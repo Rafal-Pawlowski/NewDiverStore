@@ -16,11 +16,12 @@ public class Category {
     private String name;
 
     public Category() {
+        this.id=UUID.randomUUID();
     }
 
     public Category(String name) {
+        this();
         this.name = name;
-        this.id=UUID.randomUUID();
     }
 
     public UUID getId() {

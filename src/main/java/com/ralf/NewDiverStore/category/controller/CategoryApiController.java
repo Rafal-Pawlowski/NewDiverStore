@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.ralf.NewDiverStore.category.domain.model.Category;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController

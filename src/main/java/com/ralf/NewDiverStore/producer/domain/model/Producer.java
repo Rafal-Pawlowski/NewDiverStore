@@ -17,11 +17,12 @@ public class Producer {
 
 
     public Producer() {
+        this.id = UUID.randomUUID();
     }
 
     public Producer(String name) {
+        this();
         this.name = name;
-        this.id=UUID.randomUUID();
     }
 
     public UUID getId() {
