@@ -47,13 +47,20 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProduct(UUID producerId, UUID productId, Product productRequest) {
-        Product product = new Product("Before update", 100.00);
-        product.setName(productRequest.getName());
-        return product;
+    public Product updateProduct(UUID productId, Product productRequest) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if(optionalProduct.isPresent()){
+            Product product = optionalProduct.get();
+            product.setName(productRequest.getName());
+            product.setPrice(productRequest.getPrice());
+            return productRepository.save(product);
+        } else {
+            throw new EntityNotFoundException("Product with id: " + productId + " not found");
+        }
     }
 
     @Transactional
     public void deleteProduct(UUID id) {
+        productRepository.deleteById(id);
     }
 }

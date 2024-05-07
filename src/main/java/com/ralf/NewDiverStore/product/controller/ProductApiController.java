@@ -45,7 +45,7 @@ public class ProductApiController {
     public Product updateProduct(@PathVariable("producer-id") UUID producerId,
                                  @PathVariable("product-id") UUID productId,
                                  @RequestBody Product product) {
-        return productService.updateProduct(producerId, productId, product);
+        return productService.updateProduct(productId, product);
     }
 
     @DeleteMapping("{product-id}")

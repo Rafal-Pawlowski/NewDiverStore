@@ -1,9 +1,10 @@
 package com.ralf.NewDiverStore.category.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.ralf.NewDiverStore.producer.domain.model.Producer;
+import com.ralf.NewDiverStore.product.domain.model.Product;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,6 +15,10 @@ public class Category {
     private UUID id;
 
     private String name;
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
+
 
     public Category() {
         this.id=UUID.randomUUID();

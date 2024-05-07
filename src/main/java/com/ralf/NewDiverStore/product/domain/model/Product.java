@@ -1,7 +1,10 @@
 package com.ralf.NewDiverStore.product.domain.model;
 
+import com.ralf.NewDiverStore.category.domain.model.Category;
+import com.ralf.NewDiverStore.producer.domain.model.Producer;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.util.UUID;
@@ -16,6 +19,12 @@ public class Product {
     private String name;
 
     private double price;
+
+    @ManyToOne
+    private Category category;
+
+    @ManyToOne
+    private Producer producer;
 
     public Product() {
         this.id=UUID.randomUUID();

@@ -1,9 +1,11 @@
 package com.ralf.NewDiverStore.producer.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.ralf.NewDiverStore.category.domain.model.Category;
+import com.ralf.NewDiverStore.product.domain.model.Product;
+import jakarta.persistence.*;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -14,6 +16,12 @@ public class Producer {
     private UUID id;
 
     private String name;
+
+    @ManyToMany
+    private Set<Category> categories;
+
+    @OneToMany(mappedBy = "producer")
+    private List<Product> products;
 
 
     public Producer() {
