@@ -4,7 +4,9 @@ import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import jakarta.persistence.*;
 
-import java.util.List;
+
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,7 +23,7 @@ public class Producer {
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "producer")
-    private List<Product> products;
+    private Set<Product> products;
 
 
     public Producer() {
@@ -31,6 +33,20 @@ public class Producer {
     public Producer(String name) {
         this();
         this.name = name;
+    }
+
+    public Producer addProduct(Product product){
+        if (products == null){
+            products = new LinkedHashSet<>();
+        }
+        product.setProducer(this);
+        products.add(product);
+
+        return this;
+    }
+
+    public Set<Product> getProducts() {
+        return Collections.unmodifiableSet(products);
     }
 
     public UUID getId() {

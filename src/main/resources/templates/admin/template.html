@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- ENLIGHT OF SIDEBAR SECTIONS-->
+    <link rel="stylesheet" href="css/custom.css">
+
 </head>
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -159,7 +162,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/admin/producers" class="nav-link active">
+                                <a href="/admin/producers" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Producers</p>
                                 </a>
@@ -555,6 +558,23 @@
     <script src="dist/js/demo.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="dist/js/pages/dashboard2.js"></script>
+
+    <!-- Dynamiczna zmiana podswietlenia -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Dodajemy obsługę kliknięcia na każdy element nawigacji
+            $(".nav-link").click(function(){
+                // Usuwamy klasę active z wszystkich elementów nawigacji
+                $(".nav-link").removeClass("active");
+                // Dodajemy klasę active tylko do klikniętego elementu
+                $(this).addClass("active");
+            });
+        });
+    </script>
+    <!-- ./Dynamiczna zmiana podswietlenia -->
+
+
     <!-- ./wrapper -->
 </div>
 </body>

@@ -54,7 +54,7 @@ public class ProducerService {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void deleteProducer(UUID id) {
         producerRepository.deleteById(id);
     }

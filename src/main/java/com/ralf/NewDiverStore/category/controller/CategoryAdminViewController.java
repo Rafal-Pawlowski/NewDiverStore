@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequestMapping("admin/categories")
 public class CategoryAdminViewController {
 
-public final CategoryService categoryService;
+    public final CategoryService categoryService;
 
     public CategoryAdminViewController(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -27,9 +27,18 @@ public final CategoryService categoryService;
     }
 
     @GetMapping("{id}")
-    public String singleView(@PathVariable UUID id, Model model){
+    public String singleView(@PathVariable UUID id, Model model) {
         model.addAttribute("category", categoryService.getCategory(id));
-return "admin/category/single";
+        return "admin/category/single";
+    }
+
+
+
+    @GetMapping("{id}/delete")
+    public String deleteView(@PathVariable UUID id) {
+        categoryService.deleteCategory(id);
+
+        return "redirect:/admin/categories";
     }
 
 
