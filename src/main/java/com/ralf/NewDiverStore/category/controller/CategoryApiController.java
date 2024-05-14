@@ -13,22 +13,6 @@ import java.util.UUID;
 @RequestMapping("api/v1/categories")
 public class CategoryApiController {
 
-    /*
-    Create
-    POST/ addCategory
-
-    Read
-    GET/getCategories
-    GET/getCategory
-
-    Update
-    PUT/ updateCategory
-
-    Delete
-    DELETE/ deleteCategory
-
-     */
-
     private final CategoryService categoryService;
 
     public CategoryApiController(CategoryService categoryService) {
@@ -52,6 +36,7 @@ public class CategoryApiController {
     public Category getCategory(@PathVariable("{category-id}") UUID categoryId){
         return categoryService.getCategory(categoryId);
     }
+
 
     @PutMapping("{category-id}")
     @ResponseStatus(HttpStatus.CREATED)

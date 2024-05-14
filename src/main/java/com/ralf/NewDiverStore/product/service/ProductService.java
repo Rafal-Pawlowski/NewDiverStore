@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -62,5 +63,21 @@ public class ProductService {
     @Transactional
     public void deleteProduct(UUID id) {
         productRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Product> findProductByCategoryId(UUID categoryId) {
+        return productRepository.findProductByCategoryId(categoryId);
+    }
+
+    @Transactional(readOnly = true)
+    public long countProducersByCategoryId(UUID id) {
+        List<Product> products = findProductByCategoryId(id);
+        long producerNumber = products.stream()
+                .map(Product::getProducer)
+                .filter(Objects::nonNull)
+                .distinct()
+                .count();
+        return producerNumber;
     }
 }

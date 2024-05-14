@@ -19,6 +19,8 @@ public class Producer {
 
     private String name;
 
+    private String description;
+
     @ManyToMany
     private Set<Category> categories;
 
@@ -63,6 +65,14 @@ public class Producer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
