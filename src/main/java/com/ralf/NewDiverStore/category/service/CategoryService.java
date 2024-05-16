@@ -50,6 +50,7 @@ public class CategoryService {
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
             category.setName(categoryRequest.getName());
+            category.setDescription(categoryRequest.getDescription());
             return category;
         } else {
             throw new EntityNotFoundException("Category with id: " + id + " not found");
