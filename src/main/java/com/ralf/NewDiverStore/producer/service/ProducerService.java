@@ -42,12 +42,13 @@ public class ProducerService {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Producer updateProducer(UUID id, Producer producerRequest) {
         Optional<Producer> optionalProducer = producerRepository.findById(id);
         if(optionalProducer.isPresent()){
             Producer producer =  optionalProducer.get();
             producer.setName(producerRequest.getName());
+            producer.setDescription(producerRequest.getDescription());
            return producerRepository.save(producer);
         } else {
             throw new EntityNotFoundException("Producer with id: " + id + " not found");

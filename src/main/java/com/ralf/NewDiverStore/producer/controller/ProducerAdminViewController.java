@@ -1,11 +1,10 @@
 package com.ralf.NewDiverStore.producer.controller;
 
+import com.ralf.NewDiverStore.producer.domain.model.Producer;
 import com.ralf.NewDiverStore.producer.service.ProducerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -30,6 +29,18 @@ public class ProducerAdminViewController {
     @GetMapping("{id}/delete")
     public String deleteView(@PathVariable UUID id){
         producerService.deleteProducer(id);
+        return "redirect:/admin/producers";
+    }
+
+    @GetMapping("{id}/edit")
+    public String editView(Model model, @PathVariable UUID id){
+        model.addAttribute("producer", producerService.getSingleProducer(id));
+        return "admin/producer/edit";
+    }
+
+    @PostMapping("{id}/edit")
+    public String edit(@ModelAttribute("producer") Producer producer, @PathVariable UUID id){
+        producerService.updateProducer(id, producer);
         return "redirect:/admin/producers";
     }
 

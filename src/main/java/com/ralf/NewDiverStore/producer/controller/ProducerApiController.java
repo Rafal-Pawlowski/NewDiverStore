@@ -36,7 +36,7 @@ public class ProducerApiController {
         return producerService.getSingleProducer(id);
     }
 
-    @PutMapping("{producer-id}")
+    @PatchMapping("{producer-id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Producer updateProducer(@PathVariable("producer-id") UUID id, @RequestBody Producer producer){
         return producerService.updateProducer(id, producer);
