@@ -80,4 +80,10 @@ public class ProductService {
                 .count();
         return producerNumber;
     }
+
+
+    @Transactional(readOnly = true)
+    public List<Product> getProductsByProducerId(UUID id) {
+        return productRepository.findProductByProducerId(id);
+    }
 }

@@ -87,7 +87,7 @@
                     <tr th:each="producer : ${producers}">
                       <td th:text="${producer.name}"><a href="pages/examples/invoice.html">OR9842</a></td>
                       <td>
-                        <a th:href="@{'/producers/'+${producer.id}}" class="btn btn-primary btn-sm">
+                        <a th:href="@{'/admin/producers/'+${producer.id}}" class="btn btn-primary btn-sm">
                           <i class="fas fa-folder"></i> View
                         </a>
                         <a th:href="@{'/admin/producers/'+${producer.id}+ '/edit'}" class="btn btn-info btn-sm">
