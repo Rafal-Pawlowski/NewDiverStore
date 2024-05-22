@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="admin/template::head(title='Dive Store - admin')"/>
+
+<body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<div class="wrapper">
+
+    <!-- Preloader -->
+    <th:block th:replace="admin/template::preloader"/>
+
+    <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+
+    <!-- Navbar -->
+    <th:block th:replace="admin/template::navbar"/>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <th:block th:replace="admin/template::left-sidebar-menu"/>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Edit Product</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">User Profile</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${product.name} + ' - edition form'">Producer Name</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form method="post" th:object="${product}">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="producerName">Name</label>
+                        <input th:field="*{name}" type="text" class="form-control" id="producerName" placeholder="Enter new producer name">
+                        <input th:field="*{id}" type="hidden" />
+                        <label for="categoryDescription">Description</label>
+                        <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter new description"></textarea>
+                        <label>Minimal</label>
+                        <select class="form-control select2" style="width: 100%;">
+                            <option th:selected="${product.getProducer() != null}" th:text="${product.getProducer() != null ? product.getProducer().name : 'Wybierz producenta'}"></option>
+                            <option th:each="producer : ${producers}" th:value="${producer.id}" th:text="${producer.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+
+
+    <!-- Main Footer -->
+    <th:block th:replace="admin/template::footer"/>
+</div>
+<th:block th:replace="admin/template :: scripts"/>
+<script src="plugins/select2/js/select2.full.min.js"></script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
+</script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

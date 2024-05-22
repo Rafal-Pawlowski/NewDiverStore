@@ -37,7 +37,7 @@ public class ProductApiController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Product getProduct(@PathVariable("producer-id") UUID producerId,
                               @PathVariable("product-id") UUID productId) {
-        return productService.getSingleProduct(producerId, productId);
+        return productService.getSingleProduct(productId);
     }
 
     @PutMapping("{product-id}")

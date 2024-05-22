@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Product getSingleProduct(UUID id, UUID productId) {
+    public Product getSingleProduct(UUID id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();

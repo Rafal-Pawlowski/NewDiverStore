@@ -3,3 +3,9 @@
     background-color: #007bff; /* Kolor tła */
     color: #fff; /* Kolor tekstu */
 }
+
+.custom-select-height .select2-selection--single {
+    height: 38px; /* Dostosuj tę wartość, aby dopasować wysokość do pola "Name" */
+    display: flex;
+    align-items: center;
+}

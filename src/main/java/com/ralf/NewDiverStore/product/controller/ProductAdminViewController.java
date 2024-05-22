@@ -1,13 +1,11 @@
 package com.ralf.NewDiverStore.product.controller;
 
+import com.ralf.NewDiverStore.producer.service.ProducerService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -18,10 +16,12 @@ public class ProductAdminViewController {
 
 
     public final ProductService productService;
+    public final ProducerService producerService;
 
 
-    public ProductAdminViewController(ProductService productService) {
+    public ProductAdminViewController(ProductService productService, ProducerService producerService) {
         this.productService = productService;
+        this.producerService = producerService;
     }
 
     @GetMapping
@@ -46,6 +46,26 @@ public class ProductAdminViewController {
     public String deleteView(@PathVariable UUID id){
         productService.deleteProduct(id);
         return "redirect:/admin/products";
+    }
+
+    @GetMapping("{id}")
+    public String singleView(@PathVariable UUID id, Model model){
+        model.addAttribute("product", productService.getSingleProduct(id));
+
+        return "admin/product/single";
+    }
+
+    @GetMapping("{id}/edit")
+    public String editView(@PathVariable UUID id, Model model){
+        model.addAttribute("product", productService.getSingleProduct(id));
+        model.addAttribute("producers", producerService.getProducers());
+        return "admin/product/edit";
+    }
+
+    @PostMapping("{id}/edit")
+    public String edit(@ModelAttribute("product") Product product, @PathVariable UUID id){
+        productService.updateProduct(id, product);
+        return "redirect:/admin/products/{id}";
     }
 
 }
