@@ -50,12 +50,21 @@
                         <label for="producerName">Name</label>
                         <input th:field="*{name}" type="text" class="form-control" id="producerName" placeholder="Enter new producer name">
                         <input th:field="*{id}" type="hidden" />
+                        <input th:field="*{price}" type="hidden" />
+                        <hr>
                         <label for="categoryDescription">Description</label>
                         <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter new description"></textarea>
-                        <label>Minimal</label>
-                        <select class="form-control select2" style="width: 100%;">
-                            <option th:selected="${product.getProducer() != null}" th:text="${product.getProducer() != null ? product.getProducer().name : 'Wybierz producenta'}"></option>
+                        <hr>
+                        <label>Producer select</label>
+                        <select th:field="*{producer}" class="form-control select2" style="width: 100%;">
+                            <option th:selected="${product.getProducer() != null}" value="" th:text="${product.getProducer() != null ? product.getProducer().name : 'Select producer'}"></option>
                             <option th:each="producer : ${producers}" th:value="${producer.id}" th:text="${producer.name}"></option>
+                        </select>
+                        <hr>
+                        <label>Category select</label>
+                        <select th:field="*{category}" class="form-control select2" style="width: 100%;">
+                            <option th:selected="${product.getCategory() != null}" value="" th:text="${product.getCategory() != null ? product.getCategory().name : 'Select category'}"></option>
+                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
                         </select>
                     </div>
                 </div>
@@ -88,17 +97,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

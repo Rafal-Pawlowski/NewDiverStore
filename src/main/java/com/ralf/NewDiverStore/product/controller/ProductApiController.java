@@ -40,7 +40,7 @@ public class ProductApiController {
         return productService.getSingleProduct(productId);
     }
 
-    @PutMapping("{product-id}")
+    @PatchMapping("{product-id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Product updateProduct(@PathVariable("producer-id") UUID producerId,
                                  @PathVariable("product-id") UUID productId,

@@ -1,5 +1,6 @@
 package com.ralf.NewDiverStore.product.controller;
 
+import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.producer.service.ProducerService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
@@ -17,11 +18,13 @@ public class ProductAdminViewController {
 
     public final ProductService productService;
     public final ProducerService producerService;
+    public final CategoryService categoryService;
 
 
-    public ProductAdminViewController(ProductService productService, ProducerService producerService) {
+    public ProductAdminViewController(ProductService productService, ProducerService producerService, CategoryService categoryService) {
         this.productService = productService;
         this.producerService = producerService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -59,6 +62,7 @@ public class ProductAdminViewController {
     public String editView(@PathVariable UUID id, Model model){
         model.addAttribute("product", productService.getSingleProduct(id));
         model.addAttribute("producers", producerService.getProducers());
+        model.addAttribute("categories", categoryService.getCategories());
         return "admin/product/edit";
     }
 
