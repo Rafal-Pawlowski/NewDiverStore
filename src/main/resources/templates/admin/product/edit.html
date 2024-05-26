@@ -47,10 +47,12 @@
             <form method="post" th:object="${product}">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="producerName">Name</label>
-                        <input th:field="*{name}" type="text" class="form-control" id="producerName" placeholder="Enter new producer name">
+                        <label for="productName">Name</label>
+                        <input th:field="*{name}" type="text" class="form-control" id="productName" placeholder="Enter new product name">
                         <input th:field="*{id}" type="hidden" />
-                        <input th:field="*{price}" type="hidden" />
+                        <hr>
+                        <label for="productPrice">Price</label>
+                        <input th:field="*{price}" type="text" class="form-control" id="productPrice" placeholder="Enter new product price" />
                         <hr>
                         <label for="categoryDescription">Description</label>
                         <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter new description"></textarea>

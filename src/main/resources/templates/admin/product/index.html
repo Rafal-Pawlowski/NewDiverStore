@@ -80,6 +80,7 @@
                                         <tr>
                                             <th>Id</th>
                                             <th>Products</th>
+                                            <th>Price</th>
                                             <th>Category</th>
                                             <th>Producer</th>
                                             <th>Action</th>
@@ -90,6 +91,7 @@
                                         <tr th:each="product : ${products}">
                                             <td th:text="${product.id}"></td>
                                             <td th:text="${product.name}"></td>
+                                            <td th:text="${product.price}"></td>
                                             <td th:text="${product.getCategory().name}"></td>
                                             <td th:text="${product.getProducer().name}"></td>
                                             <td>
