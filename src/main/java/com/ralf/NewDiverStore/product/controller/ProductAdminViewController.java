@@ -7,7 +7,13 @@ import com.ralf.NewDiverStore.product.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 
@@ -28,38 +34,38 @@ public class ProductAdminViewController {
     }
 
     @GetMapping
-    public String indexView(Model model){
+    public String indexView(Model model) {
         model.addAttribute("products", productService.findAllProducts());
         return "admin/product/index";
     }
 
     @GetMapping("add")
-    public String addView(Model model){
+    public String addView(Model model) {
         model.addAttribute("product", new Product());
         return "admin/product/add";
     }
 
     @PostMapping
-    public String add(Product product){
+    public String add(Product product) {
         productService.createProduct(product);
         return "redirect:/admin/products";
     }
 
     @GetMapping("{id}/delete")
-    public String deleteView(@PathVariable UUID id){
+    public String deleteView(@PathVariable UUID id) {
         productService.deleteProduct(id);
         return "redirect:/admin/products";
     }
 
     @GetMapping("{id}")
-    public String singleView(@PathVariable UUID id, Model model){
+    public String singleView(@PathVariable UUID id, Model model) {
         model.addAttribute("product", productService.getSingleProduct(id));
 
         return "admin/product/single";
     }
 
     @GetMapping("{id}/edit")
-    public String editView(@PathVariable UUID id, Model model){
+    public String editView(@PathVariable UUID id, Model model) {
         model.addAttribute("product", productService.getSingleProduct(id));
         model.addAttribute("producers", producerService.getProducers());
         model.addAttribute("categories", categoryService.getCategories());
@@ -67,9 +73,27 @@ public class ProductAdminViewController {
     }
 
     @PostMapping("{id}/edit")
-    public String edit(@ModelAttribute("product") Product product, @PathVariable UUID id){
+    public String edit(@ModelAttribute("product") Product product, @PathVariable UUID id, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (!file.isEmpty()) {
+            String imagePath = saveFile(file);
+            product.setImagePath(imagePath);
+        }
         productService.updateProduct(id, product);
         return "redirect:/admin/products/{id}";
     }
+
+    private String saveFile(MultipartFile file) {
+        try {
+            byte[] bytes = file.getBytes();
+            String fileName = file.getOriginalFilename();
+            Path path = Paths.get("uploads/" + fileName);
+            Files.write(path, bytes);
+            return fileName;
+        } catch (IOException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

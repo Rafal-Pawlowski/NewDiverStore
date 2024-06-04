@@ -59,6 +59,7 @@ public class ProductService {
             productRequest.getProducer().addProduct(product);
             product.setCategory(productRequest.getCategory());
             productRequest.getCategory().addProduct(product);
+            product.setImagePath(productRequest.getImagePath());
 
             return productRepository.save(product);
         } else {

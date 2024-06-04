@@ -44,7 +44,7 @@
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form method="post" th:object="${product}">
+            <form method="post" th:object="${product}" enctype="multipart/form-data">
                 <div class="card-body">
                     <div class="form-group">
                         <label for="productName">Name</label>
@@ -68,6 +68,10 @@
                             <option th:selected="${product.getCategory() != null}" value="" th:text="${product.getCategory() != null ? product.getCategory().name : 'Select category'}"></option>
                             <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
                         </select>
+                        <hr>
+                        <label for="file">Image</label>
+                        <input type="file" id="file" name="file"/>
+
                     </div>
                 </div>
                 <!-- /.card-body -->

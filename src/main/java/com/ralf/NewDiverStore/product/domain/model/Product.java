@@ -22,6 +22,8 @@ public class Product {
 
     private String description;
 
+    private String imagePath;
+
     @ManyToOne
     private Category category;
 
@@ -86,6 +88,14 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override
