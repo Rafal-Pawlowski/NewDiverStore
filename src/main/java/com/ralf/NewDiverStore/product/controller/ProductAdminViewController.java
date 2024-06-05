@@ -4,6 +4,7 @@ import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.producer.service.ProducerService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
+import com.ralf.NewDiverStore.utilities.ImageHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -74,26 +75,23 @@ public class ProductAdminViewController {
 
     @PostMapping("{id}/edit")
     public String edit(@ModelAttribute("product") Product product, @PathVariable UUID id, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        Product existingProduct = productService.getSingleProduct(id);
+
         if (!file.isEmpty()) {
-            String imagePath = saveFile(file);
-            product.setImagePath(imagePath);
+            String oldImagePath = existingProduct.getImagePath();
+            String newImagePath = ImageHandler.saveFile(file);
+            if (newImagePath != null) {
+                product.setImagePath(newImagePath);
+                ImageHandler.deleteFile(oldImagePath);
+            }
+        } else {
+            product.setImagePath(existingProduct.getImagePath());
         }
         productService.updateProduct(id, product);
         return "redirect:/admin/products/{id}";
     }
 
-    private String saveFile(MultipartFile file) {
-        try {
-            byte[] bytes = file.getBytes();
-            String fileName = file.getOriginalFilename();
-            Path path = Paths.get("uploads/" + fileName);
-            Files.write(path, bytes);
-            return fileName;
-        } catch (IOException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 
 
 }
