@@ -9,8 +9,6 @@
     <!-- Preloader -->
     <th:block th:replace="admin/template::preloader"/>
 
-    <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
-
     <!-- Navbar -->
     <th:block th:replace="admin/template::navbar"/>
     <!-- /.navbar -->
@@ -40,38 +38,19 @@
         <!-- Main content -->
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Add New Product</h3>
+                <h3 class="card-title">Add New Category</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form method="post" th:object="${product}" enctype="multipart/form-data">
+            <form method="post" th:object="${category}">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="productName">Name</label>
-                        <input th:field="*{name}" type="text" class="form-control" id="productName" placeholder="Enter product name">
+                        <label for="producerName">Name</label>
+                        <input th:field="*{name}" type="text" class="form-control" id="producerName" placeholder="Enter category name">
                         <input th:field="*{id}" type="hidden" />
                         <hr>
-                        <label for="productPrice">Price</label>
-                        <input th:field="*{price}" type="text" class="form-control" id="productPrice" placeholder="Enter product price" />
-                        <hr>
                         <label for="categoryDescription">Description</label>
-                        <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter product description"></textarea>
-                        <hr>
-                        <label>Producer select</label>
-                        <select th:field="*{producer}" class="form-control select2" style="width: 100%;">
-                            <option th:selected="${product.getProducer() != null}" value="" th:text="${product.getProducer() != null ? product.getProducer().name : 'Select producer'}"></option>
-                            <option th:each="producer : ${producers}" th:value="${producer.id}" th:text="${producer.name}"></option>
-                        </select>
-                        <hr>
-                        <label>Category select</label>
-                        <select th:field="*{category}" class="form-control select2" style="width: 100%;">
-                            <option th:selected="${product.getCategory() != null}" value="" th:text="${product.getCategory() != null ? product.getCategory().name : 'Select category'}"></option>
-                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-                        </select>
-                        <hr>
-                        <label for="file">Image</label>
-                        <input type="file" id="file" name="file"/>
-
+                        <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter producer description"></textarea>
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -92,14 +71,6 @@
     <th:block th:replace="admin/template::footer"/>
 </div>
 <th:block th:replace="admin/template :: scripts"/>
-<script src="plugins/select2/js/select2.full.min.js"></script>
-<script>
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2()
-    })
-</script>
-
 
 </body>
 </html>

@@ -25,36 +25,47 @@ public class ProducerAdminViewController {
     }
 
     @GetMapping
-    public String indexView(Model model){
+    public String indexView(Model model) {
         model.addAttribute("producers", producerService.getProducers());
-    return "admin/producer/index";
+        return "admin/producer/index";
     }
 
     @GetMapping("{id}/delete")
-    public String deleteView(@PathVariable UUID id){
+    public String deleteView(@PathVariable UUID id) {
         producerService.deleteProducer(id);
         return "redirect:/admin/producers";
     }
 
     @GetMapping("{id}/edit")
-    public String editView(Model model, @PathVariable UUID id){
+    public String editView(Model model, @PathVariable UUID id) {
         model.addAttribute("producer", producerService.getSingleProducer(id));
         return "admin/producer/edit";
     }
 
     @PostMapping("{id}/edit")
-    public String edit(@ModelAttribute("producer") Producer producer, @PathVariable UUID id){
+    public String edit(@ModelAttribute("producer") Producer producer, @PathVariable UUID id) {
         producerService.updateProducer(id, producer);
         return "redirect:/admin/producers";
     }
 
     @GetMapping("{id}")
-    public String singleView(@PathVariable UUID id, Model model){
+    public String singleView(@PathVariable UUID id, Model model) {
         model.addAttribute("producer", producerService.getSingleProducer(id));
         model.addAttribute("products", productService.getProductsByProducerId(id));
         return "admin/producer/single";
     }
 
+    @GetMapping("add")
+    public String addView(Model model) {
+        model.addAttribute("producer", new Producer());
+        return "admin/producer/add";
+    }
+
+    @PostMapping("add")
+    public String add(@ModelAttribute("producer")Producer producer){
+        producerService.createProducer(producer);
+        return "redirect:/admin/producers";
+    }
 
 
 }

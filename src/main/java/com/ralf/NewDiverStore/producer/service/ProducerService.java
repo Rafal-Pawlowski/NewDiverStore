@@ -23,6 +23,7 @@ public class ProducerService {
     @Transactional
     public Producer createProducer(Producer producerRequest) {
         Producer producer = new Producer(producerRequest.getName());
+        producer.setDescription(producerRequest.getDescription());
         return producerRepository.save(producer);
     }
 

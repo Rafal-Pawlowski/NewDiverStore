@@ -56,5 +56,17 @@ public class CategoryAdminViewController {
         return "redirect:/admin/categories";
     }
 
+    @GetMapping("add")
+    public String addView(Model model){
+        model.addAttribute("category", new Category());
+        return "admin/category/add";
+    }
+
+    @PostMapping("add")
+    public String add(@ModelAttribute ("category")Category category){
+        categoryService.createCategory(category);
+        return "redirect:/admin/categories";
+    }
+
 
 }

@@ -43,11 +43,17 @@ public class ProductAdminViewController {
     @GetMapping("add")
     public String addView(Model model) {
         model.addAttribute("product", new Product());
+        model.addAttribute("producers", producerService.getProducers());
+        model.addAttribute("categories", categoryService.getCategories());
         return "admin/product/add";
     }
 
-    @PostMapping
-    public String add(Product product) {
+    @PostMapping("add")
+    public String add(@ModelAttribute("product") Product product, @RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes) {
+        if(!file.isEmpty()){
+            String imagePath=ImageHandler.saveFile(file);
+            product.setImagePath(imagePath);
+        }
         productService.createProduct(product);
         return "redirect:/admin/products";
     }
