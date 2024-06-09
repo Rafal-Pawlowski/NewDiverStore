@@ -12,12 +12,19 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <!-- ENLIGHT OF SIDEBAR SECTIONS-->
     <link rel="stylesheet" href="css/custom.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+
+    <!-- Toasts CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+
+
+
 
 
 </head>
@@ -527,56 +534,82 @@
 
     <!-- Main Footer -->
     <footer th:fragment="footer" class="main-footer">
-        <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-        All rights reserved.
-        <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> 3.2.0
-        </div>
+            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 3.2.0
+            </div>
+
+
+        <!-- REQUIRED SCRIPTS -->
+        <!-- jQuery -->
+<!--        <script src="plugins/jquery/jquery.min.js"></script>-->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Bootstrap -->
+        <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- overlayScrollbars -->
+        <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="dist/js/adminlte.js"></script>
+
+        <script src="js/adminlte.min.js"></script>
+
+
+        <!-- PAGE PLUGINS -->
+        <!-- jQuery Mapael -->
+        <script src="plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+        <script src="plugins/raphael/raphael.min.js"></script>
+        <script src="plugins/jquery-mapael/jquery.mapael.min.js"></script>
+        <script src="plugins/jquery-mapael/maps/usa_states.min.js"></script>
+        <!-- ChartJS -->
+        <script src="plugins/chart.js/Chart.min.js"></script>
+
+        <!-- AdminLTE for demo purposes -->
+        <script src="dist/js/demo.js"></script>
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <script src="dist/js/pages/dashboard2.js"></script>
+
+        <!-- Dynamiczna zmiana podswietlenia -->
+<!--        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 2 razy zaimportowana  -->
+        <script>
+            $(document).ready(function(){
+                // Dodajemy obsługę kliknięcia na każdy element nawigacji
+                $(".nav-link").click(function(){
+                    // Usuwamy klasę active z wszystkich elementów nawigacji
+                    $(".nav-link").removeClass("active");
+                    // Dodajemy klasę active tylko do klikniętego elementu
+                    $(this).addClass("active");
+                });
+            });
+        </script>
+
+        <script src="plugins/select2/js/select2.full.min.js"></script>
+        <script>
+            $(function () {
+                //Initialize Select2 Elements
+                $('.select2').select2()
+            })
+        </script>
+
+        <!-- ./Dynamiczna zmiana podswietlenia -->
+
+
+
+
+
+
+        <th:block th:if="${message!=null}">
+            <script>
+                $(document).Toasts('create', {
+                    class: 'bg-maroon',
+                    title: '[[${message.title}]]',
+                    body: '[[${message.content}]]'
+                })
+            </script>
+        </th:block>
 
     </footer>
-</div>
-<div th:fragment="scripts">
-    <!-- REQUIRED SCRIPTS -->
-    <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- overlayScrollbars -->
-    <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.js"></script>
-
-    <!-- PAGE PLUGINS -->
-    <!-- jQuery Mapael -->
-    <script src="plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-    <script src="plugins/raphael/raphael.min.js"></script>
-    <script src="plugins/jquery-mapael/jquery.mapael.min.js"></script>
-    <script src="plugins/jquery-mapael/maps/usa_states.min.js"></script>
-    <!-- ChartJS -->
-    <script src="plugins/chart.js/Chart.min.js"></script>
-
-    <!-- AdminLTE for demo purposes -->
-    <script src="dist/js/demo.js"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="dist/js/pages/dashboard2.js"></script>
-
-    <!-- Dynamiczna zmiana podswietlenia -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            // Dodajemy obsługę kliknięcia na każdy element nawigacji
-            $(".nav-link").click(function(){
-                // Usuwamy klasę active z wszystkich elementów nawigacji
-                $(".nav-link").removeClass("active");
-                // Dodajemy klasę active tylko do klikniętego elementu
-                $(this).addClass("active");
-            });
-        });
-    </script>
-    <!-- ./Dynamiczna zmiana podswietlenia -->
-
-
-
     <!-- ./wrapper -->
 </div>
 </body>

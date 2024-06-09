@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -18,6 +19,7 @@ public class Category {
     @Id
     private UUID id;
 
+    @NotBlank(message = "{divestore.validation.name.NotBlank.message}")
     private String name;
 
     private String description;

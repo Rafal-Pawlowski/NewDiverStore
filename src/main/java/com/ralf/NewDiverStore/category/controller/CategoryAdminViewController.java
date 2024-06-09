@@ -2,10 +2,14 @@ package com.ralf.NewDiverStore.category.controller;
 
 import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.service.CategoryService;
+import com.ralf.NewDiverStore.common.dto.Message;
 import com.ralf.NewDiverStore.product.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -43,8 +47,28 @@ public class CategoryAdminViewController {
     }
 
     @PostMapping("{id}/edit")
-    public String edit(@ModelAttribute("category") Category category, @PathVariable UUID id) {
-        categoryService.updateCategory(id, category);
+    public String edit(
+            @PathVariable UUID id,
+            @Valid @ModelAttribute("category") Category category,
+            BindingResult bindingResult,
+            RedirectAttributes ra,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("category", category);
+            model.addAttribute("message", Message.error("Błąd zapisu"));
+            return "admin/category/edit";
+        }
+
+        try {
+            categoryService.updateCategory(id, category);
+            ra.addFlashAttribute("message", Message.info("Category updated"));
+
+        }catch (Exception e){
+            model.addAttribute("category", category);
+            model.addAttribute("message", Message.error( "Nieznany błąd zapisu"));
+            return "admin/category/edit";
+        }
         return "redirect:/admin/categories";
     }
 
@@ -57,13 +81,13 @@ public class CategoryAdminViewController {
     }
 
     @GetMapping("add")
-    public String addView(Model model){
+    public String addView(Model model) {
         model.addAttribute("category", new Category());
         return "admin/category/add";
     }
 
     @PostMapping("add")
-    public String add(@ModelAttribute ("category")Category category){
+    public String add(@ModelAttribute("category") Category category) {
         categoryService.createCategory(category);
         return "redirect:/admin/categories";
     }
