@@ -4,76 +4,80 @@
 <head th:replace="admin/template::head(title='Dive Store - admin')"/>
 
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
-<div class="wrapper">
+    <div class="wrapper">
 
-    <!-- Preloader -->
-    <th:block th:replace="admin/template::preloader"/>
+        <!-- Preloader -->
+        <th:block th:replace="admin/template::preloader"/>
 
-    <!-- Navbar -->
-    <th:block th:replace="admin/template::navbar"/>
-    <!-- /.navbar -->
+        <!-- Navbar -->
+        <th:block th:replace="admin/template::navbar"/>
+        <!-- /.navbar -->
 
-    <!-- Main Sidebar Container -->
-    <th:block th:replace="admin/template::left-sidebar-menu"/>
+        <!-- Main Sidebar Container -->
+        <th:block th:replace="admin/template::left-sidebar-menu"/>
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>Edit Category</h1>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>Edit Producer</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">User Profile</li>
+                            </ol>
+                        </div>
                     </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">User Profile</li>
-                        </ol>
-                    </div>
-                </div>
-            </div><!-- /.container-fluid -->
-        </section>
+                </div><!-- /.container-fluid -->
+            </section>
 
-        <!-- Main content -->
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title" th:text="${producer.name} + ' - edition form'">Producer Name</h3>
+            <!-- Main content -->
+            <div class="card card-primary">
+                <!-- form start -->
+                <form method="post" th:object="${producer}">
+
+                    <div class="error" th:if="${#fields.hasAnyErrors()}">
+                        <ul>
+                            <li th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
+                        </ul>
+                    </div>
+                    <div class="card-header">
+                        <h3 class="card-title" >Edit form</h3>
+                    </div>
+                <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="producerName">Name</label>
+                            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
+                            <input th:field="*{name}" type="text" class="form-control" id="producerName" placeholder="Enter new producer name">
+                            <input th:field="*{id}" type="hidden" />
+                        </div>
+                            <!-- textarea -->
+                        <div class="form-group">
+                            <label for="categoryDescription">Description</label>
+                            <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</span>
+                            <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter new description"></textarea>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
             </div>
-            <!-- /.card-header -->
-            <!-- form start -->
-            <form method="post" th:object="${producer}">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="producerName">Name</label>
-                        <input th:field="*{name}" type="text" class="form-control" id="producerName" placeholder="Enter new producer name">
-                        <input th:field="*{id}" type="hidden" />
-                    </div>
-                        <!-- textarea -->
-                    <div class="form-group">
-                        <label for="categoryDescription">Description</label>
-                        <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter new description"></textarea>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+            <!-- /.content -->
         </div>
+        <!-- /.content-wrapper -->
 
-        <!-- /.content -->
+        <!-- Main Footer -->
+        <th:block th:replace="admin/template::footer"/>
     </div>
-    <!-- /.content-wrapper -->
-
-
-
-    <!-- Main Footer -->
-    <th:block th:replace="admin/template::footer"/>
-</div>
-
-
 </body>
 </html>
 

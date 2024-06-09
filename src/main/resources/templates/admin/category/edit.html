@@ -57,6 +57,7 @@
                         <!-- textarea -->
                     <div class="form-group">
                         <label for="categoryDescription">Description</label>
+                        <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</span>
                         <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter new description"></textarea>
                     </div>
                 </div>

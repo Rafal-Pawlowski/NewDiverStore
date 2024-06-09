@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.UUID;
 
@@ -16,10 +18,13 @@ public class Product {
     @Id
     private UUID id;
 
+    @NotBlank(message = "{divestore.validation.name.NotBlank.message}")
+    @Size(min = 3, max = 255)
     private String name;
 
     private double price;
 
+    @Size(max = 2550)
     private String description;
 
     private String imagePath;

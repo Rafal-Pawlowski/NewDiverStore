@@ -1,3 +1,13 @@
+alter table categories
+    alter column description type varchar(2550) using description::varchar(2550);
+
+alter table producers
+    alter column description type varchar(2550) using description::varchar(2550);
+
+alter table products
+    alter column description type varchar(2550) using description::varchar(2550);
+
+
 insert into categories(id, name, description) values
                                      (gen_random_uuid(), 'Automaty oddechowe', 'This is a short description of a category. Little text to show the spot'),
                                      (gen_random_uuid(), 'Płetwy', 'This is a short description of a category. Little text to show the spot'),

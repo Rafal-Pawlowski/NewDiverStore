@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -20,8 +21,10 @@ public class Category {
     private UUID id;
 
     @NotBlank(message = "{divestore.validation.name.NotBlank.message}")
+    @Size(min = 3, max = 255, message = "Size must be in range between 3 to 255 characters")
     private String name;
 
+    @Size(max = 2550, message = "Size must not exceed 2550 characters")
     private String description;
 
     @OneToMany(mappedBy = "category")
@@ -36,12 +39,12 @@ public class Category {
         this();
         this.name = name;
     }
+
     public Category(String name, String description) {
         this();
         this.name = name;
-        this.description=description;
+        this.description = description;
     }
-
 
 
     public Category addProduct(Product product) {

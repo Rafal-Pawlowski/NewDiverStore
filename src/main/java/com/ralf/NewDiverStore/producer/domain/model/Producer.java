@@ -3,6 +3,8 @@ package com.ralf.NewDiverStore.producer.domain.model;
 import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 
 import java.util.Collections;
@@ -17,8 +19,11 @@ public class Producer {
     @Id
     private UUID id;
 
+    @NotBlank(message = "{divestore.validation.name.NotBlank.message}")
+    @Size(min=3, max=255, message = "Size must be in range between 3 to 255 characters")
     private String name;
 
+    @Size(max = 2550, message = "Size must not exceed 2550 characters")
     private String description;
 
     @ManyToMany

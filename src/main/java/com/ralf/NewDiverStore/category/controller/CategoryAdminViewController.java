@@ -3,6 +3,7 @@ package com.ralf.NewDiverStore.category.controller;
 import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.common.dto.Message;
+import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -56,7 +59,7 @@ public class CategoryAdminViewController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("category", category);
-            model.addAttribute("message", Message.error("Błąd zapisu"));
+            model.addAttribute("message", Message.error("Data writing error"));
             return "admin/category/edit";
         }
 
@@ -66,7 +69,7 @@ public class CategoryAdminViewController {
 
         }catch (Exception e){
             model.addAttribute("category", category);
-            model.addAttribute("message", Message.error( "Nieznany błąd zapisu"));
+            model.addAttribute("message", Message.error( "Unknown data writing error"));
             return "admin/category/edit";
         }
         return "redirect:/admin/categories";
@@ -74,9 +77,14 @@ public class CategoryAdminViewController {
 
 
     @GetMapping("{id}/delete")
-    public String deleteView(@PathVariable UUID id) {
-        categoryService.deleteCategory(id);
-
+    public String deleteView(@PathVariable UUID id, RedirectAttributes ra) {
+        List<Product>productList = productService.findProductByCategoryId(id);
+        if(productList.isEmpty()){
+            categoryService.deleteCategory(id);
+            ra.addFlashAttribute("message", Message.info("Category removed"));
+        } else {
+            ra.addFlashAttribute("message", Message.error("Category cannot be removed. Please delete related products first"));
+        }
         return "redirect:/admin/categories";
     }
 
