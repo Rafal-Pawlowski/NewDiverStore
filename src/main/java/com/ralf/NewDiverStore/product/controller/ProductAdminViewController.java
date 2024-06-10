@@ -1,12 +1,16 @@
 package com.ralf.NewDiverStore.product.controller;
 
 import com.ralf.NewDiverStore.category.service.CategoryService;
+import com.ralf.NewDiverStore.common.dto.Message;
 import com.ralf.NewDiverStore.producer.service.ProducerService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import com.ralf.NewDiverStore.utilities.ImageHandler;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -44,23 +48,49 @@ public class ProductAdminViewController {
     public String addView(Model model) {
         model.addAttribute("product", new Product());
         model.addAttribute("producers", producerService.getProducers());
-        model.addAttribute("categories", categoryService.getCategories());
+        model.addAttribute("categories", categoryService.getCategories(Pageable.unpaged()));
         return "admin/product/add";
     }
 
     @PostMapping("add")
-    public String add(@ModelAttribute("product") Product product, @RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes) {
-        if(!file.isEmpty()){
-            String imagePath=ImageHandler.saveFile(file);
+    public String add(
+            @Valid @ModelAttribute("product") Product product,
+            BindingResult bindingResult,
+            @RequestParam("file") MultipartFile file,
+            RedirectAttributes ra,
+            Model model
+            ) {
+        if (!file.isEmpty()) {
+            String imagePath = ImageHandler.saveFile(file);
             product.setImagePath(imagePath);
         }
-        productService.createProduct(product);
+
+        if(bindingResult.hasErrors()){
+            model.addAttribute("product", product);
+            model.addAttribute("producers", producerService.getProducers());
+            model.addAttribute("categories", categoryService.getCategories(Pageable.unpaged()));
+            return "admin/product/add";
+        }
+
+        try{
+            productService.createProduct(product);
+            ra.addFlashAttribute("message", Message.info("Product added"));
+        }catch (Exception e) {
+            model.addAttribute("product", product);
+            model.addAttribute("message", Message.error("Unknown writing error"));
+        }
         return "redirect:/admin/products";
     }
 
     @GetMapping("{id}/delete")
-    public String deleteView(@PathVariable UUID id) {
-        productService.deleteProduct(id);
+    public String deleteView(@PathVariable UUID id, RedirectAttributes ra) {
+
+        try {
+            productService.deleteProduct(id);
+            ra.addFlashAttribute("message", Message.info("Product removed"));
+        } catch (Exception e) {
+            ra.addFlashAttribute("message", Message.error("Unknown error"));
+        }
         return "redirect:/admin/products";
     }
 
@@ -75,12 +105,19 @@ public class ProductAdminViewController {
     public String editView(@PathVariable UUID id, Model model) {
         model.addAttribute("product", productService.getSingleProduct(id));
         model.addAttribute("producers", producerService.getProducers());
-        model.addAttribute("categories", categoryService.getCategories());
+        model.addAttribute("categories", categoryService.getCategories(Pageable.unpaged()));
         return "admin/product/edit";
     }
 
     @PostMapping("{id}/edit")
-    public String edit(@ModelAttribute("product") Product product, @PathVariable UUID id, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String edit(
+            @PathVariable UUID id,
+            @Valid @ModelAttribute("product") Product product,
+            BindingResult bindingResult,
+            @RequestParam("file") MultipartFile file,
+            RedirectAttributes ra,
+            Model model
+    ) {
         Product existingProduct = productService.getSingleProduct(id);
 
         if (!file.isEmpty()) {
@@ -93,11 +130,56 @@ public class ProductAdminViewController {
         } else {
             product.setImagePath(existingProduct.getImagePath());
         }
-        productService.updateProduct(id, product);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("product", product);
+            model.addAttribute("producers", producerService.getProducers());
+            model.addAttribute("categories", categoryService.getCategories(Pageable.unpaged()));
+            model.addAttribute("message", Message.error("Data writing error"));
+            return "admin/product/edit";
+        }
+
+        try {
+            productService.updateProduct(id, product);
+            ra.addFlashAttribute("message", Message.info("Product updated"));
+        } catch (Exception e) {
+            model.addAttribute("product", product);
+            model.addAttribute("message", Message.error("Unknown data writing error"));
+        }
+
         return "redirect:/admin/products/{id}";
     }
 
 
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

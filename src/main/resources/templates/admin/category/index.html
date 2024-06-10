@@ -61,7 +61,7 @@
                         <!-- TABLE: LATEST ORDERS -->
                         <div class="card">
                             <div class="card-header border-transparent">
-                                <h3 class="card-title">Latest Orders</h3>
+                                <h3 class="card-title" th:text="'Total: '+ ${#lists.size(categoriesPage.content)}">Categories number</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -84,7 +84,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="category : ${categories}">
+                                        <tr th:each="category : ${categoriesPage.content}">
                                             <td th:text="${category.name}"><a href="pages/examples/invoice.html">OR9842</a></td>
                                             <td>
                                                 <a th:href="@{'/admin/categories/'+${category.id}}" class="btn btn-primary btn-sm">
@@ -100,6 +100,19 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                    <!-- pagination -->
+                                    <div class ="card-footer clearfix">
+                                        <ul class="pagination pagination-sm m-0 float-right"
+                                            th:if="${categoriesPage.totalPages >0}">
+                                            <li th:each="pageNumber : ${pageNumbers}" class="page-item">
+                                                <a class="page-link"
+                                                   th:href="@{'/admin/categories'(size=${categoriesPage.size}, page=${pageNumber}-1)}"
+                                                   th:text="${pageNumber}"></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /.pagination -->
+
                                 </div>
                                 <!-- /.table-responsive -->
                             </div>

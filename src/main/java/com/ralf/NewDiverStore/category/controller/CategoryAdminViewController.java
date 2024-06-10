@@ -6,6 +6,8 @@ import com.ralf.NewDiverStore.common.dto.Message;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("admin/categories")
@@ -29,8 +33,12 @@ public class CategoryAdminViewController {
     }
 
     @GetMapping
-    public String indexView(Model model) {
-        model.addAttribute("categories", categoryService.getCategories());
+    public String indexView(Pageable pageable, Model model) {
+
+        Page<Category> categoriesPage = categoryService.getCategories(pageable);
+        model.addAttribute("categoriesPage", categoriesPage);
+        paging(model, categoriesPage);
+
         return "admin/category/index";
     }
 
@@ -67,9 +75,9 @@ public class CategoryAdminViewController {
             categoryService.updateCategory(id, category);
             ra.addFlashAttribute("message", Message.info("Category updated"));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             model.addAttribute("category", category);
-            model.addAttribute("message", Message.error( "Unknown data writing error"));
+            model.addAttribute("message", Message.error("Unknown data writing error"));
             return "admin/category/edit";
         }
         return "redirect:/admin/categories";
@@ -78,8 +86,8 @@ public class CategoryAdminViewController {
 
     @GetMapping("{id}/delete")
     public String deleteView(@PathVariable UUID id, RedirectAttributes ra) {
-        List<Product>productList = productService.findProductByCategoryId(id);
-        if(productList.isEmpty()){
+        List<Product> productList = productService.findProductByCategoryId(id);
+        if (productList.isEmpty()) {
             categoryService.deleteCategory(id);
             ra.addFlashAttribute("message", Message.info("Category removed"));
         } else {
@@ -95,10 +103,38 @@ public class CategoryAdminViewController {
     }
 
     @PostMapping("add")
-    public String add(@ModelAttribute("category") Category category) {
-        categoryService.createCategory(category);
+    public String add(
+            @Valid @ModelAttribute("category") Category category,
+            BindingResult bindingResult,
+            RedirectAttributes ra,
+            Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("category", category);
+            model.addAttribute("message", Message.error("Data writing error"));
+            return "admin/category/add";
+        }
+
+        try {
+            categoryService.createCategory(category);
+            ra.addFlashAttribute("message", Message.info("New Category added"));
+        } catch (Exception e) {
+            model.addAttribute("category", category);
+            model.addAttribute("message", Message.error("Unknown data writing error. Adding category failed."));
+            return "admin/category/add";
+        }
+
         return "redirect:/admin/categories";
     }
 
+
+    private void paging(Model model, Page page) {
+        int totalPages = page.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.ralf.NewDiverStore.category.controller;
 
 import com.ralf.NewDiverStore.category.service.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.ralf.NewDiverStore.category.domain.model.Category;
@@ -27,8 +29,8 @@ public class CategoryApiController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<Category> getCategories(){
-        return categoryService.getCategories();
+    public Page<Category> getCategories(Pageable pageable){
+        return categoryService.getCategories(pageable);
     }
 
     @GetMapping("{category-id}")

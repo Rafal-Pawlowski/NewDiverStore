@@ -37,19 +37,28 @@
 
         <!-- Main content -->
         <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">Add New Category</h3>
-            </div>
+            <form method="post" th:object="${category}">
+
+                <div class="error" th:if="${#fields.hasAnyErrors()}">
+                    <ul>
+                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
+                    </ul>
+                </div>
+
+                <div class="card-header">
+                    <h3 class="card-title">Add New Category</h3>
+                </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form method="post" th:object="${category}">
                 <div class="card-body">
                     <div class="form-group">
                         <label for="producerName">Name</label>
+                        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
                         <input th:field="*{name}" type="text" class="form-control" id="producerName" placeholder="Enter category name">
                         <input th:field="*{id}" type="hidden" />
                         <hr>
                         <label for="categoryDescription">Description</label>
+                        <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</span>
                         <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter producer description"></textarea>
                     </div>
                 </div>

@@ -92,8 +92,26 @@ public class ProducerAdminViewController {
     }
 
     @PostMapping("add")
-    public String add(@ModelAttribute("producer") Producer producer) {
-        producerService.createProducer(producer);
+    public String add(
+            @Valid @ModelAttribute("producer") Producer producer,
+            BindingResult bindingResult,
+            RedirectAttributes ra,
+            Model model) {
+
+        if(bindingResult.hasErrors()){
+            model.addAttribute("producer", producer);
+            model.addAttribute("message", Message.error("Producer adding error"));
+            return "admin/producer/add";
+        }
+
+        try{
+            producerService.createProducer(producer);
+            ra.addFlashAttribute("message", Message.info("Producer added"));
+        }catch (Exception e){
+            model.addAttribute("producer", producer);
+            model.addAttribute("message", Message.error("Unknown data writing error"));
+            return "admin/producer/add";
+        }
         return "redirect:/admin/producers";
     }
 

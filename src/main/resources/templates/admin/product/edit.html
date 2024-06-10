@@ -39,22 +39,31 @@
 
         <!-- Main content -->
         <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title" th:text="${product.name} + ' - edition form'">Producer Name</h3>
-            </div>
-            <!-- /.card-header -->
             <!-- form start -->
             <form method="post" th:object="${product}" enctype="multipart/form-data">
+
+                <div class="error" th:if="${#fields.hasAnyErrors()}">
+                    <ul>
+                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
+                    </ul>
+                </div>
+            <div class="card-header">
+                <h3 class="card-title">Product Edit form</h3>
+            </div>
+            <!-- /.card-header -->
                 <div class="card-body">
                     <div class="form-group">
                         <label for="productName">Name</label>
+                        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
                         <input th:field="*{name}" type="text" class="form-control" id="productName" placeholder="Enter new product name">
                         <input th:field="*{id}" type="hidden" />
                         <hr>
                         <label for="productPrice">Price</label>
-                        <input th:field="*{price}" type="text" class="form-control" id="productPrice" placeholder="Enter new product price" />
+                        <span class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Name Error</span>
+                        <input th:field="*{price}" type="number" step="0.01" class="form-control" id="productPrice" placeholder="Enter new product price" />
                         <hr>
                         <label for="categoryDescription">Description</label>
+                        <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</span>
                         <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter new description"></textarea>
                         <hr>
                         <label>Producer select</label>

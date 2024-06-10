@@ -6,8 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.NumberFormat;
 
 import java.util.UUID;
 
@@ -19,12 +19,15 @@ public class Product {
     private UUID id;
 
     @NotBlank(message = "{divestore.validation.name.NotBlank.message}")
-    @Size(min = 3, max = 255)
+    @Size(min = 3, max = 255, message = "Size must be in range between 3 to 255 characters")
     private String name;
 
-    private double price;
+    @NotNull(message = "Price must be added")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
+    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private Double price;
 
-    @Size(max = 2550)
+    @Size(max = 2550, message = "Size must not exceed 2550 characters")
     private String description;
 
     private String imagePath;
@@ -79,11 +82,11 @@ public class Product {
         this.name = name;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
