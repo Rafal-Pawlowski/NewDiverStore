@@ -61,7 +61,7 @@
             <!-- TABLE: LATEST ORDERS -->
             <div class="card">
               <div class="card-header border-transparent">
-                <h3 class="card-title" th:text="'Total: '+ ${#lists.size(producers)}">Latest Orders</h3>
+                <h3 class="card-title" th:text="'Total: '+ ${producersPage.totalElements}">Latest Orders</h3>
 
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -84,7 +84,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="producer : ${producers}">
+                    <tr th:each="producer : ${producersPage.content}">
                       <td th:text="${producer.name}"><a href="pages/examples/invoice.html">OR9842</a></td>
                       <td>
                         <a th:href="@{'/admin/producers/'+${producer.id}}" class="btn btn-primary btn-sm">
@@ -100,6 +100,19 @@
                     </tr>
                     </tbody>
                   </table>
+                  <!-- pagination -->
+                  <div class ="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right"
+                        th:if="${producersPage.totalPages >0}">
+                      <li th:each="pageNumber : ${pageNumbers}" class="page-item">
+                        <a class="page-link"
+                           th:href="@{'/admin/producers'(size=${producersPage.size}, page=${pageNumber}-1)}"
+                           th:text="${pageNumber}"></a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- /.pagination -->
+
                 </div>
                 <!-- /.table-responsive -->
               </div>

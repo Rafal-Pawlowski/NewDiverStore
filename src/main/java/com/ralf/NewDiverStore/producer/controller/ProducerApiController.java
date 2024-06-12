@@ -1,6 +1,8 @@
 package com.ralf.NewDiverStore.producer.controller;
 
 import com.ralf.NewDiverStore.producer.service.ProducerService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.ralf.NewDiverStore.producer.domain.model.Producer;
@@ -27,8 +29,8 @@ public class ProducerApiController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<Producer> getProducers(){
-        return producerService.getProducers();
+    public Page<Producer> getProducers(Pageable pageable){
+        return producerService.getProducers(pageable);
     }
     @GetMapping("{producer-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)

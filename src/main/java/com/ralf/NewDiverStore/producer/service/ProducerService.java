@@ -3,6 +3,8 @@ package com.ralf.NewDiverStore.producer.service;
 import com.ralf.NewDiverStore.producer.domain.model.Producer;
 import com.ralf.NewDiverStore.producer.domain.repository.ProducerRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +30,8 @@ public class ProducerService {
     }
 
     @Transactional(readOnly = true)
-    public List<Producer> getProducers() {
-        return producerRepository.findAll();
+    public Page<Producer> getProducers(Pageable pageable) {
+        return producerRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)

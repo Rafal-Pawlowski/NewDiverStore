@@ -7,6 +7,7 @@ import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import com.ralf.NewDiverStore.utilities.ImageHandler;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +20,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Controller
@@ -39,15 +43,17 @@ public class ProductAdminViewController {
     }
 
     @GetMapping
-    public String indexView(Model model) {
-        model.addAttribute("products", productService.findAllProducts());
+    public String indexView(Pageable pageable, Model model) {
+        Page<Product> productsPage = productService.findAllProducts(pageable);
+        model.addAttribute("productsPage", productsPage );
+        paging(model,productsPage);
         return "admin/product/index";
     }
 
     @GetMapping("add")
     public String addView(Model model) {
         model.addAttribute("product", new Product());
-        model.addAttribute("producers", producerService.getProducers());
+        model.addAttribute("producers", producerService.getProducers(Pageable.unpaged()));
         model.addAttribute("categories", categoryService.getCategories(Pageable.unpaged()));
         return "admin/product/add";
     }
@@ -67,7 +73,7 @@ public class ProductAdminViewController {
 
         if(bindingResult.hasErrors()){
             model.addAttribute("product", product);
-            model.addAttribute("producers", producerService.getProducers());
+            model.addAttribute("producers", producerService.getProducers(Pageable.unpaged()));
             model.addAttribute("categories", categoryService.getCategories(Pageable.unpaged()));
             return "admin/product/add";
         }
@@ -104,7 +110,7 @@ public class ProductAdminViewController {
     @GetMapping("{id}/edit")
     public String editView(@PathVariable UUID id, Model model) {
         model.addAttribute("product", productService.getSingleProduct(id));
-        model.addAttribute("producers", producerService.getProducers());
+        model.addAttribute("producers", producerService.getProducers(Pageable.unpaged()));
         model.addAttribute("categories", categoryService.getCategories(Pageable.unpaged()));
         return "admin/product/edit";
     }
@@ -133,7 +139,7 @@ public class ProductAdminViewController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", product);
-            model.addAttribute("producers", producerService.getProducers());
+            model.addAttribute("producers", producerService.getProducers(Pageable.unpaged()));
             model.addAttribute("categories", categoryService.getCategories(Pageable.unpaged()));
             model.addAttribute("message", Message.error("Data writing error"));
             return "admin/product/edit";
@@ -148,6 +154,16 @@ public class ProductAdminViewController {
         }
 
         return "redirect:/admin/products/{id}";
+    }
+
+    private void paging(Model model, Page page) {
+        int totalPages = page.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
     }
 
 

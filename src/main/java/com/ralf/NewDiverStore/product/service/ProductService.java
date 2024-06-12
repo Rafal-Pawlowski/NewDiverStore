@@ -3,6 +3,8 @@ package com.ralf.NewDiverStore.product.service;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.domain.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +40,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> findAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)

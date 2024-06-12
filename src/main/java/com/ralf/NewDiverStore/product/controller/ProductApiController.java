@@ -2,6 +2,8 @@ package com.ralf.NewDiverStore.product.controller;
 
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +31,8 @@ public class ProductApiController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<Product> getProducts(@PathVariable("producer-id") UUID id) {
-        return productService.findAllProducts();
+    public Page<Product> getProducts(Pageable pageable) {
+        return productService.findAllProducts(pageable);
     }
 
     @GetMapping("{product-id}")

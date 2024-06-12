@@ -6,6 +6,8 @@ import com.ralf.NewDiverStore.producer.service.ProducerService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Controller
@@ -31,8 +35,12 @@ public class ProducerAdminViewController {
     }
 
     @GetMapping
-    public String indexView(Model model) {
-        model.addAttribute("producers", producerService.getProducers());
+    public String indexView(Pageable pageable, Model model) {
+
+        Page<Producer> producersPage = producerService.getProducers(pageable);
+        model.addAttribute("producersPage", producersPage);
+        paging(model, producersPage);
+
         return "admin/producer/index";
     }
 
@@ -115,6 +123,16 @@ public class ProducerAdminViewController {
         return "redirect:/admin/producers";
     }
 
+
+    private void paging(Model model, Page page) {
+        int totalPages = page.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+    }
 
 }
 
