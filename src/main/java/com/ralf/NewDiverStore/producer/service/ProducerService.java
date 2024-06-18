@@ -31,7 +31,15 @@ public class ProducerService {
 
     @Transactional(readOnly = true)
     public Page<Producer> getProducers(Pageable pageable) {
-        return producerRepository.findAll(pageable);
+        return getProducers(null, pageable);
+    }
+    @Transactional(readOnly = true)
+    public Page<Producer> getProducers(String search, Pageable pageable) {
+        if(search==null){
+            return producerRepository.findAll(pageable);
+        } else {
+            return producerRepository.findByNameContainingIgnoreCase(search, pageable);
+        }
     }
 
     @Transactional(readOnly = true)

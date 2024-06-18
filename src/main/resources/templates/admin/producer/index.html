@@ -61,16 +61,23 @@
             <!-- TABLE: LATEST ORDERS -->
             <div class="card">
               <div class="card-header border-transparent">
-                <h3 class="card-title" th:text="'Total: '+ ${producersPage.totalElements}">Latest Orders</h3>
+                <h3 class="card-title" th:text="'Total: '+ ${producersPage.totalElements} + ${#strings.isEmpty(search)? '' : ' , SEARCH : ' + search}">Total</h3>
 
+                <!-- search -->
                 <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
+                  <form>
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                      <input  th:value="${search}" type="text" name="s" class="form-control float-right" placeholder="Search">
+
+                      <div class="input-group-append">
+                        <button type="submit" class="btn btn-default">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
+                <!-- /.search -->
               </div>
               <!-- /.card-header -->
               <div class="card-body p-0">

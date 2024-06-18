@@ -35,10 +35,15 @@ public class ProducerAdminViewController {
     }
 
     @GetMapping
-    public String indexView(Pageable pageable, Model model) {
+    public String indexView(
+            @RequestParam(name = "s", required = false)String search,
+            Pageable pageable,
+            Model model
+    ) {
 
-        Page<Producer> producersPage = producerService.getProducers(pageable);
+        Page<Producer> producersPage = producerService.getProducers(search, pageable);
         model.addAttribute("producersPage", producersPage);
+        model.addAttribute("search", search);
         paging(model, producersPage);
 
         return "admin/producer/index";

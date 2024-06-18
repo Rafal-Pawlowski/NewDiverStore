@@ -63,6 +63,7 @@
                             <div class="card-header border-transparent">
                                 <h3 class="card-title" th:text="'Total: '+ ${categoriesPage.totalElements} + ${#strings.isEmpty(search) ?'' : ',   search: '+ search}">Categories number</h3>
 
+                                <!-- search -->
                                     <div class="card-tools">
                                         <form>
                                             <div class="input-group input-group-sm" style="width: 150px;">
@@ -76,6 +77,8 @@
                                             </div>
                                         </form>
                                     </div>
+                                <!-- /.search -->
+
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body p-0">

@@ -43,9 +43,14 @@ public class ProductAdminViewController {
     }
 
     @GetMapping
-    public String indexView(Pageable pageable, Model model) {
-        Page<Product> productsPage = productService.findAllProducts(pageable);
+    public String indexView(
+            @RequestParam(name = "s", required = false)String search,
+            Pageable pageable,
+            Model model
+    ) {
+        Page<Product> productsPage = productService.findAllProducts(search, pageable);
         model.addAttribute("productsPage", productsPage );
+        model.addAttribute("search", search );
         paging(model,productsPage);
         return "admin/product/index";
     }
