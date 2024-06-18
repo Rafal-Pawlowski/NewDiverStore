@@ -31,13 +31,21 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public Page<Category> getCategories(Pageable pageable) {
-        return categoryRepository.findAll(pageable);
+        return getCategories(null, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Category> getCategories(String search, Pageable pageable) {
+        if (search == null) {
+            return categoryRepository.findAll(pageable);
+        } else
+            return categoryRepository.findByNameContainingIgnoreCase(search, pageable);
     }
 
     @Transactional(readOnly = true)
     public Category getCategory(UUID id) {
         Optional<Category> optionalCategory = categoryRepository.findById(id);
-        if(optionalCategory.isPresent()){
+        if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
             return category;
         } else {

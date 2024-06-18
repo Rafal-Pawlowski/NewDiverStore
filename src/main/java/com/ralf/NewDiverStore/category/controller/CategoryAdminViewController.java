@@ -33,10 +33,15 @@ public class CategoryAdminViewController {
     }
 
     @GetMapping
-    public String indexView(Pageable pageable, Model model) {
+    public String indexView(
+            @RequestParam(name = "s", required = false) String search,
+            Pageable pageable,
+            Model model
+    ) {
 
-        Page<Category> categoriesPage = categoryService.getCategories(pageable);
+        Page<Category> categoriesPage = categoryService.getCategories(search, pageable);
         model.addAttribute("categoriesPage", categoriesPage);
+        model.addAttribute("search", search);
         paging(model, categoriesPage);
 
         return "admin/category/index";
