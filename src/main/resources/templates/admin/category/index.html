@@ -86,13 +86,16 @@
                                     <table class="table m-0">
                                         <thead>
                                         <tr>
-                                            <th>Category</th>
+                                            <th>#</th>
+                                            <th><a th:class="'sort-'+${reverseSort}"
+                                                    th:href="@{'/admin/categories'(s=${search}, field='name', direction=${reverseSort})}">Category</a></th>
                                             <th>#</th>
 
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="category : ${categoriesPage.content}">
+                                        <tr th:each="category, it : ${categoriesPage.content}">
+                                            <td th:text="${it.index}+1"></td>
                                             <td th:text="${category.name}"><a href="pages/examples/invoice.html">OR9842</a></td>
                                             <td>
                                                 <a th:href="@{'/admin/categories/'+${category.id}}" class="btn btn-primary btn-sm">

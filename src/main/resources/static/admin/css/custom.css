@@ -13,3 +13,13 @@
 .error{
     color: red;
 }
+
+.sort-asc:after{
+    content: " ↑";
+    color: greenyellow;
+}
+
+.sort-desc:after{
+    content: " ↓";
+    color: #2fc4ff;
+}
