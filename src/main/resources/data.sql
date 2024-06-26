@@ -16,7 +16,13 @@ insert into categories(id, name, description) values
                                      (gen_random_uuid(), 'Maski', 'This is a short description of a category. Little text to show the spot'),
                                      (gen_random_uuid(), 'Komputery nurkowe', 'This is a short description of a category. Little text to show the spot'),
                                      (gen_random_uuid(), 'Butle', 'This is a short description of a category. Little text to show the spot'),
-                                     (gen_random_uuid(), 'Akcesoria', 'This is a short description of a category. Little text to show the spot');
+                                     (gen_random_uuid(), 'Akcesoria', 'This is a short description of a category. Little text to show the spot'),
+                                     (gen_random_uuid(), 'Portki', 'This is a short description of a category. Little text to show the spot'),
+                                     (gen_random_uuid(), 'Kąpielówki', 'This is a short description of a category. Little text to show the spot'),
+                                     (gen_random_uuid(), 'Okularki', 'This is a short description of a category. Little text to show the spot'),
+                                     (gen_random_uuid(), 'Lekarstwa', 'This is a short description of a category. Little text to show the spot'),
+                                     (gen_random_uuid(), 'Ksiązki nurkowe', 'This is a short description of a category. Little text to show the spot'),
+                                     (gen_random_uuid(), 'Noże nurkowe', 'This is a short description of a category. Little text to show the spot');
 
 insert into producers(id, name) values
                                     (gen_random_uuid(), 'APEKS'),

@@ -8,7 +8,9 @@ import com.ralf.NewDiverStore.product.service.ProductService;
 import com.ralf.NewDiverStore.utilities.ImageHandler;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,14 +46,29 @@ public class ProductAdminViewController {
 
     @GetMapping
     public String indexView(
-            @RequestParam(name = "s", required = false)String search,
-            Pageable pageable,
+            @RequestParam(name = "s", required = false) String search,
+            @RequestParam(name = "field", required = false, defaultValue = "id") String field,
+            @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size,
             Model model
     ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), field);
+
+        String reverseSort = null;
+        if ("asc".equals(direction)) {
+            reverseSort = "desc";
+        } else {
+            reverseSort = "asc";
+        }
+
         Page<Product> productsPage = productService.findAllProducts(search, pageable);
-        model.addAttribute("productsPage", productsPage );
-        model.addAttribute("search", search );
-        paging(model,productsPage);
+        model.addAttribute("productsPage", productsPage);
+        model.addAttribute("search", search);
+        model.addAttribute("field", field);
+        model.addAttribute("direction", direction);
+        model.addAttribute("reverseSort", reverseSort);
+        paging(model, productsPage);
         return "admin/product/index";
     }
 
@@ -70,23 +87,23 @@ public class ProductAdminViewController {
             @RequestParam("file") MultipartFile file,
             RedirectAttributes ra,
             Model model
-            ) {
+    ) {
         if (!file.isEmpty()) {
             String imagePath = ImageHandler.saveFile(file);
             product.setImagePath(imagePath);
         }
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             model.addAttribute("product", product);
             model.addAttribute("producers", producerService.getProducers(Pageable.unpaged()));
             model.addAttribute("categories", categoryService.getCategories(Pageable.unpaged()));
             return "admin/product/add";
         }
 
-        try{
+        try {
             productService.createProduct(product);
             ra.addFlashAttribute("message", Message.info("Product added"));
-        }catch (Exception e) {
+        } catch (Exception e) {
             model.addAttribute("product", product);
             model.addAttribute("message", Message.error("Unknown writing error"));
         }

@@ -85,13 +85,16 @@
                   <table class="table m-0">
                     <thead>
                     <tr>
-                      <th>Producer</th>
+                      <th>#</th>
+                      <th><a th:class="'sort-'+${reverseSort}"
+                             th:href="@{'/admin/producers'(s=${search}, field='name', direction=${reverseSort})}">Producer</a></th>
                       <th>#</th>
 
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="producer : ${producersPage.content}">
+                    <tr th:each="producer, it : ${producersPage.content}">
+                      <td th:text="${it.index}+1"></td>
                       <td th:text="${producer.name}"><a href="pages/examples/invoice.html">OR9842</a></td>
                       <td>
                         <a th:href="@{'/admin/producers/'+${producer.id}}" class="btn btn-primary btn-sm">
@@ -113,7 +116,7 @@
                         th:if="${producersPage.totalPages >0}">
                       <li th:each="pageNumber : ${pageNumbers}" class="page-item">
                         <a class="page-link"
-                           th:href="@{'/admin/producers'(size=${producersPage.size}, page=${pageNumber}-1)}"
+                           th:href="@{'/admin/producers'(s=${search}, field=${field}, direction=${direction} , size=${producersPage.size}, page=${pageNumber}-1)}"
                            th:text="${pageNumber}"></a>
                       </li>
                     </ul>

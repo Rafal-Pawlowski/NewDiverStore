@@ -86,17 +86,23 @@
                                     <table class="table m-0">
                                         <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Id</th>
-                                            <th>Products</th>
-                                            <th>Price</th>
-                                            <th>Category</th>
-                                            <th>Producer</th>
+                                            <th><a th:classappend="${field == 'name' ? 'sort-' + reverseSort : ''}"
+                                                   th:href="@{'/admin/products'(s=${search}, field='name', direction=${reverseSort})}">Products</a></th>
+                                            <th><a th:classappend="${field == 'price' ? 'sort-' + reverseSort : ''}"
+                                                   th:href="@{'/admin/products'(s=${search}, field='price', direction=${reverseSort})}">Price</a></th>
+                                            <th><a th:classappend="${field == 'category.name' ? 'sort-' + reverseSort : ''}"
+                                                   th:href="@{'/admin/products'(s=${search}, field='category.name', direction=${reverseSort})}">Category</a></th>
+                                            <th><a th:classappend="${field == 'producer.name' ? 'sort-' + reverseSort : ''}"
+                                                   th:href="@{'/admin/products'(s=${search}, field='producer.name', direction=${reverseSort})}">Producer</a></th>
                                             <th>Action</th>
 
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="product : ${productsPage.content}">
+                                        <tr th:each="product, it : ${productsPage.content}">
+                                            <td th:text="${it.index}+1"></td>
                                             <td th:text="${product.id}"></td>
                                             <td th:text="${product.name}"></td>
                                             <td th:text="${product.price}"></td>
@@ -123,7 +129,7 @@
                                             th:if="${productsPage.totalPages >0}">
                                             <li th:each="pageNumber : ${pageNumbers}" class="page-item">
                                                 <a class="page-link"
-                                                   th:href="@{'/admin/products'(size=${productsPage.size}, page=${pageNumber}-1)}"
+                                                   th:href="@{'/admin/products'(s=${search}, field=${field}, direction=${direction}, size=${productsPage.size}, page=${pageNumber}-1)}"
                                                    th:text="${pageNumber}"></a>
                                             </li>
                                         </ul>

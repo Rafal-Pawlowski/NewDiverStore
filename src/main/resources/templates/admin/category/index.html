@@ -117,7 +117,7 @@
                                             th:if="${categoriesPage.totalPages >0}">
                                             <li th:each="pageNumber : ${pageNumbers}" class="page-item">
                                                 <a class="page-link"
-                                                   th:href="@{'/admin/categories'(size=${categoriesPage.size}, page=${pageNumber}-1)}"
+                                                   th:href="@{'/admin/categories'(s=${search}, field=${field}, direction=${direction}, size=${categoriesPage.size}, page=${pageNumber}-1)}"
                                                    th:text="${pageNumber}"></a>
                                             </li>
                                         </ul>

@@ -7,7 +7,9 @@ import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,13 +39,27 @@ public class ProducerAdminViewController {
     @GetMapping
     public String indexView(
             @RequestParam(name = "s", required = false)String search,
-            Pageable pageable,
+            @RequestParam(name = "field", required = false, defaultValue = "id")String field,
+            @RequestParam(name = "direction", required = false, defaultValue = "asc")String direction,
+            @RequestParam(name = "page", required = false, defaultValue = "0")int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10")int size,
             Model model
     ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), field);
+
+        String reverseSort = null;
+        if("asc".equals(direction)){
+            reverseSort = "desc";
+        }else {
+            reverseSort = "asc";
+        }
 
         Page<Producer> producersPage = producerService.getProducers(search, pageable);
         model.addAttribute("producersPage", producersPage);
         model.addAttribute("search", search);
+        model.addAttribute("field", field);
+        model.addAttribute("direction", direction);
+        model.addAttribute("reverseSort", reverseSort);
         paging(model, producersPage);
 
         return "admin/producer/index";
