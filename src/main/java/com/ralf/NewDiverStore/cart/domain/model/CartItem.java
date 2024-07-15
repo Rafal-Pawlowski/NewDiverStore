@@ -1,37 +1,38 @@
-package com.ralf.NewDiverStore.orderItem.domain.model;
+package com.ralf.NewDiverStore.cart.domain.model;
 
-import com.ralf.NewDiverStore.order.domain.model.Order;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "orderItems")
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class OrderItem {
+@AllArgsConstructor
+@Getter
+@Setter
+public class CartItem {
 
     @Id
     private UUID id;
 
     @ManyToOne
-    private Order order;
+    private Cart cart;
 
     @ManyToOne
     private Product product;
 
     private int quantity;
 
-    private double price;
-
-
+    public CartItem(Cart cart, Product product, int quantity){
+        this.cart= cart;
+        this.product = product;
+        this.quantity = quantity;
+    }
 
 }
