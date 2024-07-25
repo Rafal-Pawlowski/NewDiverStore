@@ -38,7 +38,7 @@
 
         <!-- Main content -->
         <div class="card card-primary">
-            <form method="post" th:object="${category}">
+            <form method="post" th:object="${category}" enctype="multipart/form-data">
 
             <div class="error" th:if="${#fields.hasAnyErrors()}">
                 <ul>
@@ -46,6 +46,8 @@
                 </ul>
             </div>
             <!-- /.card-header -->
+                <div class="card-header">
+                    <h3 class="card-title">Category Edit form</h3>
             <!-- form start -->
                 <div class="card-body">
                     <div class="form-group">
@@ -60,6 +62,9 @@
                         <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</span>
                         <textarea th:field="*{description}" type="text" class="form-control" id="categoryDescription" rows="3" placeholder="Enter new description"></textarea>
                     </div>
+                    <hr>
+                    <label for="file">Image</label>
+                    <input type="file" id="file" name="file"/>
                 </div>
                 <!-- /.card-body -->
 

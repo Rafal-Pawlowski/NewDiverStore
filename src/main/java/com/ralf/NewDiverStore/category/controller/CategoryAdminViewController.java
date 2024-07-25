@@ -5,6 +5,7 @@ import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.common.dto.Message;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
+import com.ralf.NewDiverStore.utilities.ImageHandler;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
@@ -46,10 +48,10 @@ public class CategoryAdminViewController {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), field);
 
         String reverseSort = null;
-        if("asc".equals(direction)){
-            reverseSort="desc";
+        if ("asc".equals(direction)) {
+            reverseSort = "desc";
         } else {
-            reverseSort="asc";
+            reverseSort = "asc";
         }
 
         Page<Category> categoriesPage = categoryService.getCategories(search, pageable);
@@ -85,9 +87,25 @@ public class CategoryAdminViewController {
             @PathVariable UUID id,
             @Valid @ModelAttribute("category") Category category,
             BindingResult bindingResult,
+            @RequestParam("file") MultipartFile file,
             RedirectAttributes ra,
             Model model
     ) {
+        Category existingCategory = categoryService.getCategory(id);
+
+        if(!file.isEmpty()){
+            String oldImagePath = existingCategory.getImagePath();
+            String newImagePath = ImageHandler.saveFile(file);
+            if(newImagePath !=null){
+                category.setImagePath(newImagePath);
+                ImageHandler.deleteFile(oldImagePath);
+            }
+        } else {
+            category.setImagePath(existingCategory.getImagePath());
+        }
+
+
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("category", category);
             model.addAttribute("message", Message.error("Data writing error"));
@@ -129,8 +147,16 @@ public class CategoryAdminViewController {
     public String add(
             @Valid @ModelAttribute("category") Category category,
             BindingResult bindingResult,
+            @RequestParam("file") MultipartFile file,
             RedirectAttributes ra,
             Model model) {
+
+        if (!file.isEmpty()) {
+            String imagePath = ImageHandler.saveFile(file);
+            category.setImagePath(imagePath);
+        }
+
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("category", category);
             model.addAttribute("message", Message.error("Data writing error"));

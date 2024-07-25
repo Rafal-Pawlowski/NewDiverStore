@@ -38,10 +38,19 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
+                <!-- Dodanie sekcji dla większego zdjęcia -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <img th:src="@{'/uploads/' + ${category.imagePath}}" src="/uploads/sample.jpg" class="img-fluid" alt="Category Image" style="max-width: 100%; height: auto;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-3">
 
-                        <!-- Profile Image -->
                         <div class="card card-primary card-outline">
                             <div class="card-body box-profile">
 

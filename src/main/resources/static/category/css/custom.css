@@ -8,3 +8,29 @@
 .card-link:hover {
     color: blue; /* Zmiana koloru tekstu na niebieski */
 }
+
+.category-image {
+    width: 100%;
+    height: 200px; /* Zwiększona wysokość obrazu */
+    object-fit: cover;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.category-body {
+    height: 50px; /* Zmniejszona wysokość pola z nazwą kategorii */
+    overflow: hidden; /* Ukrycie nadmiarowego tekstu, jeśli występuje */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-name {
+    font-size: 2rem; /* Możesz dostosować rozmiar czcionki, jeśli to konieczne */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 0; /* Ustawienie marginesu na 0, aby tekst był wyśrodkowany */
+}
+

@@ -25,7 +25,7 @@ public class CategoryService {
     public Category createCategory(Category categoryRequest) {
         Category category = new Category(categoryRequest.getName(),
                 categoryRequest.getDescription());
-
+                category.setImagePath(categoryRequest.getImagePath());
         return categoryRepository.save(category);
     }
 
@@ -62,7 +62,8 @@ public class CategoryService {
             Category category = optionalCategory.get();
             category.setName(categoryRequest.getName());
             category.setDescription(categoryRequest.getDescription());
-            return category;
+            category.setImagePath(categoryRequest.getImagePath());
+            return categoryRepository.save(category);
         } else {
             throw new EntityNotFoundException("Category with id: " + id + " not found");
         }

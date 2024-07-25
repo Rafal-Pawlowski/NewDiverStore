@@ -30,6 +30,8 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
 
+    private String imagePath;
+
 
     public Category() {
         this.id = UUID.randomUUID();
@@ -83,6 +85,14 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override
