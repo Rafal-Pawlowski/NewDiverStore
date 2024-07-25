@@ -1,0 +1,10 @@
+/* Styl dla linku */
+.card-link {
+    color: inherit; /* Dziedziczenie koloru tekstu */
+    text-decoration: none; /* Usunięcie podkreślenia */
+}
+
+/* Podświetlenie linku na niebiesko po najechaniu */
+.card-link:hover {
+    color: blue; /* Zmiana koloru tekstu na niebieski */
+}

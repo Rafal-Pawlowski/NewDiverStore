@@ -27,6 +27,8 @@
     <link rel="icon" href="/assets/img/favicons/favicon.ico">
     <meta name="theme-color" content="#712cf9">
 
+    <link rel="stylesheet" href="css/custom.css">
+
 
     <style>
         .carousel-item {
@@ -38,10 +40,10 @@
             background-image: url('/img/rdbanner.png'); /* Ścieżka do Twojego obrazu */
         }
         .carousel-item:nth-child(2) {
-            background-image: url('https://via.placeholder.com/800x400.png'); /* Przykładowy obraz dla drugiego slajdu */
+            background-image: url('/img/sdtg.png'); /* Przykładowy obraz dla drugiego slajdu */
         }
         .carousel-item:nth-child(3) {
-            background-image: url('https://via.placeholder.com/800x400.png'); /* Przykładowy obraz dla trzeciego slajdu */
+            background-image: url('/img/sid.png'); /* Przykładowy obraz dla trzeciego slajdu */
         }
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -119,6 +121,8 @@
         .bd-mode-toggle .dropdown-menu .active .bi {
             display: block !important;
         }
+
+
     </style>
 
 
@@ -181,20 +185,31 @@
 <header th:fragment="header" data-bs-theme="dark">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Carousel</a>
+            <a class="navbar-brand" href="/index">Home</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Language
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="#">English</a></li>
+                            <li><a class="dropdown-item" href="#">Spanish</a></li>
+                            <li><a class="dropdown-item" href="#">French</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="currencyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Currency
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="currencyDropdown">
+                            <li><a class="dropdown-item" href="#">USD</a></li>
+                            <li><a class="dropdown-item" href="#">EUR</a></li>
+                            <li><a class="dropdown-item" href="#">PLN</a></li>
+                        </ul>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
@@ -217,7 +232,7 @@
 
 <main>
 
-    <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+    <div th:fragment="carousel" id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -225,22 +240,14 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="https://via.placeholder.com/800x400.png" class="d-block w-100" alt="First slide">
-                <div class="container">
-                    <div class="carousel-caption text-start">
-                        <h1>Example headline.</h1>
-                        <p class="opacity-75">Some representative placeholder content for the first slide of the carousel.</p>
-                        <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
-                    </div>
-                </div>
+                <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="transparent"/></svg>
             </div>
             <div class="carousel-item">
                 <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
                 <div class="container">
                     <div class="carousel-caption">
-                        <h1>Another example headline.</h1>
-                        <p>Some representative placeholder content for the second slide of the carousel.</p>
-                        <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
+                        <h1>The best diving gear at the best prices! </h1>
+                        <p><a class="btn btn-lg btn-primary" href="/categories">Start shopping here</a></p>
                     </div>
                 </div>
             </div>
@@ -248,9 +255,9 @@
                 <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
                 <div class="container">
                     <div class="carousel-caption text-end">
-                        <h1>One more for good measure.</h1>
-                        <p>Some representative placeholder content for the third slide of this carousel.</p>
-                        <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
+                        <h1>The best diving destinations</h1>
+                        <p>Check out our recommendations of the best diving spots</p>
+                        <p><a class="btn btn-lg btn-primary" href="#">Read an article</a></p>
                     </div>
                 </div>
             </div>
