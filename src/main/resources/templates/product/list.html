@@ -1,7 +1,7 @@
 
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
-<head th:replace="category/template :: head(title='Categories')"/>
+<head th:replace="category/template :: head(title='Products')"/>
 
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -33,16 +33,16 @@
         <div class="container">
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <!-- Iteracja przez listę kategorii -->
-                <div th:each="category : ${categoriesPage.content}" class="col">
+                <!-- Iteracja przez listę produktu -->
+                <div th:each="product : ${productsPage.content}" class="col">
                     <div class="card shadow-sm">
-                        <!-- Wyświetlanie obrazu kategorii -->
+                        <!-- Wyświetlanie obrazu produktu -->
                         <div class="text-center mb-2">
-                            <img th:src="@{'/uploads/' + ${category.imagePath}}" class="category-image img-thumbnail" alt="Category Image">
+                            <img th:src="@{'/uploads/' + ${product.imagePath}}" class="category-image img-thumbnail" alt="Category Image">
                         </div>
-                        <!-- Wyświetlanie nazwy kategorii -->
+                        <!-- Wyświetlanie nazwy produktu -->
                         <div class="card-body category-body text-center">
-                            <h2><a th:href="@{'/categories/' + ${category.id}+ '/products'}" class="card-link category-name" th:text="${category.name}">Category name</a></h2>
+                            <h2><a th:href="@{'/products/' + ${product.id}}" class="card-link category-name" th:text="${product.name}">Product name</a></h2>
 
                         </div>
                     </div>
@@ -52,10 +52,10 @@
             <!-- pagination -->
             <div class="card-footer d-flex justify-content-end">
                 <ul class="pagination pagination-sm m-0 float-right"
-                    th:if="${categoriesPage.totalPages >0}">
+                    th:if="${productsPage.totalPages >0}">
                     <li th:each="pageNumber : ${pageNumbers}" class="page-item">
                         <a class="page-link"
-                           th:href="@{'/categories'(field=${field}, size=${categoriesPage.size}, page=${pageNumber}-1)}"
+                           th:href="@{'/categories/' + ${category.id} + '/products' (field=${field}, size=${productsPage.size}, page=${pageNumber}-1)}"
                            th:text="${pageNumber}"></a>
                     </li>
                 </ul>

@@ -89,13 +89,13 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findProductByCategoryId(UUID categoryId) {
-        return productRepository.findProductByCategoryId(categoryId);
+    public Page<Product> findProductByCategoryId(UUID categoryId, Pageable pageable) {
+        return productRepository.findProductByCategoryId(categoryId, pageable);
     }
 
     @Transactional(readOnly = true)
-    public long countProducersByCategoryId(UUID id) {
-        List<Product> products = findProductByCategoryId(id);
+    public long countProducersByCategoryId(UUID id, Pageable pageable) {
+        Page<Product> products = findProductByCategoryId(id, pageable);
         long producerNumber = products.stream()
                 .map(Product::getProducer)
                 .filter(Objects::nonNull)

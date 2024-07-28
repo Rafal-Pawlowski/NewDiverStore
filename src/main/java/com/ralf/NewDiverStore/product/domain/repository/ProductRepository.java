@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
-    List<Product> findProductByCategoryId(UUID categoryId);
+    Page<Product> findProductByCategoryId(UUID categoryId, Pageable pageable);
 
     List<Product> findProductByProducerId(UUID producerId);
 

@@ -1,6 +1,5 @@
-package com.ralf.NewDiverStore.category.controller;
+package com.ralf.NewDiverStore.product.controller;
 
-import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
@@ -20,51 +19,44 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
-public class CategoryViewController {
+public class ProductViewController {
 
-    public final CategoryService categoryService;
+
     public final ProductService productService;
 
-    public CategoryViewController(CategoryService categoryService, ProductService productService) {
-        this.categoryService = categoryService;
+    public final CategoryService categoryService;
+    public ProductViewController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
 
-    @GetMapping("index")
-    public String indexView(){
-        return "category/index";
-    }
-
-    @GetMapping("categories")
-    public String categoriesView(
-            @RequestParam(name = "field", required = false, defaultValue = "name") String field,
-            @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction,
-            @RequestParam(name = "page", required = false, defaultValue = "0")int page,
-            @RequestParam(name = "size", required = false, defaultValue = "12")int size,
-            Model model
-    ){
+    @GetMapping("categories/{category-id}/products")
+    public String productsByCategoryView(@PathVariable("category-id") UUID categoryId,
+                                         @RequestParam(name = "field", required = false, defaultValue = "name") String field,
+                                         @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction,
+                                         @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                         @RequestParam(name = "size", required = false, defaultValue = "12") int size,
+                                         Model model) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), field);
 
         String reverseSort = null;
-        if("asc".equals(direction)){
-            reverseSort="desc";
-        }else {
+        if ("asc".equals(direction)) {
+            reverseSort = "desc";
+        } else {
             reverseSort = "asc";
         }
 
-        Page<Category> categoriesPage = categoryService.getCategories(pageable);
-        model.addAttribute("categoriesPage", categoriesPage);
+        Page<Product> productsPage = productService.findProductByCategoryId(categoryId, pageable);
+        model.addAttribute("productsPage", productsPage);
         model.addAttribute("reverseSort", reverseSort);
         model.addAttribute("field", field);
         model.addAttribute("direction", direction);
+        model.addAttribute("category", categoryService.getCategory(categoryId));
 
-
-        paging(model, categoriesPage);
-
-        return "category/list";
+        paging(model, productsPage);
+        return "product/list";
     }
-
 
     private void paging(Model model, Page page) {
         int totalPages = page.getTotalPages();
@@ -75,5 +67,4 @@ public class CategoryViewController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
     }
-
 }

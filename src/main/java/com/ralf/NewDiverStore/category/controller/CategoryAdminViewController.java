@@ -68,10 +68,10 @@ public class CategoryAdminViewController {
     }
 
     @GetMapping("{id}")
-    public String singleView(@PathVariable UUID id, Model model) {
+    public String singleView(@PathVariable UUID id, Model model, Pageable pageable) {
         model.addAttribute("category", categoryService.getCategory(id));
-        model.addAttribute("products", productService.findProductByCategoryId(id));
-        model.addAttribute("producerCounter", productService.countProducersByCategoryId(id));
+        model.addAttribute("products", productService.findProductByCategoryId(id, pageable));
+        model.addAttribute("producerCounter", productService.countProducersByCategoryId(id, pageable));
         return "admin/category/single";
     }
 
@@ -127,7 +127,7 @@ public class CategoryAdminViewController {
 
     @GetMapping("{id}/delete")
     public String deleteView(@PathVariable UUID id, RedirectAttributes ra) {
-        List<Product> productList = productService.findProductByCategoryId(id);
+        Page<Product> productList = productService.findProductByCategoryId(id, Pageable.unpaged());
         if (productList.isEmpty()) {
             categoryService.deleteCategory(id);
             ra.addFlashAttribute("message", Message.info("Category removed"));
