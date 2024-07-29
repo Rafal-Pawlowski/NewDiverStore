@@ -19,11 +19,12 @@
 }
 
 .category-body {
-    height: 50px; /* Zmniejszona wysokość pola z nazwą kategorii */
+    /*height: 50px; !* Zmniejszona wysokość pola z nazwą kategorii *!*/
     overflow: hidden; /* Ukrycie nadmiarowego tekstu, jeśli występuje */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    text-align: center;
 }
 
 .category-name {
@@ -32,5 +33,23 @@
     text-overflow: ellipsis;
     overflow: hidden;
     margin: 0; /* Ustawienie marginesu na 0, aby tekst był wyśrodkowany */
+    display: block;
 }
+
+.product-price {
+    font-size:2rem; /* lub 1em, aby był tej samej wielkości co nazwa produktu */
+    color: red;
+    margin-top: 10px; /* dodanie odstępu, jeśli to konieczne */
+    display: block; /* wymuszenie wyświetlania w nowej linii */
+}
+
+.custom-btn-green {
+    background-color: green;
+    border-color: green;
+}
+.custom-btn-green:hover {
+    background-color: darkgreen;
+    border-color: darkgreen;
+}
+
 

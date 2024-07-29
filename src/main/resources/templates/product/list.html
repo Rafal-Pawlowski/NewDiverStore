@@ -42,9 +42,17 @@
                         </div>
                         <!-- Wyświetlanie nazwy produktu -->
                         <div class="card-body category-body text-center">
-                            <h2><a th:href="@{'/products/' + ${product.id}}" class="card-link category-name" th:text="${product.name}">Product name</a></h2>
-
+                            <h2>
+                                <a th:href="@{'/products/' + ${product.id}}" class="card-link category-name" th:text="${product.name}">Product name</a>
+                            </h2>
+                            <div>
+                                <p class="product-price" th:text="'$' + ${product.price}"></p>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary custom-btn-green">Add to cart</button>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
