@@ -63,4 +63,12 @@
     margin-right: auto;
 }
 
+.input-group .btn {
+    width: 2.5rem;
+}
+
+.input-group input {
+    text-align: center;
+}
+
 

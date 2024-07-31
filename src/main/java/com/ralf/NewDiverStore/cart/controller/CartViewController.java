@@ -37,8 +37,19 @@ public class CartViewController {
     @GetMapping("/view")
     public String viewCart(@ModelAttribute("cartId") UUID cartId, Model model) {
         Cart cart = cartService.getCart(cartId);
-        model.addAttribute("cart", cart);
-        return "cart/view";
+        double shippingCost;
+
+        if (cart.getTotal() >= 200.00) {
+            shippingCost = 0;
+        }else {
+            shippingCost=25.00;
+        }
+
+        model.addAttribute("cartItems", cart.getItems());
+        model.addAttribute("cartTotal", cart.getTotal());
+        model.addAttribute("shippingCost", shippingCost);
+        model.addAttribute("total", cart.getTotal() + shippingCost);
+        return "cart/index";
     }
 
     @PostMapping("/update")
