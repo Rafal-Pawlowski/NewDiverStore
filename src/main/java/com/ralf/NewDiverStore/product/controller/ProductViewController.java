@@ -58,6 +58,13 @@ public class ProductViewController {
         return "product/list";
     }
 
+    @GetMapping("products/{product-id}")
+    public String singleProductView(@PathVariable("product-id")UUID productId, Model model){
+        model.addAttribute("product", productService.getSingleProduct(productId));
+
+        return "product/single";
+    }
+
     private void paging(Model model, Page page) {
         int totalPages = page.getTotalPages();
         if (totalPages > 0) {

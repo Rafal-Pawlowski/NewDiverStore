@@ -1,0 +1,92 @@
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
+<head th:replace="category/template :: head(title='Products')"/>
+
+<body>
+<th:block th:replace="category/template::icons"/>
+
+<th:block th:replace="category/template::header"/>
+
+<main>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!-- Default box -->
+            <div class="card card-solid">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <h3 class="d-inline-block d-sm-none">LOWA Men’s Renegade GTX Mid Hiking Boots Review</h3>
+                            <div class="col-12">
+                                <img th:src="@{'/uploads/' + ${product.imagePath}}" class="product-image" alt="Product Image">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <h3 class="my-3" th:text="${product.name}">Product Name</h3>
+                            <p th:text="'Producer: '+ ${product.getProducer().name}"></p>
+                            <p th:text="'Category: '+ ${product.getCategory().name}"></p>
+
+                            <hr>
+
+
+
+                            <div class="bg-gray py-2 px-3 mt-4">
+                                <h2 class="mb-0" th:text="${product.price} + ' zł'">
+                                    99999 zł
+                                </h2>
+                            </div>
+
+                            <div class="mt-4">
+                                <a th:href="@{'/admin/products/' + ${product.id}+ '/edit'}" class="btn btn-primary custom-btn-green d-inline-flex align-items-center">
+                                    <i class="bi bi-cart4 me-2"></i>
+                                    Add to cart
+                                </a>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <nav class="w-100">
+                            <div class="nav nav-tabs" id="product-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="product-desc-tab" data-toggle="tab" href="#product-desc" role="tab" aria-controls="product-desc" aria-selected="true">Description</a>
+                                <!--                                    <a class="nav-item nav-link" id="product-comments-tab" data-toggle="tab" href="#product-comments" role="tab" aria-controls="product-comments" aria-selected="false">Comments</a>-->
+                                <!--                                    <a class="nav-item nav-link" id="product-rating-tab" data-toggle="tab" href="#product-rating" role="tab" aria-controls="product-rating" aria-selected="false">Rating</a>-->
+                            </div>
+                        </nav>
+                        <div class="tab-content p-3" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="product-desc" role="tabpanel" aria-labelledby="product-desc-tab" th:text="${product.description}"> </div>
+                            <!--                                <div class="tab-pane fade" id="product-comments" role="tabpanel" aria-labelledby="product-comments-tab"> dowolny tekst </div>-->
+                            <!--                                <div class="tab-pane fade" id="product-rating" role="tabpanel" aria-labelledby="product-rating-tab"> dowolny tekst </div>-->
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+        </section>
+
+    </div>
+
+</main>
+
+<th:block th:replace="category/template :: footer" class="text-body-secondary py-5">
+    <div class="container">
+        <p class="float-end mb-1">
+            <a href="#">Back to top</a>
+        </p>
+        <p class="mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
+        <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="../getting-started/introduction/">getting started guide</a>.</p>
+    </div>
+</th:block>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

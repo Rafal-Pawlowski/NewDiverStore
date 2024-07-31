@@ -52,4 +52,15 @@
     border-color: darkgreen;
 }
 
+.product-image {
+    width: 100%;
+    height: auto;
+    max-width: 600px; /* Ustal maksymalną szerokość, którą chcesz dla obrazu */
+    max-height: 500px; /* Ustal maksymalną wysokość, którą chcesz dla obrazu */
+    object-fit: cover; /* Zachowuje proporcje obrazu */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 

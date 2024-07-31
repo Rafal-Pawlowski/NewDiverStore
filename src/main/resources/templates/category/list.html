@@ -38,7 +38,9 @@
                     <div class="card shadow-sm">
                         <!-- Wyświetlanie obrazu kategorii -->
                         <div class="text-center mb-2">
-                            <img th:src="@{'/uploads/' + ${category.imagePath}}" class="category-image img-thumbnail" alt="Category Image">
+                            <a th:href="@{'/categories/' + ${category.id}+ '/products'}">
+                                <img th:src="@{'/uploads/' + ${category.imagePath}}" class="category-image img-thumbnail" alt="Category Image">
+                            </a>
                         </div>
                         <!-- Wyświetlanie nazwy kategorii -->
                         <div class="card-body category-body text-center">
