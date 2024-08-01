@@ -25,6 +25,10 @@ public class CartService {
     public Cart getCart(UUID cartId) {
         return cartRepository.findById(cartId).orElseThrow(() -> new EntityNotFoundException("Cart not found"));
     }
+    @Transactional
+    public Cart getorCreateCart(UUID cartId){
+        return cartRepository.findById(cartId).orElseGet(()->cartRepository.save(new Cart()));
+    }
 
     @Transactional
     public Cart addProductToCart(UUID cartId, UUID productId, int quantity) {

@@ -30,6 +30,7 @@ public class CartItem {
     private int quantity;
 
     public CartItem(Cart cart, Product product, int quantity){
+        this.id=UUID.randomUUID();
         this.cart= cart;
         this.product = product;
         this.quantity = quantity;

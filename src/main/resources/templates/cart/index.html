@@ -69,7 +69,7 @@
             </div>
             <div class="quantity-input">
                 <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">-</button>
-                <input type="number" name="qty" value="1" class="form-control text-center" min="1">
+                <input type="number" name="qty" th:value="${item.quantity}" class="form-control text-center" min="1">
                 <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">+</button>
             </div>
             <div>
@@ -81,7 +81,7 @@
             <h4>Podsumowanie</h4>
             <div class="summary-item">
                 <span>Produkty:</span>
-                <span th:text="${cartTotal} + ' zł'">999 zł</span>
+                <span th:text="${productsTotal} + ' zł'">999 zł</span>
             </div>
             <div class="summary-item">
                 <span>Wysyłka:</span>
