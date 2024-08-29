@@ -9,31 +9,46 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Setter
 public class CartItem {
 
-    @Id
-    private UUID id;
-
-    @ManyToOne
-    private Cart cart;
-
-    @ManyToOne
     private Product product;
 
-    private int quantity;
+    private int counter;
 
-    public CartItem(Cart cart, Product product, int quantity){
-        this.id=UUID.randomUUID();
-        this.cart= cart;
+    private BigDecimal price;
+
+    public CartItem(Product product) {
         this.product = product;
-        this.quantity = quantity;
+        this.counter = 1;
+        this.price = product.getPrice();
+    }
+
+    public void increaseCounter(){
+        counter++;
+        recalculate();
+    }
+
+    public void decreaseCounter(){
+        if(counter > 0){
+            counter--;
+            recalculate();
+        }
+    }
+
+    public boolean hasZeroItems(){
+        return counter ==0;
+    }
+
+    private void recalculate(){
+        price = product.getPrice().multiply(new BigDecimal(counter));
+    }
+
+    public boolean idEquals(Product product){
+        return this.product.getId().equals(product.getId());
     }
 
 }

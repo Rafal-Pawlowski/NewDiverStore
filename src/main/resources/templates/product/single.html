@@ -72,7 +72,8 @@
                                         <input type="number" name="qty" id="quantity_wanted" value="1" class="form-control text-center" min="1" aria-label="Ilość">
                                         <button class="btn btn-outline-secondary" type="button" id="button-plus" onclick="increaseQuantity()">+</button>
                                     </div>
-                                    <a th:href="@{'/admin/products/' + ${product.id}+ '/edit'}" class="btn btn-primary custom-btn-green d-inline-flex align-items-center">
+
+                                    <a th:href="@{'/add/' + ${product.id}}" class="btn btn-primary custom-btn-green d-inline-flex align-items-center">
                                         <i class="bi bi-cart4 me-2"></i>
                                         Add to cart
                                     </a>

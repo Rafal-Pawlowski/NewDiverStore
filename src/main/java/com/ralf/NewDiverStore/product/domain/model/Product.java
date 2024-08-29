@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.NumberFormat;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +26,7 @@ public class Product {
     @NotNull(message = "Price must be added")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
     @NumberFormat(style = NumberFormat.Style.NUMBER)
-    private Double price;
+    private BigDecimal price;
 
     @Size(max = 2550, message = "Size must not exceed 2550 characters")
     private String description;
@@ -42,7 +43,7 @@ public class Product {
         this.id=UUID.randomUUID();
     }
 
-    public Product(String name, double price) {
+    public Product(String name, BigDecimal price) {
         this();
         this.name = name;
         this.price = price;
@@ -82,11 +83,11 @@ public class Product {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

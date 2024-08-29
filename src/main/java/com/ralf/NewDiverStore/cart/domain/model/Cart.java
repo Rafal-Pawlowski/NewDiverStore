@@ -3,48 +3,67 @@ package com.ralf.NewDiverStore.cart.domain.model;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
+@Component
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Getter
 public class Cart {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
 
+    private int counter = 0;
 
-    public void addItem(Product product, int quantity){
-        for(CartItem item : items){
-            if (item.getProduct().getId().equals(product.getId())){
-                item.setQuantity(item.getQuantity() + quantity);
-                return;
+    private BigDecimal sum = BigDecimal.ZERO;
+
+    public void addItem(Product product){
+        boolean notFound = true;
+
+        for(CartItem ci: items){
+            if(ci.getProduct().getId().equals(product.getId())){
+                notFound = false;
+                ci.increaseCounter();
+                recalculatePriceAndCounter();
+                break;
             }
         }
-        items.add(new CartItem(this, product, quantity));
-    }
+        if(notFound){
+            items.add(new CartItem(product));
+            recalculatePriceAndCounter();
+        }
+   }
 
-    public void updateItem(Product product, int quantity){
-        for(CartItem item : items){
-            if(item.getProduct().getId().equals(product.getId())){
-                item.setQuantity(quantity);
-                return;
+   public void removeItem(Product product){
+        for(CartItem ci: items){
+            if(ci.getProduct().getId().equals(product.getId())){
+                ci.decreaseCounter();
+                if(ci.hasZeroItems()){
+                    items.remove(ci);
+                }
+                recalculatePriceAndCounter();
+                break;
             }
         }
-    }
+   }
 
-    public void removeItem(Product product){
-        items.removeIf(item -> item.getProduct().getId().equals(product.getId()));
-    }
+   private void recalculatePriceAndCounter(){
+        int tempCounter = 0;
+        Double tempPrice = 0.0;
 
-    public double getTotal(){
-        return items.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum();
-    }
+        for(CartItem ci: items){
+            tempCounter += ci.getCounter();
+        }
+
+   }
+
+
 
 }

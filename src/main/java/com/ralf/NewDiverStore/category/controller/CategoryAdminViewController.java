@@ -156,7 +156,6 @@ public class CategoryAdminViewController {
             category.setImagePath(imagePath);
         }
 
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("category", category);
             model.addAttribute("message", Message.error("Data writing error"));
