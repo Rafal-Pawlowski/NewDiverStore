@@ -73,10 +73,14 @@
                                         <button class="btn btn-outline-secondary" type="button" id="button-plus" onclick="increaseQuantity()">+</button>
                                     </div>
 
-                                    <a th:href="@{'/add/' + ${product.id}}" class="btn btn-primary custom-btn-green d-inline-flex align-items-center">
-                                        <i class="bi bi-cart4 me-2"></i>
-                                        Add to cart
-                                    </a>
+                                    <form th:action="@{'/add/' + ${product.id}}" method="get">
+                                        <input type="hidden" name="quantity" id="quantity_wanted_input" th:value="1" />
+                                        <button type="submit" class="btn btn-primary custom-btn-green d-inline-flex align-items-center">
+                                            <i class="bi bi-cart4 me-2"></i>
+                                            Add to cart
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
                         </div>
@@ -110,6 +114,7 @@
         var quantityInput = document.getElementById('quantity_wanted');
         var currentQuantity = parseInt(quantityInput.value);
         quantityInput.value = currentQuantity + 1;
+        document.getElementById('quantity_wanted_input').value = quantityInput.value;
     }
 
     function decreaseQuantity() {
@@ -117,8 +122,10 @@
         var currentQuantity = parseInt(quantityInput.value);
         if (currentQuantity > 1) {
             quantityInput.value = currentQuantity - 1;
+            document.getElementById('quantity_wanted_input').value = quantityInput.value;
         }
     }
+
 </script>
 
 </body>

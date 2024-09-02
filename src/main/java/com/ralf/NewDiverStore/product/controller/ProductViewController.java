@@ -1,5 +1,6 @@
 package com.ralf.NewDiverStore.product.controller;
 
+import com.ralf.NewDiverStore.cart.domain.model.Cart;
 import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
@@ -24,15 +26,19 @@ import java.util.stream.IntStream;
 public class ProductViewController {
 
 
-    public final ProductService productService;
+    private final ProductService productService;
 
-    public final CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    private final Cart cart;
 
 
-    public ProductViewController(ProductService productService, CategoryService categoryService) {
+
+    public ProductViewController(ProductService productService, CategoryService categoryService, Cart cart) {
         this.productService = productService;
         this.categoryService = categoryService;
 
+        this.cart = cart;
     }
 
 
@@ -103,22 +109,32 @@ public class ProductViewController {
         return "product/list";
     }
 
+    //TODO refactor method using cartItem
     @GetMapping("add/{product-id}")
-    public String addProductToCartInSingleView(@PathVariable("product-id") UUID productId, Model model, HttpSession session){
+    public String addProductToCartInSingleView(
+            @PathVariable("product-id") UUID productId,
+            @RequestParam(name = "quantity", required = false, defaultValue = "1")int quantity,
+            Model model, HttpSession session){
         @SuppressWarnings("unchecked")
         List<Product> cart = (List<Product>) session.getAttribute("cart");
         if (cart == null) {
             cart = new ArrayList<>();
         }
 
+
         Product product = productService.getSingleProduct(productId);
-        cart.add(product);
+        for(int i = 0; i < quantity; i++) {
+            cart.add(product);
+        }
+
         session.setAttribute("cart", cart);
 
         model.addAttribute("product", productService.getSingleProduct(productId));
 
         return "product/single";
     }
+
+
 
 
     @GetMapping("products/{product-id}")

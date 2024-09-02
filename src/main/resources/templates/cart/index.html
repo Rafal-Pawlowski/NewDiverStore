@@ -61,19 +61,19 @@
     <div class="container">
         <h1 class="cart-title">Twój koszyk</h1>
 
-        <div th:each="item : ${cartItems}" class="cart-item">
-            <img th:src="@{'/uploads/' + ${item.product.imagePath}}" alt="Product Image">
+        <div th:each="cartItem : ${@cart.cartItems}" class="cart-item">
+            <img th:src="@{'/uploads/' + ${cartItem.product.imagePath}}" alt="Product Image">
             <div>
-                <h5 th:text="${item.product.name}">Product Name</h5>
-                <p th:text="'Price: ' + ${item.product.price} + ' zł'">Price: 999 zł</p>
+                <h5 th:text="${cartItem.product.name}">Product Name</h5>
+                <p th:text="'Price: ' + ${cartItem.product.price} + ' zł'">Price: 999 zł</p>
             </div>
             <div class="quantity-input">
                 <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">-</button>
-                <input type="number" name="qty" th:value="${item.quantity}" class="form-control text-center" min="1">
+                <input type="number" name="qty" th:value="${cartItem.quantity}" class="form-control text-center" min="1">
                 <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">+</button>
             </div>
             <div>
-                <h5 th:text="'Total: ' + ${item.totalPrice} + ' zł'">Total: 999 zł</h5>
+                <h5 th:text="'Total: ' + ${cartItem.price} + ' zł'">Total: 999 zł</h5>
             </div>
         </div>
 
@@ -81,15 +81,15 @@
             <h4>Podsumowanie</h4>
             <div class="summary-item">
                 <span>Produkty:</span>
-                <span th:text="${productsTotal} + ' zł'">999 zł</span>
+<!--                <span th:text="${productsTotal} + ' zł'">999 zł</span>-->
             </div>
             <div class="summary-item">
                 <span>Wysyłka:</span>
-                <span th:text="${shippingCost} + ' zł'">20 zł</span>
+<!--                <span th:text="${shippingCost} + ' zł'">20 zł</span>-->
             </div>
             <div class="summary-item">
                 <span>Total:</span>
-                <span th:text="${total} + ' zł'">1019 zł</span>
+                <span th:text="${@cart.sum} + ' zł'">1019 zł</span>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-package com.ralf.NewDiverStore;
+package com.ralf.NewDiverStore.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

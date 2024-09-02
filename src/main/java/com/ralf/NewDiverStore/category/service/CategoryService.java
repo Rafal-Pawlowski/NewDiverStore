@@ -1,5 +1,6 @@
 package com.ralf.NewDiverStore.category.service;
 
+import com.ralf.NewDiverStore.cart.domain.model.Cart;
 import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.domain.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,9 +17,11 @@ import java.util.UUID;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final Cart cart;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, Cart cart) {
         this.categoryRepository = categoryRepository;
+        this.cart = cart;
     }
 
     @Transactional

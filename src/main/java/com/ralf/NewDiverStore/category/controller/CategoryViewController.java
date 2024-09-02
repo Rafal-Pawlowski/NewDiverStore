@@ -1,9 +1,12 @@
 package com.ralf.NewDiverStore.category.controller;
 
+import com.ralf.NewDiverStore.cart.domain.model.Cart;
 import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,14 +29,25 @@ public class CategoryViewController {
     public final CategoryService categoryService;
     public final ProductService productService;
 
-    public CategoryViewController(CategoryService categoryService, ProductService productService) {
+    public  final Cart cart;
+
+    public CategoryViewController(CategoryService categoryService, ProductService productService, Cart cart) {
         this.categoryService = categoryService;
         this.productService = productService;
+        this.cart = cart;
     }
 
 
     @GetMapping("index")
-    public String indexView(){
+    public String indexView(HttpSession session, Model model){
+        @SuppressWarnings("unchecked")
+        List<Product> cart = (List<Product>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+        session.setAttribute("cart", cart);
+
+        model.addAttribute("cart", cart);
         return "category/index";
     }
 

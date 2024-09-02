@@ -1,24 +1,22 @@
 package com.ralf.NewDiverStore.cart.domain.model;
 
 import com.ralf.NewDiverStore.product.domain.model.Product;
-import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Component
-@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@SessionScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Getter
 public class Cart {
 
 
-    private List<CartItem> items = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 
     private int counter = 0;
 
@@ -27,7 +25,7 @@ public class Cart {
     public void addItem(Product product){
         boolean notFound = true;
 
-        for(CartItem ci: items){
+        for(CartItem ci: cartItems){
             if(ci.getProduct().getId().equals(product.getId())){
                 notFound = false;
                 ci.increaseCounter();
@@ -36,17 +34,17 @@ public class Cart {
             }
         }
         if(notFound){
-            items.add(new CartItem(product));
+            cartItems.add(new CartItem(product));
             recalculatePriceAndCounter();
         }
    }
 
    public void removeItem(Product product){
-        for(CartItem ci: items){
+        for(CartItem ci: cartItems){
             if(ci.getProduct().getId().equals(product.getId())){
                 ci.decreaseCounter();
                 if(ci.hasZeroItems()){
-                    items.remove(ci);
+                    cartItems.remove(ci);
                 }
                 recalculatePriceAndCounter();
                 break;
@@ -56,11 +54,14 @@ public class Cart {
 
    private void recalculatePriceAndCounter(){
         int tempCounter = 0;
-        Double tempPrice = 0.0;
+        BigDecimal tempPrice = BigDecimal.ZERO;
 
-        for(CartItem ci: items){
+        for(CartItem ci: cartItems){
             tempCounter += ci.getCounter();
+            tempPrice = tempPrice.add(ci.getPrice());
         }
+        this.counter = tempCounter;
+        this.sum=tempPrice;
 
    }
 
