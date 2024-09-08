@@ -10,8 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@SessionScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+
 @Getter
 public class Cart {
 
@@ -21,6 +20,8 @@ public class Cart {
     private int counter = 0;
 
     private BigDecimal sum = BigDecimal.ZERO;
+
+
 
     public void addItem(Product product){
         boolean notFound = true;
@@ -52,6 +53,7 @@ public class Cart {
         }
    }
 
+
    private void recalculatePriceAndCounter(){
         int tempCounter = 0;
         BigDecimal tempPrice = BigDecimal.ZERO;
@@ -64,6 +66,8 @@ public class Cart {
         this.sum=tempPrice;
 
    }
+
+
 
 
 

@@ -61,7 +61,7 @@
     <div class="container">
         <h1 class="cart-title">Twój koszyk</h1>
 
-        <div th:each="cartItem : ${@cart.cartItems}" class="cart-item">
+        <div th:each="cartItem : ${cart.getCartItems()}" class="cart-item">
             <img th:src="@{'/uploads/' + ${cartItem.product.imagePath}}" alt="Product Image">
             <div>
                 <h5 th:text="${cartItem.product.name}">Product Name</h5>
@@ -69,7 +69,7 @@
             </div>
             <div class="quantity-input">
                 <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">-</button>
-                <input type="number" name="qty" th:value="${cartItem.quantity}" class="form-control text-center" min="1">
+                <input type="number" name="qty" th:value="${cartItem.counter}" class="form-control text-center" min="1">
                 <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">+</button>
             </div>
             <div>
@@ -89,7 +89,7 @@
             </div>
             <div class="summary-item">
                 <span>Total:</span>
-                <span th:text="${@cart.sum} + ' zł'">1019 zł</span>
+                <span th:text="${cart.sum} + ' zł'">1019 zł</span>
             </div>
         </div>
     </div>

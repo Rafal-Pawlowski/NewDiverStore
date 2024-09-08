@@ -17,11 +17,10 @@ import java.util.UUID;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final Cart cart;
 
-    public CategoryService(CategoryRepository categoryRepository, Cart cart) {
+
+    public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        this.cart = cart;
     }
 
     @Transactional

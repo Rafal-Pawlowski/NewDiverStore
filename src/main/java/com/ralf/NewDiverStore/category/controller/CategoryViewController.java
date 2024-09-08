@@ -1,6 +1,7 @@
 package com.ralf.NewDiverStore.category.controller;
 
 import com.ralf.NewDiverStore.cart.domain.model.Cart;
+import com.ralf.NewDiverStore.cart.service.SessionCartService;
 import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,28 +28,27 @@ import java.util.stream.IntStream;
 @Controller
 public class CategoryViewController {
 
-    public final CategoryService categoryService;
-    public final ProductService productService;
+    private final CategoryService categoryService;
+    private final ProductService productService;
 
-    public  final Cart cart;
+    private final SessionCartService sessionCartService;
 
-    public CategoryViewController(CategoryService categoryService, ProductService productService, Cart cart) {
+
+    public CategoryViewController(CategoryService categoryService, ProductService productService, SessionCartService sessionCartService) {
         this.categoryService = categoryService;
         this.productService = productService;
-        this.cart = cart;
+        this.sessionCartService = sessionCartService;
+    }
+
+    @ModelAttribute("sessionCartService")
+    public SessionCartService sessionCartService() {
+        return sessionCartService;
     }
 
 
     @GetMapping("index")
-    public String indexView(HttpSession session, Model model){
-        @SuppressWarnings("unchecked")
-        List<Product> cart = (List<Product>) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ArrayList<>();
-        }
-        session.setAttribute("cart", cart);
-
-        model.addAttribute("cart", cart);
+    public String indexView() {
+        sessionCartService().getCart(); // in order to session start
         return "category/index";
     }
 
@@ -55,16 +56,16 @@ public class CategoryViewController {
     public String categoriesView(
             @RequestParam(name = "field", required = false, defaultValue = "name") String field,
             @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction,
-            @RequestParam(name = "page", required = false, defaultValue = "0")int page,
-            @RequestParam(name = "size", required = false, defaultValue = "12")int size,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "12") int size,
             Model model
-    ){
+    ) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), field);
 
         String reverseSort = null;
-        if("asc".equals(direction)){
-            reverseSort="desc";
-        }else {
+        if ("asc".equals(direction)) {
+            reverseSort = "desc";
+        } else {
             reverseSort = "asc";
         }
 
