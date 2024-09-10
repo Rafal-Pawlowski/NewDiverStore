@@ -50,6 +50,15 @@
         justify-content: space-between;
         padding: 5px 0;
     }
+    /* Ukrywanie strzałek dla pól typu number */
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type='number'] {
+        -moz-appearance: textfield;
+    }
 </style>
 </head>
 
@@ -67,11 +76,16 @@
                 <h5 th:text="${cartItem.product.name}">Product Name</h5>
                 <p th:text="'Price: ' + ${cartItem.product.price} + ' zł'">Price: 999 zł</p>
             </div>
-            <div class="quantity-input">
-                <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">-</button>
+
+            <!-- Formularz dla zmiany ilości (połączenie przycisków plus i minus w jednym formularzu) -->
+            <form th:action="@{'/order/update/' + ${cartItem.product.id}}" method="post" class="quantity-input">
+                <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'decrease')">-</button>
                 <input type="number" name="qty" th:value="${cartItem.counter}" class="form-control text-center" min="1">
-                <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">+</button>
-            </div>
+                <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'increase')">+</button>
+                <!-- Ukryte pole, które będzie wskazywać, czy zmniejszamy czy zwiększamy ilość -->
+                <input type="hidden" name="action" value="">
+            </form>
+
             <div>
                 <h5 th:text="'Total: ' + ${cartItem.price} + ' zł'">Total: 999 zł</h5>
             </div>
@@ -106,18 +120,15 @@
 </th:block>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
-    function increaseQuantity() {
-        var quantityInput = event.target.previousElementSibling;
-        var currentQuantity = parseInt(quantityInput.value);
-        quantityInput.value = currentQuantity + 1;
-    }
+    function submitForm(button, action) {
+        // Znajdujemy formularz, do którego należy przycisk
+        var form = button.closest('form');
 
-    function decreaseQuantity() {
-        var quantityInput = event.target.nextElementSibling;
-        var currentQuantity = parseInt(quantityInput.value);
-        if (currentQuantity > 1) {
-            quantityInput.value = currentQuantity - 1;
-        }
+        // Ustawiamy wartość ukrytego pola "action" (increase lub decrease)
+        form.querySelector('input[name="action"]').value = action;
+
+        // Wysyłamy formularz metodą POST
+        form.submit();
     }
 </script>
 
