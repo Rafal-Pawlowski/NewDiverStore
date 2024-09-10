@@ -1,6 +1,7 @@
 package com.ralf.NewDiverStore.cart.controller;
 
 import com.ralf.NewDiverStore.cart.domain.model.Cart;
+import com.ralf.NewDiverStore.cart.domain.model.ItemOperation;
 import com.ralf.NewDiverStore.cart.service.SessionCartService;
 import com.ralf.NewDiverStore.common.dto.Message;
 import com.ralf.NewDiverStore.product.domain.model.Product;
@@ -29,6 +30,8 @@ public class CartViewController {
     public String index(Model model) {
 
         model.addAttribute("cart", sessionCartService.getCart());
+        model.addAttribute("totalCostShippingIncluded", sessionCartService.getTotalCostShippingIncluded());
+        model.addAttribute("shipping", sessionCartService.getShippingCost());
 
 
         return "cart/index";
@@ -41,13 +44,25 @@ public class CartViewController {
                                          @RequestParam String action, @RequestParam int qty, Model model) {
 
         if (action.equals("increase")) {
-            sessionCartService.addProductToCart(productId);
+            sessionCartService.itemOperation(productId, ItemOperation.INCREASE);
 
         } else if (action.equals("decrease")) {
-            sessionCartService.removeProductFromCart(productId);
+            sessionCartService.itemOperation(productId, ItemOperation.DECREASE);
         }
 
-        model.addAttribute("cart", sessionCartService.getCart());
+//        model.addAttribute("cart", sessionCartService.getCart());
+        return "redirect:/order/cart";
+    }
+
+    @GetMapping("/delete/{productId}")
+    public String deleteCartItemView(@PathVariable("productId") UUID productId, RedirectAttributes redirectAttributes){
+        try {
+            sessionCartService.itemOperation(productId, ItemOperation.REMOVE);
+            redirectAttributes.addFlashAttribute("message", Message.info("Product removed"));
+        } catch (Exception e){
+            redirectAttributes.addFlashAttribute("message", Message.error("Unknown error"));
+        }
+
         return "redirect:/order/cart";
     }
 

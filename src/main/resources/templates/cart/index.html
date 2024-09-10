@@ -36,6 +36,20 @@
     .cart-item .quantity-input button {
         margin: 0;
     }
+
+    .cart-item .delete-button {
+        margin-left: 15px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .cart-item .delete-button i {
+        margin-right: 5px;
+    }
+
     .cart-summary {
         background-color: #e9ecef;
         padding: 20px;
@@ -69,7 +83,9 @@
 <main>
     <div class="container">
         <h1 class="cart-title">Twój koszyk</h1>
-
+        <div th:if="${message != null}" class="alert alert-success" role="alert">
+            <span th:text="${message}"></span>
+        </div>
         <div th:each="cartItem : ${cart.getCartItems()}" class="cart-item">
             <img th:src="@{'/uploads/' + ${cartItem.product.imagePath}}" alt="Product Image">
             <div>
@@ -86,6 +102,13 @@
                 <input type="hidden" name="action" value="">
             </form>
 
+            <!-- Przycisk usuwania produktu -->
+            <form th:action="@{'/order/delete/' + ${cartItem.product.id}}" method="get">
+                <button class="delete-button" type="submit">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+            </form>
+
             <div>
                 <h5 th:text="'Total: ' + ${cartItem.price} + ' zł'">Total: 999 zł</h5>
             </div>
@@ -95,15 +118,15 @@
             <h4>Podsumowanie</h4>
             <div class="summary-item">
                 <span>Produkty:</span>
-<!--                <span th:text="${productsTotal} + ' zł'">999 zł</span>-->
+                <span th:text="${cart.getSum()} + ' zł'">999 zł</span>
             </div>
             <div class="summary-item">
                 <span>Wysyłka:</span>
-<!--                <span th:text="${shippingCost} + ' zł'">20 zł</span>-->
+                <span th:text="${shipping} + ' zł'">20 zł</span>
             </div>
             <div class="summary-item">
                 <span>Total:</span>
-                <span th:text="${cart.sum} + ' zł'">1019 zł</span>
+                <span th:text="${totalCostShippingIncluded} + ' zł'">1019 zł</span>
             </div>
         </div>
     </div>
