@@ -73,6 +73,27 @@
     input[type='number'] {
         -moz-appearance: textfield;
     }
+
+    .go-next-container {
+        text-align: center; /* Wyśrodkowanie przycisku */
+        margin-top: 20px;
+    }
+
+    .go-next-button {
+        background-color: #28a745; /* Zielony kolor tła */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        width: 200px; /* Umiarkowana szerokość */
+    }
+
+    .go-next-button:hover {
+        background-color: #218838; /* Ciemniejszy zielony po najechaniu */
+    }
+
 </style>
 </head>
 
@@ -128,6 +149,11 @@
                 <span>Total:</span>
                 <span th:text="${totalCostShippingIncluded} + ' zł'">1019 zł</span>
             </div>
+        </div>
+        <div class="go-next-container">
+            <a th:href="@{/order/shipping}" class="go-next-button">
+                Go to next
+            </a>
         </div>
     </div>
 </main>

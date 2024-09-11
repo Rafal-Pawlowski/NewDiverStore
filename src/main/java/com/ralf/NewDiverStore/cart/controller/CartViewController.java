@@ -66,6 +66,11 @@ public class CartViewController {
         return "redirect:/order/cart";
     }
 
+    @GetMapping("/shipping")
+    public String shippingView(){
+        return "cart/shipping";
+    }
+
 
 }
 
