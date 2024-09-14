@@ -9,12 +9,11 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-public class BillingAddress extends Address{
+public class ShippingAddress extends Address{
 
     @Id
     private UUID id;
-
 }

@@ -7,8 +7,8 @@ public class CustomerBuilder {
     private String firstName;
     private String lastName;
     private String email;
-    private Address shippingAddress;
-    private Address billingAddress;
+    private ShippingAddress shippingAddress;
+    private BillingAddress billingAddress;
 
     public CustomerBuilder withId(UUID id) {
         this.id = id;
@@ -30,12 +30,12 @@ public class CustomerBuilder {
         return this;
     }
 
-    public CustomerBuilder withShippingAddress(Address shippingAddress) {
+    public CustomerBuilder withShippingAddress(ShippingAddress shippingAddress) {
         this.shippingAddress = shippingAddress;
         return this;
     }
 
-    public CustomerBuilder withBillingAddress(Address billingAddress) {
+    public CustomerBuilder withBillingAddress(BillingAddress billingAddress) {
         this.billingAddress = billingAddress;
         return this;
     }

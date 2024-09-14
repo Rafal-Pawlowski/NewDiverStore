@@ -3,13 +3,17 @@ package com.ralf.NewDiverStore.customer.domain.model;
 
 import com.ralf.NewDiverStore.order.domain.model.Order;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.*;
 
 @Entity
 @Table(name = "customers")
 @NoArgsConstructor
+@Getter
+@Setter
 
 public class Customer {
 
@@ -20,17 +24,17 @@ public class Customer {
     private String lastName;
     private String email;
 
-    @Embedded
-    private Address shippingAddress;
+    @OneToOne
+    private ShippingAddress shippingAddress;
 
-    @Embedded
-    private Address billingAddress;
+    @OneToOne
+    private BillingAddress billingAddress;
 
     @OneToMany(mappedBy = "customer")
-    private List<Order> orders;
+    private Set<Order> orders;
 
 
-    public Customer(UUID id, String firstName, String lastName, String email, Address shippingAddress, Address billingAddress) {
+    public Customer(UUID id, String firstName, String lastName, String email, ShippingAddress shippingAddress, BillingAddress billingAddress) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -41,7 +45,7 @@ public class Customer {
 
     public Customer addOrder(Order order) {
         if (orders == null) {
-            orders = new ArrayList<>();
+            orders = new HashSet<>();
         }
         order.setCustomer(this);
         orders.add(order);
@@ -49,8 +53,8 @@ public class Customer {
         return this;
     }
 
-    public List<Order> getOrders() {
-        return Collections.unmodifiableList(orders);
+    public Set<Order> getOrders() {
+        return Collections.unmodifiableSet(orders);
     }
 
 }

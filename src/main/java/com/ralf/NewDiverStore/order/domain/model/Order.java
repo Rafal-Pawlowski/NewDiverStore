@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -23,9 +24,10 @@ public class Order {
     @ManyToOne
     private Customer customer;
 
+    private LocalDateTime orderTime;
 
 
-    public Order(){
+    public Order() {
         this.id = UUID.randomUUID();
     }
 
