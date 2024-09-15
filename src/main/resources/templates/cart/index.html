@@ -115,7 +115,7 @@
             </div>
 
             <!-- Formularz dla zmiany ilości (połączenie przycisków plus i minus w jednym formularzu) -->
-            <form th:action="@{'/order/update/' + ${cartItem.product.id}}" method="post" class="quantity-input">
+            <form th:action="@{'/cart/update/' + ${cartItem.product.id}}" method="post" class="quantity-input">
                 <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'decrease')">-</button>
                 <input type="number" name="qty" th:value="${cartItem.counter}" class="form-control text-center" min="1">
                 <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'increase')">+</button>
@@ -124,7 +124,7 @@
             </form>
 
             <!-- Przycisk usuwania produktu -->
-            <form th:action="@{'/order/delete/' + ${cartItem.product.id}}" method="get">
+            <form th:action="@{'/cart/delete/' + ${cartItem.product.id}}" method="get">
                 <button class="delete-button" type="submit">
                     <i class="bi bi-trash"></i> Delete
                 </button>

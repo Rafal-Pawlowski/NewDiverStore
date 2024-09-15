@@ -2,6 +2,7 @@ package com.ralf.NewDiverStore.order.domain.model;
 
 import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,6 +21,7 @@ public class Order {
     private UUID id;
 
     private Payment payment;
+
 
     @ManyToOne
     private Customer customer;

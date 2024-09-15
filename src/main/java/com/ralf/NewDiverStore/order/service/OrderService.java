@@ -22,6 +22,14 @@ public class OrderService {
     }
 
     @Transactional
+    public Order createNewOrder() {
+        Order order = new Order();
+        order.setOrderTime(LocalDateTime.now());
+
+        return orderRepository.save(order);
+    }
+
+    @Transactional
     public Order createOrder(Order orderRequest) {
         Order order = new Order();
         order.setPayment(orderRequest.getPayment());

@@ -3,6 +3,8 @@ package com.ralf.NewDiverStore.customer.domain.model;
 
 import com.ralf.NewDiverStore.order.domain.model.Order;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,10 +21,19 @@ public class Customer {
 
     @Id
     private UUID id;
-
+    @NotBlank(message = "{divestore.validation.name.NotBlank.message}")
+    @Size(min = 2, max = 255, message = "Size must be in range between 2 to 255 characters")
     private String firstName;
+
+
+    @NotBlank(message = "{divestore.validation.name.NotBlank.message}")
+    @Size(min = 2, max = 255, message = "Size must be in range between 2 to 255 characters")
     private String lastName;
+
+    @NotBlank(message = "{divestore.validation.email.NotBlank.message}")
+    @Size(min = 6, max = 255, message = "Size must be in range between 6 to 255 characters")
     private String email;
+
 
     @OneToOne
     private ShippingAddress shippingAddress;

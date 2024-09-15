@@ -1,21 +1,17 @@
 package com.ralf.NewDiverStore.cart.controller;
 
-import com.ralf.NewDiverStore.cart.domain.model.Cart;
 import com.ralf.NewDiverStore.cart.domain.model.ItemOperation;
 import com.ralf.NewDiverStore.cart.service.SessionCartService;
 import com.ralf.NewDiverStore.common.dto.Message;
-import com.ralf.NewDiverStore.product.domain.model.Product;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/order")
+@RequestMapping("/cart")
 
 public class CartViewController {
 
@@ -26,7 +22,7 @@ public class CartViewController {
         this.sessionCartService = sessionCartService;
     }
 
-    @GetMapping("/cart")
+    @GetMapping()
     public String index(Model model) {
 
         model.addAttribute("cart", sessionCartService.getCart());
@@ -51,7 +47,7 @@ public class CartViewController {
         }
 
 //        model.addAttribute("cart", sessionCartService.getCart());
-        return "redirect:/order/cart";
+        return "redirect:/cart";
     }
 
     @GetMapping("/delete/{productId}")
@@ -63,13 +59,10 @@ public class CartViewController {
             redirectAttributes.addFlashAttribute("message", Message.error("Unknown error"));
         }
 
-        return "redirect:/order/cart";
+        return "redirect:/cart";
     }
 
-    @GetMapping("/shipping")
-    public String shippingView(){
-        return "cart/shipping";
-    }
+
 
 
 }
