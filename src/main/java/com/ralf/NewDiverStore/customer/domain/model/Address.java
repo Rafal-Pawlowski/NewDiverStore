@@ -21,4 +21,12 @@ public class Address {
     private String city;
     private String zip;
 
+
+    public void copyFrom(Address source) {
+        this.setStreet(source.getStreet());
+        this.setCity(source.getCity());
+        this.setZip(source.getZip());
+        this.setCountry(source.getCountry());
+    }
+
 }

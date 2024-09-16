@@ -16,7 +16,6 @@ import java.util.*;
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class Customer {
 
     @Id
@@ -41,8 +40,12 @@ public class Customer {
     @OneToOne
     private BillingAddress billingAddress;
 
+    private boolean sameAddress;
+
     @OneToMany(mappedBy = "customer")
     private Set<Order> orders;
+
+
 
 
     public Customer(UUID id, String firstName, String lastName, String email, ShippingAddress shippingAddress, BillingAddress billingAddress) {
