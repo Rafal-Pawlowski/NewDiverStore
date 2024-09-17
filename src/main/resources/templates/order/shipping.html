@@ -87,8 +87,8 @@
 </head>
 
 <body>
-<th:block th:replace="category/template::icons"/>
-<th:block th:replace="category/template::header"/>
+<th:block th:replace="~{category/template::icons}"/>
+<th:block th:replace="~{category/template::header}"/>
 
 
 
@@ -281,7 +281,7 @@
         </div>
     </main>
 
-    <th:block th:replace="category/template :: footer" class="text-body-secondary py-5">
+    <th:block th:replace="~{category/template :: footer}" class="text-body-secondary py-5">
         <div class="container">
             <p class="float-end mb-1">
                 <a href="#">Back to top</a>

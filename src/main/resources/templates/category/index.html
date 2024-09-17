@@ -1,10 +1,10 @@
 
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
-<head th:replace="category/template :: head(~{title ='Dive Store'})"></head>
+<head th:replace="~{category/template :: head(~{title ='Dive Store'})}"></head>
 <body>
 
-    <th:block th:replace="category/template::icons"/>
+    <th:block th:replace="~{category/template::icons}"/>
 
 <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
     <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
@@ -45,7 +45,7 @@
 
 <main>
 
-    <th:block th:replace="category/template :: carousel" />
+    <th:block th:replace="~{category/template :: carousel}" />
 
 
     <!-- Marketing messaging and featurettes
@@ -55,7 +55,7 @@
     <div class="container marketing">
 
         <!-- Four columns of text below the carousel -->
-        <th:block th:replace="category/template :: sections"/>
+        <th:block th:replace="~{category/template :: sections}"/>
 
         <!-- START THE FEATURETTES -->
 
@@ -103,7 +103,7 @@
 
 
     <!-- FOOTER -->
-    <th:block th:replace="category/template :: footer"/>
+    <th:block th:replace="~{category/template :: footer}"/>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

@@ -13,7 +13,6 @@ import java.util.*;
 
 @Entity
 @Table(name = "customers")
-@NoArgsConstructor
 @Getter
 @Setter
 public class Customer {
@@ -34,22 +33,31 @@ public class Customer {
     private String email;
 
 
-    @OneToOne
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private ShippingAddress shippingAddress;
 
-    @OneToOne
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private BillingAddress billingAddress;
 
     private boolean sameAddress;
 
     @OneToMany(mappedBy = "customer")
-    private Set<Order> orders;
+    private Set<Order> orders = new HashSet<>();
 
 
+    public Customer() {
+        this.id = UUID.randomUUID();
+    }
 
 
-    public Customer(UUID id, String firstName, String lastName, String email, ShippingAddress shippingAddress, BillingAddress billingAddress) {
-        this.id = id;
+    public Customer(String firstName, String lastName, String email) {
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+    public Customer(String firstName, String lastName, String email, ShippingAddress shippingAddress, BillingAddress billingAddress) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -67,9 +75,13 @@ public class Customer {
         return this;
     }
 
+
     public Set<Order> getOrders() {
         return Collections.unmodifiableSet(orders);
     }
 
+    public void setId(UUID id) {
+        this.id = id != null ? id : UUID.randomUUID();
+    }
 }
 

@@ -4,6 +4,8 @@ import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import com.ralf.NewDiverStore.customer.domain.model.CustomerBuilder;
 import com.ralf.NewDiverStore.customer.domain.repository.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.UUID;
 @Service
 public class CustomerService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
     private final CustomerRepository customerRepository;
 
     public CustomerService(CustomerRepository customerRepository) {
@@ -32,6 +35,26 @@ public class CustomerService {
                 .build();
 
     return customerRepository.save(customer);
+    }
+
+    @Transactional
+    public Customer createOrUpdateCustomer(Customer customerRequest){
+        logger.debug("CreateOrUpdateCustomer method");
+        if(customerRequest.getId()!=null) {
+            Optional<Customer> existingCustomer = customerRepository.findById(customerRequest.getId());
+            if (existingCustomer.isPresent()) {
+                Customer customer = existingCustomer.get();
+                customer.setFirstName(customerRequest.getFirstName());
+                customer.setLastName(customerRequest.getLastName());
+                customer.setEmail(customerRequest.getEmail());
+//                customer.setShippingAddress(customerRequest.getShippingAddress());
+//                customer.setBillingAddress(customerRequest.getBillingAddress());
+                logger.debug("Before Saving customer in createOrUpdateCustomer method: {}", customer);
+                return customerRepository.save(customer);
+            }
+        }
+        logger.debug("Before Saving customerRequest in createOrUpdateCustomer method: {}", customerRequest);
+        return createCustomer(customerRequest);
     }
 
     @Transactional(readOnly = true)

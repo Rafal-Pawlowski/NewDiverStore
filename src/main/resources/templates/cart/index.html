@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
-<head th:replace="category/template :: head(title='Your Cart')"/>
+<head th:replace="~{category/template :: head(title='Your Cart')}"/>
 <style>
     .cart-title {
         font-size: 2.5rem;
@@ -98,8 +98,8 @@
 </head>
 
 <body>
-<th:block th:replace="category/template::icons"/>
-<th:block th:replace="category/template::header"/>
+<th:block th:replace="~{category/template::icons}"/>
+<th:block th:replace="~{category/template::header}"/>
 
 <main>
     <div class="container">
@@ -151,14 +151,14 @@
             </div>
         </div>
         <div class="go-next-container">
-            <a th:href="@{/order/shipping}" class="go-next-button">
+            <a th:href="@{/order/customer-details}" class="go-next-button">
                 Go to next
             </a>
         </div>
     </div>
 </main>
 
-<th:block th:replace="category/template :: footer" class="text-body-secondary py-5">
+<th:block th:replace="~{category/template :: footer}" class="text-body-secondary py-5">
     <div class="container">
         <p class="float-end mb-1">
             <a href="#">Back to top</a>

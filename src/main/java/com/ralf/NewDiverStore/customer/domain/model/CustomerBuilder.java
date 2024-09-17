@@ -3,17 +3,15 @@ package com.ralf.NewDiverStore.customer.domain.model;
 import java.util.UUID;
 
 public class CustomerBuilder {
-    private UUID id;
+
+
     private String firstName;
     private String lastName;
     private String email;
     private ShippingAddress shippingAddress;
     private BillingAddress billingAddress;
 
-    public CustomerBuilder withId(UUID id) {
-        this.id = id;
-        return this;
-    }
+
 
     public CustomerBuilder withFirstName(String firstName) {
         this.firstName = firstName;
@@ -41,6 +39,8 @@ public class CustomerBuilder {
     }
 
     public Customer build() {
-        return new Customer(id, firstName, lastName, email, shippingAddress, billingAddress);
+        Customer customer= new Customer(firstName, lastName, email, shippingAddress, billingAddress);
+        customer.setId(UUID.randomUUID());
+        return customer;
     }
 }

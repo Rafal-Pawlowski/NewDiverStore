@@ -3,11 +3,12 @@ package com.ralf.NewDiverStore.order.service;
 import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import com.ralf.NewDiverStore.order.domain.model.Order;
 import lombok.Getter;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
 @Service
-@SessionScope
+@SessionScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Getter
 public class SessionOrderService {
 
