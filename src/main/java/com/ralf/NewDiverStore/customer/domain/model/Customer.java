@@ -41,7 +41,7 @@ public class Customer {
 
     private boolean sameAddress;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders = new HashSet<>();
 
 
@@ -65,14 +65,9 @@ public class Customer {
         this.billingAddress = billingAddress;
     }
 
-    public Customer addOrder(Order order) {
-        if (orders == null) {
-            orders = new HashSet<>();
-        }
-        order.setCustomer(this);
+    public void addOrder(Order order) {
         orders.add(order);
-
-        return this;
+        order.setCustomer(this);
     }
 
 

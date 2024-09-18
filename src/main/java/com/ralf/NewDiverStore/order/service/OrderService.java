@@ -1,5 +1,6 @@
 package com.ralf.NewDiverStore.order.service;
 
+import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import com.ralf.NewDiverStore.order.domain.model.Order;
 import com.ralf.NewDiverStore.order.domain.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -40,17 +41,18 @@ public class OrderService {
     @Transactional
     public Order createOrder(Order orderRequest) {
         Order order = new Order();
-        logger.debug("New Order added: {}", order);
+        logger.debug("New Order added with id: {}", order.getId());
         order.setPayment(orderRequest.getPayment());
         logger.debug("Payment set to: {}", order.getPayment());
-        orderRequest.getCustomer().addOrder(order);
-//        order.setCustomer(orderRequest.getCustomer());
+
+        Customer customer = orderRequest.getCustomer();
+        customer.addOrder(order);
         logger.debug("Customer to Order added: {}", order.getCustomer().getId());
 
         LocalDateTime orderDateTime = LocalDateTime.now();
         order.setOrderTime(orderDateTime);
-
         logger.debug("Order time: {}", orderDateTime);
+
         logger.debug("Zamówienie przed zapisem: {}", order);
         logger.debug("Zamówienie przed zapisem, id klienta: {}", order.getCustomer().getId());
         return orderRepository.save(order);

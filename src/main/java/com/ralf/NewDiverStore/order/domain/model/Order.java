@@ -20,10 +20,12 @@ public class Order {
     @Id
     private UUID id;
 
+    @Enumerated(EnumType.STRING)
     private Payment payment;
 
 
     @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     private LocalDateTime orderTime;
@@ -31,6 +33,7 @@ public class Order {
 
     public Order() {
         this.id = UUID.randomUUID();
+        this.orderTime = LocalDateTime.now();
     }
 
     public Order(Payment payment) {

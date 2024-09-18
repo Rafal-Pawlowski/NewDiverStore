@@ -2,13 +2,11 @@ package com.ralf.NewDiverStore.order.controller;
 
 import com.ralf.NewDiverStore.cart.service.SessionCartService;
 import com.ralf.NewDiverStore.common.dto.Message;
-import com.ralf.NewDiverStore.customer.domain.model.BillingAddress;
-import com.ralf.NewDiverStore.customer.domain.model.Customer;
-import com.ralf.NewDiverStore.customer.domain.model.CustomerBuilder;
-import com.ralf.NewDiverStore.customer.domain.model.ShippingAddress;
+import com.ralf.NewDiverStore.customer.domain.model.*;
 import com.ralf.NewDiverStore.customer.domain.repository.CustomerRepository;
 import com.ralf.NewDiverStore.customer.service.CustomerService;
 import com.ralf.NewDiverStore.order.domain.model.Order;
+import com.ralf.NewDiverStore.order.domain.model.Payment;
 import com.ralf.NewDiverStore.order.service.OrderService;
 import com.ralf.NewDiverStore.order.service.SessionOrderService;
 import jakarta.validation.Valid;
@@ -24,7 +22,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/order")
-@SessionAttributes("customer")
+@SessionAttributes({"customer", "BillingAddress", "ShippingAddress", "sameAddress"})
 public class OrderViewController {
 
 
@@ -53,11 +51,7 @@ public class OrderViewController {
 
 
         model.addAttribute("customer", new Customer());
-
-
         logger.debug("order customer: {}", order.getCustomer());
-;
-
         logger.debug("New customer added");
 
         return "order/customer-details";
@@ -92,12 +86,13 @@ public class OrderViewController {
 
 
             logger.debug("Before creating order: {}", order);
-            orderService.createOrder(order);
+//            orderService.createOrder(order);
             logger.info("After New order created in DB: {}", order);
 
             redirectAttributes.addFlashAttribute("message", Message.info("New Order added"));
 
-            return "redirect:/order/greetings/" + order.getId();
+            return "redirect:/order/address-form";
+//            return "redirect:/order/greetings/" + order.getId();
 
         } catch (Exception e) {
             logger.error("Exception shown", e);
@@ -107,10 +102,40 @@ public class OrderViewController {
     }
 
 
+    @GetMapping("/address-form")
+    public String addressFormView(
+            @ModelAttribute("customer") Customer customer,
+            Model model) {
+        logger.info("wyświetlenie formularza address-form");
+
+        model.addAttribute("shippingAddress", new ShippingAddress());
+        model.addAttribute("billingAddress", new BillingAddress());
+        model.addAttribute("order", sessionOrderService.getOrder());
+
+
+
+        return "order/address";
+    }
+
+    @PostMapping("/address-form")
+    public String addressFormEditView(
+            @ModelAttribute("shippingAddress") ShippingAddress shippingAddress,
+            @ModelAttribute("billingAddress") BillingAddress billingAddress,
+            @ModelAttribute("customer") Customer customer,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+
+
+        return "test";
+    }
+
+
     @GetMapping("/greetings/{order-id}")
     public String greetingsView(@PathVariable("order-id") UUID orderId, Model model) {
         logger.info("wyświetlenie widoku Greetings");
-        model.addAttribute("order", orderService.findOrder(orderId));
+        model.addAttribute("order", sessionOrderService.getOrder());
         return "order/greetings";
     }
 

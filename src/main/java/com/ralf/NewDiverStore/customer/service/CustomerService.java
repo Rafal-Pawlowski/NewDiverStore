@@ -24,6 +24,7 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
+    //TODO zmiana metody na prostrzą, ponieważ w pierwszym kroku nie jest ustawiany żaden adres
     @Transactional
     public Customer createCustomer(Customer customerRequest) {
         Customer customer = new CustomerBuilder()
@@ -37,6 +38,7 @@ public class CustomerService {
     return customerRepository.save(customer);
     }
 
+    //TODO metoda do ustawienia tylko adresów u klienta
     @Transactional
     public Customer createOrUpdateCustomer(Customer customerRequest){
         logger.debug("CreateOrUpdateCustomer method");
