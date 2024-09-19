@@ -63,6 +63,7 @@ public class Customer {
         this.email = email;
         this.shippingAddress = shippingAddress;
         this.billingAddress = billingAddress;
+        this.sameAddress = false;
     }
 
     public void addOrder(Order order) {
@@ -78,5 +79,7 @@ public class Customer {
     public void setId(UUID id) {
         this.id = id != null ? id : UUID.randomUUID();
     }
+
+
 }
 

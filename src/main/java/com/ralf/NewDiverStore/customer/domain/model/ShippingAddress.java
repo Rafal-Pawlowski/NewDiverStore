@@ -36,4 +36,15 @@ public class ShippingAddress {
         this.city = city;
         this.zip = zip;
     }
+
+
+    public static ShippingAddress updateShippingAddress(ShippingAddress shippingAddressRequest){
+        ShippingAddress shippingAddress = new ShippingAddress(
+                shippingAddressRequest.getStreet(),
+                shippingAddressRequest.getCountry(),
+                shippingAddressRequest.getCity(),
+                shippingAddressRequest.zip
+        );
+        return shippingAddress;
+    }
 }

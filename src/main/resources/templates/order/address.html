@@ -171,35 +171,38 @@
                             </div>
                         </div>
                     </div>
-                </form>
-                    <hr class="my-4">
-
-                <form method="post"  th:object="${order}" class="needs-validation" novalidate>
-                <h4 class="mb-3">Payment</h4>
-
-                    <div class="my-3">
-                        <span class="error" th:if="${#fields.hasErrors('payment')}" th:errors="*{payment}">Shipping ZipCode Error</span>
-
-                        <div class="form-check">
-                            <input th:field="*{payment}" id="credit" name="paymentMethod" type="radio" class="form-check-input" value="CREDIT_CARD" checked required>
-                            <label class="form-check-label" for="credit">Credit card</label>
-                        </div>
-                        <div class="form-check">
-                            <input th:field="*{payment}" id="debit" name="paymentMethod" type="radio" class="form-check-input" value="DEBIT_CARD" required>
-                            <label class="form-check-label" for="debit">Debit card</label>
-                        </div>
-                        <div class="form-check">
-                            <input th:field="*{payment}" id="paypal" name="paymentMethod" type="radio" class="form-check-input" value="PAYPAL" required>
-                            <label class="form-check-label" for="paypal">PayPal</label>
-                        </div>
-                    </div>
-
-
-
                     <hr class="my-4">
 
                     <button class="w-100 btn btn-primary btn-lg" type="submit">Next</button>
                 </form>
+                    <hr class="my-4">
+
+<!--                <form method="post"  th:object="${order}" class="needs-validation" novalidate>-->
+<!--                <h4 class="mb-3">Payment</h4>-->
+
+<!--                    <div class="my-3">-->
+<!--                        <span class="error" th:if="${#fields.hasErrors('payment')}" th:errors="*{payment}">Shipping ZipCode Error</span>-->
+
+<!--                        <div class="form-check">-->
+<!--                            <input th:field="*{payment}" id="credit" name="paymentMethod" type="radio" class="form-check-input" value="CREDIT_CARD" checked required>-->
+<!--                            <label class="form-check-label" for="credit">Credit card</label>-->
+<!--                        </div>-->
+<!--                        <div class="form-check">-->
+<!--                            <input th:field="*{payment}" id="debit" name="paymentMethod" type="radio" class="form-check-input" value="DEBIT_CARD" required>-->
+<!--                            <label class="form-check-label" for="debit">Debit card</label>-->
+<!--                        </div>-->
+<!--                        <div class="form-check">-->
+<!--                            <input th:field="*{payment}" id="paypal" name="paymentMethod" type="radio" class="form-check-input" value="PAYPAL" required>-->
+<!--                            <label class="form-check-label" for="paypal">PayPal</label>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+
+                    <hr class="my-4">
+
+<!--                    <button class="w-100 btn btn-primary btn-lg" type="submit">Next</button>-->
+<!--                </form>-->
             </div>
         </div>
     </main>

@@ -6,7 +6,7 @@ import com.ralf.NewDiverStore.customer.domain.model.*;
 import com.ralf.NewDiverStore.customer.domain.repository.CustomerRepository;
 import com.ralf.NewDiverStore.customer.service.CustomerService;
 import com.ralf.NewDiverStore.order.domain.model.Order;
-import com.ralf.NewDiverStore.order.domain.model.Payment;
+//import com.ralf.NewDiverStore.order.domain.model.Payment;
 import com.ralf.NewDiverStore.order.service.OrderService;
 import com.ralf.NewDiverStore.order.service.SessionOrderService;
 import jakarta.validation.Valid;
@@ -107,11 +107,10 @@ public class OrderViewController {
             @ModelAttribute("customer") Customer customer,
             Model model) {
         logger.info("wyświetlenie formularza address-form");
-
+        Order order = sessionOrderService.getOrder();
         model.addAttribute("shippingAddress", new ShippingAddress());
         model.addAttribute("billingAddress", new BillingAddress());
-        model.addAttribute("order", sessionOrderService.getOrder());
-
+        model.addAttribute("order", order);
 
 
         return "order/address";
@@ -119,16 +118,67 @@ public class OrderViewController {
 
     @PostMapping("/address-form")
     public String addressFormEditView(
-            @ModelAttribute("shippingAddress") ShippingAddress shippingAddress,
-            @ModelAttribute("billingAddress") BillingAddress billingAddress,
+            @ModelAttribute("shippingAddress") ShippingAddress shippingAddressForm,
+            @ModelAttribute("billingAddress") BillingAddress billingAddressForm,
             @ModelAttribute("customer") Customer customer,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
+        logger.debug("PostMapping : /address");
+
+        if (bindingResult.hasErrors()) {
+            logger.error("Error while completing form");
+            model.addAttribute("message", Message.error("Data writing error"));
+            return "order/address";
+        }
+
+        try {
+            Order order = sessionOrderService.getOrder();
+            logger.debug("Getting Order from session. Order id: {}", order.getId());
+
+            logger.debug("Got shippingAddres from shippingAddressForm: {}", shippingAddressForm);
 
 
+            //settery parametrów adresów
+            logger.debug("ShippingAddressForm.getStreet: {}", shippingAddressForm.getStreet());
 
-        return "test";
+            //metoda if sameAddress?
+
+            //przypisanie adresów do customera
+            customer.setShippingAddress(shippingAddressForm);
+            logger.debug("After setting shippingAddres in Customer: {}", shippingAddressForm.getId());
+            logger.debug("Before copying same billingAddress: {}", customer.isSameAddress());
+            if (customer.isSameAddress()) {
+                billingAddressForm.setStreet(shippingAddressForm.getStreet());
+                billingAddressForm.setCountry(shippingAddressForm.getCountry());
+                billingAddressForm.setCity(shippingAddressForm.getCity());
+                billingAddressForm.setZip(shippingAddressForm.getZip());
+            }
+            logger.debug("After copying same billingAddress: {}", customer.getBillingAddress());
+            logger.debug("Customer Before setting billingAddress: {}", customer.getBillingAddress());
+            customer.setBillingAddress(billingAddressForm);
+            logger.debug("Customer After setting billingAddress: {}", customer.getBillingAddress());
+
+//            logger.debug("Order Payment: {}", order.getPayment());
+            //update Customera do BD
+customer.addOrder(order);
+            logger.debug("Customer before persisting entity: {}", customer);
+            customerRepository.save(customer);
+            logger.debug("Customer After persisting entity: {}", customer);
+
+            logger.debug("Order before persisting entity: {}", order);
+
+            orderService.createOrder(order);
+            logger.debug("Order After persisting entity: {}", order);
+
+            return "redirect:/order/greetings/" + order.getId();
+
+        } catch (Exception e) {
+            logger.error("Exception shown", e);
+            model.addAttribute("message", Message.error("Unknown data writing error. Adding order failed."));
+            return "order/address";
+        }
+
     }
 
 
@@ -138,5 +188,6 @@ public class OrderViewController {
         model.addAttribute("order", sessionOrderService.getOrder());
         return "order/greetings";
     }
+
 
 }

@@ -36,4 +36,16 @@ public class BillingAddress{
         this.city = city;
         this.zip = zip;
     }
+
+    public BillingAddress updateBillingAddress(BillingAddress billingAddressRequest){
+        BillingAddress billingAddress = new BillingAddress(
+                billingAddressRequest.getStreet(),
+                billingAddressRequest.getCountry(),
+                billingAddressRequest.getCity(),
+                billingAddressRequest.zip
+        );
+        return billingAddress;
+    }
+
+
 }

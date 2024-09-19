@@ -40,22 +40,22 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(Order orderRequest) {
-        Order order = new Order();
-        logger.debug("New Order added with id: {}", order.getId());
-        order.setPayment(orderRequest.getPayment());
-        logger.debug("Payment set to: {}", order.getPayment());
+
+        logger.debug("New Order added with id: {}", orderRequest.getId());
+//        order.setPayment(orderRequest.getPayment());
+//        logger.debug("Payment set to: {}", order.getPayment());
 
         Customer customer = orderRequest.getCustomer();
-        customer.addOrder(order);
-        logger.debug("Customer to Order added: {}", order.getCustomer().getId());
+        customer.addOrder(orderRequest);
+        logger.debug("Customer to Order added: {}", orderRequest.getCustomer().getId());
 
         LocalDateTime orderDateTime = LocalDateTime.now();
-        order.setOrderTime(orderDateTime);
+        orderRequest.setOrderTime(orderDateTime);
         logger.debug("Order time: {}", orderDateTime);
 
-        logger.debug("Zamówienie przed zapisem: {}", order);
-        logger.debug("Zamówienie przed zapisem, id klienta: {}", order.getCustomer().getId());
-        return orderRepository.save(order);
+        logger.debug("Zamówienie przed zapisem: {}", orderRequest);
+        logger.debug("Zamówienie przed zapisem, id klienta: {}", orderRequest.getCustomer().getId());
+        return orderRepository.save(orderRequest);
     }
 
     @Transactional(readOnly = true)
@@ -79,7 +79,7 @@ public class OrderService {
     public Order updateOrder(UUID orderId, Order orderRequest) {
         Order order = findOrder(orderId);
         order.setCustomer(orderRequest.getCustomer());
-        order.setPayment(orderRequest.getPayment());
+//        order.setPayment(orderRequest.getPayment());
 
         return orderRepository.save(order);
     }

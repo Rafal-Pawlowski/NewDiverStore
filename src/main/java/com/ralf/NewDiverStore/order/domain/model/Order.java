@@ -3,6 +3,7 @@ package com.ralf.NewDiverStore.order.domain.model;
 import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,13 +16,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 public class Order {
 
     @Id
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    private Payment payment;
+//    @Enumerated(EnumType.STRING)
+//    private Payment payment;
 
 
     @ManyToOne
@@ -36,10 +38,10 @@ public class Order {
         this.orderTime = LocalDateTime.now();
     }
 
-    public Order(Payment payment) {
-        this();
-        this.payment = payment;
-    }
+//    public Order(Payment payment) {
+//        this();
+//        this.payment = payment;
+//    }
 
 
 }
