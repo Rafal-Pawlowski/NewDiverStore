@@ -45,7 +45,7 @@
                 </div>
                 <h4 class="mb-3">Enter Information</h4>
 
-                <form method="post"  th:object="${shippingAddress}" class="needs-validation" novalidate>
+                <form method="post"  th:object="${addressWrapper}" class="needs-validation" novalidate>
 
                     <div class="error" th:if="${#fields.hasAnyErrors()}">
                         <ul>
@@ -58,9 +58,9 @@
                         <div class="col-12">
                             <label for="shipping-address" class="form-label">Shipping Address</label>
 
-                            <span class="error" th:if="${#fields.hasErrors('street')}" th:errors="*{street}">Shipping Street Error</span>
+                            <span class="error" th:if="${#fields.hasErrors('shippingAddress.street')}" th:errors="*{shippingAddress.street}">Shipping Street Error</span>
 
-                            <input th:field="*{street}" type="text" class="form-control" id="shipping-address" placeholder="1234 Main St" required>
+                            <input th:field="*{shippingAddress.street}" type="text" class="form-control" id="shipping-address" placeholder="1234 Main St" required>
                             <div class="invalid-feedback">
                                 Please enter your shipping address.
                             </div>
@@ -68,8 +68,8 @@
 
                         <div class="col-md-5">
                             <label for="shipping-country" class="form-label">Country</label>
-                            <span class="error" th:if="${#fields.hasErrors('country')}" th:errors="*{country}">Country Error</span>
-                            <select th:field="*{country}" class="form-select" id="shipping-country" required>
+                            <span class="error" th:if="${#fields.hasErrors('shippingAddress.country')}" th:errors="*{shippingAddress.country}">Country Error</span>
+                            <select th:field="*{shippingAddress.country}" class="form-select" id="shipping-country" required>
                                 <option value="">Choose...</option>
                                 <option value="USA">United States</option>
                                 <option value="POLAND">Poland</option>
@@ -82,9 +82,9 @@
 
                         <div class="col-md-4">
                             <label for="shipping-city" class="form-label">City</label>
-                            <span class="error" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">City Error</span>
+                            <span class="error" th:if="${#fields.hasErrors('shippingAddress.city')}" th:errors="*{shippingAddress.city}">City Error</span>
 
-                            <input th:field="*{city}" type="text" class="form-control" id="shipping-city" placeholder="Input City" required>
+                            <input th:field="*{shippingAddress.city}" type="text" class="form-control" id="shipping-city" placeholder="Input City" required>
                             <div class="invalid-feedback">
                                 Please enter your shipping address.
                             </div>
@@ -92,17 +92,17 @@
 
                         <div class="col-md-3">
                             <label for="shipping-zip" class="form-label">Zip</label>
-                            <span class="error" th:if="${#fields.hasErrors('zip')}" th:errors="*{zip}">ZipCode Error</span>
+                            <span class="error" th:if="${#fields.hasErrors('shippingAddress.zip')}" th:errors="*{shippingAddress.zip}">ZipCode Error</span>
 
-                            <input th:field="*{zip}" type="text" class="form-control" id="shipping-zip" placeholder="XX-XXX" required>
+                            <input th:field="*{shippingAddress.zip}" type="text" class="form-control" id="shipping-zip" placeholder="XX-XXX" required>
                             <div class="invalid-feedback">
                                 Zip code required.
                             </div>
                         </div>
                     </div>
-                </form>
+
                     <hr class="my-4">
-                <form method="post"  th:object="${customer}" class="needs-validation" novalidate>
+
 
                     <div class="error" th:if="${#fields.hasAnyErrors()}">
                         <ul>
@@ -111,13 +111,12 @@
                     </div>
 
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" th:field="*{sameAddress}" id="same-address">
+                        <input type="checkbox" class="form-check-input"  id="same-address">
                         <label class="form-check-label" for="same-address">Billing address is the same as my shipping address</label>
                     </div>
-                </form>
+
                     <hr class="my-4">
 
-                <form method="post"  th:object="${billingAddress}" class="needs-validation" novalidate>
 
                 <h4 class="mb-3">Billing address</h4>
 
@@ -128,9 +127,9 @@
 
                         <div class="col-12">
                             <label for="billing-address" class="form-label">Billing Address</label>
-                            <span class="error" th:if="${#fields.hasErrors('street')}" th:errors="*{street}">Billing Street Error</span>
+                            <span class="error" th:if="${#fields.hasErrors('billingAddress.street')}" th:errors="*{billingAddress.street}">Billing Street Error</span>
 
-                            <input th:field="*{street}" type="text" class="form-control" id="billing-address" placeholder="1234 Main St" required>
+                            <input th:field="*{billingAddress.street}" type="text" class="form-control" id="billing-address" placeholder="1234 Main St" required>
                             <div class="invalid-feedback">
                                 Please enter your shipping address.
                             </div>
@@ -138,9 +137,9 @@
 
                         <div class="col-md-5">
                             <label for="billing-country" class="form-label">Country</label>
-                            <span class="error" th:if="${#fields.hasErrors('country')}" th:errors="*{country}">Billing Country Error</span>
+                            <span class="error" th:if="${#fields.hasErrors('billingAddress.country')}" th:errors="*{billingAddress.country}">Billing Country Error</span>
 
-                            <select th:field="*{country}" class="form-select" id="billing-country" required>
+                            <select th:field="*{billingAddress.country}" class="form-select" id="billing-country" required>
                                 <option value="">Choose...</option>
                                 <option value="USA">United States</option>
                                 <option value="POLAND">Poland</option>
@@ -153,9 +152,9 @@
 
                         <div class="col-md-4">
                             <label for="billing-city" class="form-label">City</label>
-                            <span class="error" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">Billing City Error</span>
+                            <span class="error" th:if="${#fields.hasErrors('billingAddress.city')}" th:errors="*{billingAddress.city}">Billing City Error</span>
 
-                            <input th:field="*{city}" type="text" class="form-control" id="billing-city" placeholder="Input City" required>
+                            <input th:field="*{billingAddress.city}" type="text" class="form-control" id="billing-city" placeholder="Input City" required>
                             <div class="invalid-feedback">
                                 Please enter your shipping address.
                             </div>
@@ -163,9 +162,9 @@
 
                         <div class="col-md-3">
                             <label for="billing-zip" class="form-label">Zip</label>
-                            <span class="error" th:if="${#fields.hasErrors('zip')}" th:errors="*{zip}">Shipping ZipCode Error</span>
+                            <span class="error" th:if="${#fields.hasErrors('billingAddress.zip')}" th:errors="*{billingAddress.zip}">Shipping ZipCode Error</span>
 
-                            <input th:field="*{zip}" type="text" class="form-control" id="billing-zip" placeholder="XX-XXX" required>
+                            <input th:field="*{billingAddress.zip}" type="text" class="form-control" id="billing-zip" placeholder="XX-XXX" required>
                             <div class="invalid-feedback">
                                 Zip code required.
                             </div>
@@ -175,34 +174,7 @@
 
                     <button class="w-100 btn btn-primary btn-lg" type="submit">Next</button>
                 </form>
-                    <hr class="my-4">
 
-<!--                <form method="post"  th:object="${order}" class="needs-validation" novalidate>-->
-<!--                <h4 class="mb-3">Payment</h4>-->
-
-<!--                    <div class="my-3">-->
-<!--                        <span class="error" th:if="${#fields.hasErrors('payment')}" th:errors="*{payment}">Shipping ZipCode Error</span>-->
-
-<!--                        <div class="form-check">-->
-<!--                            <input th:field="*{payment}" id="credit" name="paymentMethod" type="radio" class="form-check-input" value="CREDIT_CARD" checked required>-->
-<!--                            <label class="form-check-label" for="credit">Credit card</label>-->
-<!--                        </div>-->
-<!--                        <div class="form-check">-->
-<!--                            <input th:field="*{payment}" id="debit" name="paymentMethod" type="radio" class="form-check-input" value="DEBIT_CARD" required>-->
-<!--                            <label class="form-check-label" for="debit">Debit card</label>-->
-<!--                        </div>-->
-<!--                        <div class="form-check">-->
-<!--                            <input th:field="*{payment}" id="paypal" name="paymentMethod" type="radio" class="form-check-input" value="PAYPAL" required>-->
-<!--                            <label class="form-check-label" for="paypal">PayPal</label>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-
-
-                    <hr class="my-4">
-
-<!--                    <button class="w-100 btn btn-primary btn-lg" type="submit">Next</button>-->
-<!--                </form>-->
             </div>
         </div>
     </main>

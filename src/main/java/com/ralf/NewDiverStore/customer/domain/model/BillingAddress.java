@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-public class BillingAddress{
+public class BillingAddress {
 
     @Id
     private UUID id;
@@ -37,14 +37,13 @@ public class BillingAddress{
         this.zip = zip;
     }
 
-    public BillingAddress updateBillingAddress(BillingAddress billingAddressRequest){
-        BillingAddress billingAddress = new BillingAddress(
-                billingAddressRequest.getStreet(),
-                billingAddressRequest.getCountry(),
-                billingAddressRequest.getCity(),
-                billingAddressRequest.zip
-        );
-        return billingAddress;
+    public BillingAddress sameAddressUpdate(ShippingAddress shippingAddress) {
+        this.setStreet(shippingAddress.getStreet());
+        this.setCity(shippingAddress.getCity());
+        this.setCountry(shippingAddress.getCountry());
+        this.setZip(shippingAddress.getZip());
+        return this;
+
     }
 
 

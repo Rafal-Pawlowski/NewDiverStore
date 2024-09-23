@@ -1,7 +1,9 @@
 package com.ralf.NewDiverStore.customer.service;
 
+import com.ralf.NewDiverStore.customer.domain.model.BillingAddress;
 import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import com.ralf.NewDiverStore.customer.domain.model.CustomerBuilder;
+import com.ralf.NewDiverStore.customer.domain.model.ShippingAddress;
 import com.ralf.NewDiverStore.customer.domain.repository.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -38,9 +40,8 @@ public class CustomerService {
     return customerRepository.save(customer);
     }
 
-    //TODO metoda do ustawienia tylko adresów u klienta
     @Transactional
-    public Customer createOrUpdateCustomer(Customer customerRequest){
+    public Customer createOrUpdateCustomerWithNamesAndEmail(Customer customerRequest){
         logger.debug("CreateOrUpdateCustomer method");
         if(customerRequest.getId()!=null) {
             Optional<Customer> existingCustomer = customerRepository.findById(customerRequest.getId());
@@ -49,8 +50,6 @@ public class CustomerService {
                 customer.setFirstName(customerRequest.getFirstName());
                 customer.setLastName(customerRequest.getLastName());
                 customer.setEmail(customerRequest.getEmail());
-//                customer.setShippingAddress(customerRequest.getShippingAddress());
-//                customer.setBillingAddress(customerRequest.getBillingAddress());
                 logger.debug("Before Saving customer in createOrUpdateCustomer method: {}", customer);
                 return customerRepository.save(customer);
             }
@@ -58,6 +57,8 @@ public class CustomerService {
         logger.debug("Before Saving customerRequest in createOrUpdateCustomer method: {}", customerRequest);
         return createCustomer(customerRequest);
     }
+
+
 
     @Transactional(readOnly = true)
     public Page<Customer> getCustomers(Pageable pageable) {

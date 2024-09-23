@@ -22,8 +22,8 @@ public class Order {
     @Id
     private UUID id;
 
-//    @Enumerated(EnumType.STRING)
-//    private Payment payment;
+    @Enumerated(EnumType.STRING)
+    private Payment payment;
 
 
     @ManyToOne

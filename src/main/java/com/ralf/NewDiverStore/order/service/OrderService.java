@@ -35,15 +35,14 @@ public class OrderService {
 
         logger.debug("Order time: {}", orderDateTime);
         return orderRepository.save(order);
-
     }
 
     @Transactional
     public Order createOrder(Order orderRequest) {
 
         logger.debug("New Order added with id: {}", orderRequest.getId());
-//        order.setPayment(orderRequest.getPayment());
-//        logger.debug("Payment set to: {}", order.getPayment());
+        orderRequest.setPayment(orderRequest.getPayment());
+        logger.debug("Payment set to: {}", orderRequest.getPayment());
 
         Customer customer = orderRequest.getCustomer();
         customer.addOrder(orderRequest);
@@ -79,7 +78,7 @@ public class OrderService {
     public Order updateOrder(UUID orderId, Order orderRequest) {
         Order order = findOrder(orderId);
         order.setCustomer(orderRequest.getCustomer());
-//        order.setPayment(orderRequest.getPayment());
+        order.setPayment(orderRequest.getPayment());
 
         return orderRepository.save(order);
     }

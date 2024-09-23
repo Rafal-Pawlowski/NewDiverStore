@@ -95,8 +95,37 @@
 <div class="container">
     <main>
         <h2>Thanks for your shopping. Have a nice day!</h2>
-            <a th:text="'Your order id is: '+ ${order.getId()}"></a>
 
+        <div class="align-content-center">
+            <h2>Customer details</h2>
+            <p th:text="'customer id: '+ ${customer.id}"></p>
+            <p th:text="'customer name: '+ ${customer.firstName}"></p>
+            <p th:text="'customer last name: '+ ${customer.lastName}"></p>
+            <p th:text="'email: '+ ${customer.email}"></p>
+            <h2>Shipping address</h2>
+            <p th:text="'street: '+ ${customer.shippingAddress.street}"></p>
+            <p th:text="'city: '+ ${customer.shippingAddress.city}"></p>
+            <p th:text="'zip code: '+ ${customer.shippingAddress.zip}"></p>
+            <p th:text="'country: '+ ${customer.shippingAddress.country}"></p>
+            <h2>Billing address</h2>
+            <p th:text="'street: '+ ${customer.billingAddress.street}"></p>
+            <p th:text="'city: '+ ${customer.billingAddress.city}"></p>
+            <p th:text="'zip code: '+ ${customer.billingAddress.zip}"></p>
+            <p th:text="'country: '+ ${customer.billingAddress.country}"></p>
+            <h2>Payment</h2>
+            <p th:text="${order.payment}"></p> <!-- Wyświetlanie wartości enuma -->
+
+        </div>
+
+        <a th:text="'Your order id is: '+ ${order.getId()}"></a>
+
+
+        <hr>
+        <!-- Przycisk do pobrania faktury -->
+
+        <a th:href="@{'/order/download-bill/' + ${order.getId()}}" class="btn btn-primary mt-3">
+            Download your bill
+        </a>
     </main>
 
     <th:block th:replace="category/template :: footer" class="text-body-secondary py-5">
