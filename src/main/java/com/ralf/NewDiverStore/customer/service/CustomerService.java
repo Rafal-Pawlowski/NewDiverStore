@@ -33,8 +33,8 @@ public class CustomerService {
                 .withFirstName(customerRequest.getFirstName())
                 .withLastName(customerRequest.getLastName())
                 .withEmail(customerRequest.getEmail())
-                .withShippingAddress(customerRequest.getShippingAddress())
-                .withBillingAddress(customerRequest.getBillingAddress())
+//                .withShippingAddress(customerRequest.getShippingAddress())
+//                .withBillingAddress(customerRequest.getBillingAddress())
                 .build();
 
     return customerRepository.save(customer);

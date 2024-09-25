@@ -25,6 +25,7 @@ public class CartViewController {
     @GetMapping()
     public String index(Model model) {
 
+
         model.addAttribute("cart", sessionCartService.getCart());
         model.addAttribute("totalCostShippingIncluded", sessionCartService.getTotalCostShippingIncluded());
         model.addAttribute("shipping", sessionCartService.getShippingCost());

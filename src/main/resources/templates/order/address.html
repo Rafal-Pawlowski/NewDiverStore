@@ -47,18 +47,11 @@
 
                 <form method="post"  th:object="${addressWrapper}" class="needs-validation" novalidate>
 
-                    <div class="error" th:if="${#fields.hasAnyErrors()}">
-                        <ul>
-                            <li th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
-                        </ul>
-                    </div>
 
                     <div class="row g-3">
 
                         <div class="col-12">
                             <label for="shipping-address" class="form-label">Shipping Address</label>
-
-                            <span class="error" th:if="${#fields.hasErrors('shippingAddress.street')}" th:errors="*{shippingAddress.street}">Shipping Street Error</span>
 
                             <input th:field="*{shippingAddress.street}" type="text" class="form-control" id="shipping-address" placeholder="1234 Main St" required>
                             <div class="invalid-feedback">
@@ -68,7 +61,6 @@
 
                         <div class="col-md-5">
                             <label for="shipping-country" class="form-label">Country</label>
-                            <span class="error" th:if="${#fields.hasErrors('shippingAddress.country')}" th:errors="*{shippingAddress.country}">Country Error</span>
                             <select th:field="*{shippingAddress.country}" class="form-select" id="shipping-country" required>
                                 <option value="">Choose...</option>
                                 <option value="USA">United States</option>
@@ -82,7 +74,6 @@
 
                         <div class="col-md-4">
                             <label for="shipping-city" class="form-label">City</label>
-                            <span class="error" th:if="${#fields.hasErrors('shippingAddress.city')}" th:errors="*{shippingAddress.city}">City Error</span>
 
                             <input th:field="*{shippingAddress.city}" type="text" class="form-control" id="shipping-city" placeholder="Input City" required>
                             <div class="invalid-feedback">
@@ -92,7 +83,6 @@
 
                         <div class="col-md-3">
                             <label for="shipping-zip" class="form-label">Zip</label>
-                            <span class="error" th:if="${#fields.hasErrors('shippingAddress.zip')}" th:errors="*{shippingAddress.zip}">ZipCode Error</span>
 
                             <input th:field="*{shippingAddress.zip}" type="text" class="form-control" id="shipping-zip" placeholder="XX-XXX" required>
                             <div class="invalid-feedback">
@@ -104,11 +94,6 @@
                     <hr class="my-4">
 
 
-                    <div class="error" th:if="${#fields.hasAnyErrors()}">
-                        <ul>
-                            <li th:each="err : ${#fields.allErrors()}" th:text="${err}"/>
-                        </ul>
-                    </div>
 
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input"  id="same-address">
@@ -200,23 +185,57 @@
             zip: document.getElementById('billing-zip')
         };
 
+        // Funkcja kopiująca dane z shipping do billing
+        function copyShippingToBilling() {
+            billingAddressFields.street.value = shippingAddressFields.street.value;
+            billingAddressFields.country.value = shippingAddressFields.country.value;
+            billingAddressFields.city.value = shippingAddressFields.city.value;
+            billingAddressFields.zip.value = shippingAddressFields.zip.value;
+        }
+
+        // Obsługa checkboxa dla kopiowania adresu
         sameAddressCheckbox.addEventListener('change', function () {
             if (this.checked) {
-                billingAddressFields.street.value = shippingAddressFields.street.value;
-                billingAddressFields.country.value = shippingAddressFields.country.value;
-                billingAddressFields.city.value = shippingAddressFields.city.value;
-                billingAddressFields.zip.value = shippingAddressFields.zip.value;
-
-                // Dezaktywujemy pola, aby uniemożliwić ich edycję
+                copyShippingToBilling();
+                // Dezaktywacja pól billing
                 for (let key in billingAddressFields) {
                     billingAddressFields[key].setAttribute('readonly', 'true');
                 }
             } else {
-                // Aktywujemy pola w przypadku odznaczenia
+                // Aktywacja pól billing w przypadku odznaczenia checkboxa
                 for (let key in billingAddressFields) {
                     billingAddressFields[key].removeAttribute('readonly');
                 }
             }
+        });
+
+        // Nasłuchiwanie zmian w polach shipping i kopiowanie do billing, jeśli checkbox jest zaznaczony
+        Object.values(shippingAddressFields).forEach(field => {
+            field.addEventListener('input', function () {
+                if (sameAddressCheckbox.checked) {
+                    copyShippingToBilling();
+                }
+            });
+        });
+
+        // Walidacja formularza
+        const form = document.querySelector('form.needs-validation');
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                // Weryfikacja billingAddress jeśli checkbox jest zaznaczony
+                if (sameAddressCheckbox.checked) {
+                    const billingAddressInvalid = Object.values(billingAddressFields).some(field => !field.value);
+                    if (billingAddressInvalid) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        alert("Billing Address contains empty fields!");
+                    }
+                }
+            }
+            form.classList.add('was-validated');
         });
     });
 </script>

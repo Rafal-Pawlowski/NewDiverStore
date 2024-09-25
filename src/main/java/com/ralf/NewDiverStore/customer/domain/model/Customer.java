@@ -39,8 +39,6 @@ public class Customer {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private BillingAddress billingAddress;
 
-    private boolean sameAddress;
-
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders = new HashSet<>();
 
@@ -63,7 +61,7 @@ public class Customer {
         this.email = email;
         this.shippingAddress = shippingAddress;
         this.billingAddress = billingAddress;
-        this.sameAddress = false;
+
     }
 
     public void addOrder(Order order) {

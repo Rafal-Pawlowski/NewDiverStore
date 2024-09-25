@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,9 +19,14 @@ public class ShippingAddress {
 
     @Id
     private UUID id;
+
     private String street;
+
     private String country;
+
+
     private String city;
+
     private String zip;
 
     @OneToOne
@@ -38,13 +45,5 @@ public class ShippingAddress {
     }
 
 
-    public static ShippingAddress updateShippingAddress(ShippingAddress shippingAddressRequest){
-        ShippingAddress shippingAddress = new ShippingAddress(
-                shippingAddressRequest.getStreet(),
-                shippingAddressRequest.getCountry(),
-                shippingAddressRequest.getCity(),
-                shippingAddressRequest.zip
-        );
-        return shippingAddress;
-    }
+
 }

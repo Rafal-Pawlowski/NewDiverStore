@@ -5,83 +5,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
-
 <style>
-    .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
+    body {
+        font-family: Arial, sans-serif;
     }
 
-    @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-            font-size: 3.5rem;
-        }
+    .container {
+        margin-top: 20px;
+        border: 1px solid black;
+        padding: 20px;
     }
 
-    .b-example-divider {
-        width: 100%;
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
-        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    .section {
+        border: 1px solid black;
+        padding: 20px;
+        margin-bottom: 20px;
     }
 
-    .b-example-vr {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 100vh;
+    .section h2 {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
     }
 
-    .bi {
-        vertical-align: -.125em;
-        fill: currentColor;
+    .section p {
+        margin: 5px 0;
     }
 
-    .nav-scroller {
-        position: relative;
-        z-index: 2;
-        height: 2.75rem;
-        overflow-y: hidden;
-    }
-
-    .nav-scroller .nav {
+    .order-summary {
         display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 20px;
     }
 
-    .btn-bd-primary {
-        --bd-violet-bg: #712cf9;
-        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
-        --bs-btn-font-weight: 600;
-        --bs-btn-color: var(--bs-white);
-        --bs-btn-bg: var(--bd-violet-bg);
-        --bs-btn-border-color: var(--bd-violet-bg);
-        --bs-btn-hover-color: var(--bs-white);
-        --bs-btn-hover-bg: #6528e0;
-        --bs-btn-hover-border-color: #6528e0;
-        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-        --bs-btn-active-color: var(--bs-btn-hover-color);
-        --bs-btn-active-bg: #5a23c8;
-        --bs-btn-active-border-color: #5a23c8;
+    .order-summary .total {
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-top: 20px;
     }
 
-    .bd-mode-toggle {
-        z-index: 1500;
+    .product-list {
+        border: 1px solid black;
+        padding: 20px;
+        margin-top: 20px;
     }
 
-    .bd-mode-toggle .dropdown-menu .active .bi {
-        display: block !important;
+    .product-list h4 {
+        margin-bottom: 10px;
+    }
+
+    .product-list table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .product-list table, .product-list th, .product-list td {
+        border: 1px solid black;
+    }
+
+    .product-list th, .product-list td {
+        padding: 8px;
+        text-align: left;
+    }
+
+    .total-amount {
+        text-align: right;
+        font-weight: bold;
     }
 </style>
 </head>
@@ -90,41 +80,68 @@
 <th:block th:replace="category/template::icons"/>
 <th:block th:replace="category/template::header"/>
 
-
-
 <div class="container">
     <main>
         <h2>Thanks for your shopping. Have a nice day!</h2>
+        <!-- Sekcja danych klienta i adresu billingowego -->
+        <div class="section">
 
-        <div class="align-content-center">
             <h2>Customer details</h2>
-            <p th:text="'customer id: '+ ${customer.id}"></p>
-            <p th:text="'customer name: '+ ${customer.firstName}"></p>
-            <p th:text="'customer last name: '+ ${customer.lastName}"></p>
-            <p th:text="'email: '+ ${customer.email}"></p>
-            <h2>Shipping address</h2>
-            <p th:text="'street: '+ ${customer.shippingAddress.street}"></p>
-            <p th:text="'city: '+ ${customer.shippingAddress.city}"></p>
-            <p th:text="'zip code: '+ ${customer.shippingAddress.zip}"></p>
-            <p th:text="'country: '+ ${customer.shippingAddress.country}"></p>
-            <h2>Billing address</h2>
-            <p th:text="'street: '+ ${customer.billingAddress.street}"></p>
-            <p th:text="'city: '+ ${customer.billingAddress.city}"></p>
-            <p th:text="'zip code: '+ ${customer.billingAddress.zip}"></p>
-            <p th:text="'country: '+ ${customer.billingAddress.country}"></p>
-            <h2>Payment</h2>
-            <p th:text="${order.payment}"></p> <!-- Wyświetlanie wartości enuma -->
+            <p th:text="'First name: '+ ${customer.firstName}"></p>
+            <p th:text="'Last name: '+ ${customer.lastName}"></p>
+            <p th:text="'E-mail: '+ ${customer.email}"></p>
 
+            <h2>Billing Address</h2>
+            <p th:text="'Street: '+ ${customer.billingAddress.street}"></p>
+            <p th:text="'City: '+ ${customer.billingAddress.city}"></p>
+            <p th:text="'Zip code: '+ ${customer.billingAddress.zip}"></p>
+            <p th:text="'Country: '+ ${customer.billingAddress.country}"></p>
         </div>
 
-        <a th:text="'Your order id is: '+ ${order.getId()}"></a>
+        <!-- Sekcja adresu wysyłkowego -->
+        <div class="section">
+            <h2>Shipping Address</h2>
+            <p th:text="'Street: '+ ${customer.shippingAddress.street}"></p>
+            <p th:text="'City: '+ ${customer.shippingAddress.city}"></p>
+            <p th:text="'Zip code: '+ ${customer.shippingAddress.zip}"></p>
+            <p th:text="'Country: '+ ${customer.shippingAddress.country}"></p>
+        </div>
 
+        <!-- Lista produktów -->
+        <div class="product-list">
+            <h4>Products</h4>
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cart.cartItems}">
+                    <td th:text="${item.product.name}">Produkt</td>
+                    <td th:text="${item.counter}">1</td>
+                    <td th:text="${item.price}">99.99 zł</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Podsumowanie zamówienia -->
+        <div class="order-summary">
+            <div class="total">
+                <p th:text="'Shipping: ' + ${shipping} + ' zł'">20 zł</p>
+                <p th:text="'Total: ' + ${totalCostShippingIncluded} + ' zł'">Total: 299.99 zł</p>
+                <p th:text="'Payment: ' + ${order.payment}"></p>
+            </div>
+        </div>
 
         <hr>
-        <!-- Przycisk do pobrania faktury -->
 
-        <a th:href="@{'/order/download-bill/' + ${order.getId()}}" class="btn btn-primary mt-3">
-            Download your bill
+        <!-- Przycisk do powrotu do sklepu -->
+        <a th:href="@{'/index'}" class="btn btn-primary mt-3">
+            Go to shop
         </a>
     </main>
 
@@ -138,8 +155,8 @@
         </div>
     </th:block>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="checkout.js"></script>
 
 </body>
 </html>

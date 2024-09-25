@@ -93,6 +93,38 @@
     .go-next-button:hover {
         background-color: #218838; /* Ciemniejszy zielony po najechaniu */
     }
+    .empty-cart {
+        text-align: center;
+        margin-top: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 50vh; /* Wysokość kontenera, aby elementy były na środku */
+    }
+
+    .empty-cart h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .continue-shopping-button {
+        background-color: #ffc107; /* Żółty kolor */
+        color: black;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1.2rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    .continue-shopping-button:hover {
+        background-color: #e0a800; /* Ciemniejszy żółty po najechaniu */
+        text-decoration: none;
+        color: black;
+    }
+
 
 </style>
 </head>
@@ -103,59 +135,71 @@
 
 <main>
     <div class="container">
-        <h1 class="cart-title">Twój koszyk</h1>
+        <h1 class="cart-title">Your Cart</h1>
+
+
         <div th:if="${message != null}" class="alert alert-success" role="alert">
             <span th:text="${message}"></span>
         </div>
-        <div th:each="cartItem : ${cart.getCartItems()}" class="cart-item">
-            <img th:src="@{'/uploads/' + ${cartItem.product.imagePath}}" alt="Product Image">
-            <div>
-                <h5 th:text="${cartItem.product.name}">Product Name</h5>
-                <p th:text="'Price: ' + ${cartItem.product.price} + ' zł'">Price: 999 zł</p>
-            </div>
 
-            <!-- Formularz dla zmiany ilości (połączenie przycisków plus i minus w jednym formularzu) -->
-            <form th:action="@{'/cart/update/' + ${cartItem.product.id}}" method="post" class="quantity-input">
-                <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'decrease')">-</button>
-                <input type="number" name="qty" th:value="${cartItem.counter}" class="form-control text-center" min="1">
-                <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'increase')">+</button>
-                <!-- Ukryte pole, które będzie wskazywać, czy zmniejszamy czy zwiększamy ilość -->
-                <input type="hidden" name="action" value="">
-            </form>
-
-            <!-- Przycisk usuwania produktu -->
-            <form th:action="@{'/cart/delete/' + ${cartItem.product.id}}" method="get">
-                <button class="delete-button" type="submit">
-                    <i class="bi bi-trash"></i> Delete
-                </button>
-            </form>
-
-            <div>
-                <h5 th:text="'Total: ' + ${cartItem.price} + ' zł'">Total: 999 zł</h5>
-            </div>
+        <!-- Gdy koszyk jest pusty -->
+        <div th:if="${cart.getCartItems().isEmpty()}" class="empty-cart">
+            <h2>Your Cart is empty</h2>
+            <a th:href="@{/categories}" class="continue-shopping-button">Continue shopping</a>
         </div>
 
-        <div class="cart-summary">
-            <h4>Podsumowanie</h4>
-            <div class="summary-item">
-                <span>Produkty:</span>
-                <span th:text="${cart.getSum()} + ' zł'">999 zł</span>
+        <div th:if="${!cart.getCartItems().isEmpty()}">
+            <div th:each="cartItem : ${cart.getCartItems()}" class="cart-item">
+                <img th:src="@{'/uploads/' + ${cartItem.product.imagePath}}" alt="Product Image">
+                <div>
+                    <h5 th:text="${cartItem.product.name}">Product Name</h5>
+                    <p th:text="'Price: ' + ${cartItem.product.price} + ' zł'">Price: 999 zł</p>
+                </div>
+
+                <!-- Formularz dla zmiany ilości (połączenie przycisków plus i minus w jednym formularzu) -->
+                <form th:action="@{'/cart/update/' + ${cartItem.product.id}}" method="post" class="quantity-input">
+                    <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'decrease')">-</button>
+                    <input type="number" name="qty" th:value="${cartItem.counter}" class="form-control text-center" min="1">
+                    <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'increase')">+</button>
+                    <!-- Ukryte pole, które będzie wskazywać, czy zmniejszamy czy zwiększamy ilość -->
+                    <input type="hidden" name="action" value="">
+                </form>
+
+                <!-- Przycisk usuwania produktu -->
+                <form th:action="@{'/cart/delete/' + ${cartItem.product.id}}" method="get">
+                    <button class="delete-button" type="submit">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </form>
+
+                <div>
+                    <h5 th:text="'Total: ' + ${cartItem.price} + ' zł'">Total: 999 zł</h5>
+                </div>
             </div>
-            <div class="summary-item">
-                <span>Wysyłka:</span>
-                <span th:text="${shipping} + ' zł'">20 zł</span>
+
+            <div class="cart-summary">
+                <h4>Podsumowanie</h4>
+                <div class="summary-item">
+                    <span>Produkty:</span>
+                    <span th:text="${cart.getSum()} + ' zł'">999 zł</span>
+                </div>
+                <div class="summary-item">
+                    <span>Wysyłka:</span>
+                    <span th:text="${shipping} + ' zł'">20 zł</span>
+                </div>
+                <div class="summary-item">
+                    <span>Total:</span>
+                    <span th:text="${totalCostShippingIncluded} + ' zł'">1019 zł</span>
+                </div>
             </div>
-            <div class="summary-item">
-                <span>Total:</span>
-                <span th:text="${totalCostShippingIncluded} + ' zł'">1019 zł</span>
+            <div class="go-next-container">
+                <a th:href="@{/order/customer-details}" class="go-next-button">
+                    Go to next
+                </a>
             </div>
-        </div>
-        <div class="go-next-container">
-            <a th:href="@{/order/customer-details}" class="go-next-button">
-                Go to next
-            </a>
         </div>
     </div>
+
 </main>
 
 <th:block th:replace="~{category/template :: footer}" class="text-body-secondary py-5">

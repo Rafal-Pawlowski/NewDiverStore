@@ -1,6 +1,7 @@
 package com.ralf.NewDiverStore.order.controller;
 
-import com.ralf.NewDiverStore.AddressWrapper;
+import com.ralf.NewDiverStore.cart.service.SessionCartService;
+import com.ralf.NewDiverStore.wrapper.AddressWrapper;
 import com.ralf.NewDiverStore.common.dto.Message;
 import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import com.ralf.NewDiverStore.customer.domain.repository.CustomerRepository;
@@ -32,26 +33,26 @@ public class OrderViewController {
 
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
+    private final SessionCartService sessionCartService;
 
 
-    public OrderViewController(SessionOrderService sessionOrderService, OrderService orderService, CustomerService customerService, CustomerRepository customerRepository) {
+    public OrderViewController(SessionOrderService sessionOrderService, OrderService orderService, CustomerService customerService, CustomerRepository customerRepository, SessionCartService sessionCartService) {
         this.sessionOrderService = sessionOrderService;
 
         this.orderService = orderService;
         this.customerService = customerService;
         this.customerRepository = customerRepository;
+        this.sessionCartService = sessionCartService;
     }
 
     @GetMapping("/customer-details")
     public String customerDetailsView(Model model) {
-        logger.info(" wyswietlenie GetMapping /customer-details");
+
+
         Order order = sessionOrderService.initiateOrderSession();
         logger.debug("Session order initiated");
 
-
         model.addAttribute("customer", new Customer());
-        logger.debug("order customer: {}", order.getCustomer());
-        logger.debug("New customer added");
 
         return "order/customer-details";
     }
@@ -73,11 +74,9 @@ public class OrderViewController {
 
         try {
             Order order = sessionOrderService.getOrder();
-            logger.debug("Got order from session: {}", order);
 
-            logger.debug("Got customer from orderForm: {}", customerForm);
             Customer savedCustomer = customerService.createOrUpdateCustomerWithNamesAndEmail(customerForm);
-            logger.debug("Created or updated customer to DB: {}", savedCustomer);
+            logger.info("Created or updated customer to DB: {}", savedCustomer);
 
             redirectAttributes.addFlashAttribute("message", Message.info("New Order added"));
 
@@ -96,9 +95,7 @@ public class OrderViewController {
             @ModelAttribute("customer") Customer customer,
             Model model) {
         logger.info("wyświetlenie formularza address-form");
-
         model.addAttribute("addressWrapper", new AddressWrapper());
-
 
         return "order/address";
     }
@@ -113,29 +110,13 @@ public class OrderViewController {
         logger.debug("PostMapping : /address");
 
         if (bindingResult.hasErrors()) {
-            logger.error("Error while completing form");
+            logger.error("Validation errors detected: {}", bindingResult.getAllErrors());
             model.addAttribute("message", Message.error("Data writing error"));
             return "order/address";
         }
 
         try {
-
-            logger.debug("Got shippingAddres from shippingAddressForm: {}", addressWrapper.getShippingAddress());
-
-
-            logger.debug("ShippingAddressForm.getStreet: {}", addressWrapper.getShippingAddress().getStreet());
-
-
-            //przypisanie adresów do customera
             customer.setShippingAddress(addressWrapper.getShippingAddress());
-            logger.debug("After setting shippingAddres in Customer: {}", customer.getShippingAddress().getId());
-            logger.debug("Before copying same billingAddress: {}", customer.isSameAddress());
-            if (customer.isSameAddress()) {
-                addressWrapper.getBillingAddress().sameAddressUpdate(customer.getShippingAddress());
-            }
-
-            logger.debug("After copying same billingAddress: {}", customer.getBillingAddress());
-            logger.debug("Customer Before setting billingAddress: {}", customer.getBillingAddress());
             customer.setBillingAddress(addressWrapper.getBillingAddress());
             logger.debug("Customer After setting billingAddress: {}", customer.getBillingAddress());
 
@@ -148,13 +129,11 @@ public class OrderViewController {
         }
     }
 
-    //TODO PAYMENT VIEW
 
     @GetMapping("/payment")
     public String paymentView(Model model) {
         Order order = sessionOrderService.getOrder();
         model.addAttribute("order", order);
-
         return "order/payment";
     }
 
@@ -171,23 +150,17 @@ public class OrderViewController {
         }
 
         try {
-            logger.debug("Order Payment: {}", order.getPayment());
 
             customer.addOrder(order);
-            logger.debug("Customer before persisting entity: {}", customer);
             customerRepository.save(customer);
-            logger.debug("Customer After persisting entity: {}", customer);
 
             logger.debug("Order before persisting entity: {}", order);
-
             orderService.createOrder(order);
             logger.debug("Order After persisting entity: {}", order);
 
-
             return "redirect:/order/greetings/" + order.getId();
 
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             logger.error("Exception shown", e);
             model.addAttribute("message", Message.error("Unknown data writing error. Adding order failed."));
             return "order/address";
@@ -204,6 +177,9 @@ public class OrderViewController {
         logger.debug("GREETINGSVIEW - Payment: {}", order.getPayment());
         model.addAttribute("order", order);
         model.addAttribute("customer", customer);
+        model.addAttribute("cart", sessionCartService.getCart());
+        model.addAttribute("totalCostShippingIncluded", sessionCartService.getTotalCostShippingIncluded());
+        model.addAttribute("shipping", sessionCartService.getShippingCost());
 
 
         return "order/greetings";
