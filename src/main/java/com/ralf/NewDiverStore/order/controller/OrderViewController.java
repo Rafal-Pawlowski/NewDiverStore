@@ -9,6 +9,7 @@ import com.ralf.NewDiverStore.customer.service.CustomerService;
 import com.ralf.NewDiverStore.order.domain.model.Order;
 import com.ralf.NewDiverStore.order.service.OrderService;
 import com.ralf.NewDiverStore.order.service.SessionOrderService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/order")
-@SessionAttributes({"customer", "addressWrapper", "sameAddress"})
+@SessionAttributes({"customer", "addressWrapper"})
 public class OrderViewController {
 
 
@@ -170,17 +171,16 @@ public class OrderViewController {
 
 
     @GetMapping("/greetings/{order-id}")
-    public String greetingsView(@PathVariable("order-id") UUID orderId, @ModelAttribute("customer") Customer customer, Model model) {
-        //Rozwiazanie GPT
-        logger.info("wyświetlenie widoku Greetings");
+    public String greetingsView(@PathVariable("order-id") UUID orderId, @ModelAttribute("customer") Customer customer, Model model, HttpSession session) {
+
+
         Order order = orderService.findOrder(orderId);
-        logger.debug("GREETINGSVIEW - Payment: {}", order.getPayment());
+
         model.addAttribute("order", order);
         model.addAttribute("customer", customer);
-        model.addAttribute("cart", sessionCartService.getCart());
-        model.addAttribute("totalCostShippingIncluded", sessionCartService.getTotalCostShippingIncluded());
-        model.addAttribute("shipping", sessionCartService.getShippingCost());
 
+        sessionCartService.clearCart();
+        session.removeAttribute("scopedTarget.sessionCartService");
 
         return "order/greetings";
     }

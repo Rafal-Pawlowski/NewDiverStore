@@ -82,7 +82,7 @@
 
 <div class="container">
     <main>
-        <h2>Thanks for your shopping. Have a nice day!</h2>
+        <h2>Thanks for your shopping. Your order has been added. Have a nice day!</h2>
         <!-- Sekcja danych klienta i adresu billingowego -->
         <div class="section">
 
@@ -119,10 +119,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="item : ${cart.cartItems}">
+                <tr th:each="item : ${order.getOrderItems()}">
                     <td th:text="${item.product.name}">Produkt</td>
-                    <td th:text="${item.counter}">1</td>
-                    <td th:text="${item.price}">99.99 zł</td>
+                    <td th:text="${item.quantity}">1</td>
+                    <td th:text="${item.totalPrice}">99.99 zł</td>
                 </tr>
                 </tbody>
             </table>
@@ -131,8 +131,8 @@
         <!-- Podsumowanie zamówienia -->
         <div class="order-summary">
             <div class="total">
-                <p th:text="'Shipping: ' + ${shipping} + ' zł'">20 zł</p>
-                <p th:text="'Total: ' + ${totalCostShippingIncluded} + ' zł'">Total: 299.99 zł</p>
+                <p th:text="'Shipping: ' + ${order.shippingCost} + ' zł'">20 zł</p>
+                <p th:text="'Total: ' + ${order.totalOrderPrice} + ' zł'">Total: 299.99 zł</p>
                 <p th:text="'Payment: ' + ${order.payment}"></p>
             </div>
         </div>

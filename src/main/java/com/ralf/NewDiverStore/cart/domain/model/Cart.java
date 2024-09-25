@@ -71,7 +71,7 @@ public class Cart {
     }
 
 
-    private void recalculatePriceAndCounter() {
+    public void recalculatePriceAndCounter() {
         int tempCounter = 0;
         BigDecimal tempPrice = BigDecimal.ZERO;
 

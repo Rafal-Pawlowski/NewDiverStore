@@ -54,6 +54,11 @@ public class SessionCartService {
         cart.removeAllItems(product);
     }
 
+    public void clearCart(){
+        cart.getCartItems().clear();
+        cart.recalculatePriceAndCounter();
+    }
+
 
 
     public int counter() {

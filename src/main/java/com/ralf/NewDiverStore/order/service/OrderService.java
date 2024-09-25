@@ -1,7 +1,11 @@
 package com.ralf.NewDiverStore.order.service;
 
+import com.ralf.NewDiverStore.cart.domain.model.Cart;
+import com.ralf.NewDiverStore.cart.domain.model.CartItem;
+import com.ralf.NewDiverStore.cart.service.SessionCartService;
 import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import com.ralf.NewDiverStore.order.domain.model.Order;
+import com.ralf.NewDiverStore.order.domain.model.OrderItem;
 import com.ralf.NewDiverStore.order.domain.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -11,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,39 +26,46 @@ public class OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
 
-    public OrderService(OrderRepository orderRepository) {
+    public final SessionCartService sessionCartService;
+
+    public OrderService(OrderRepository orderRepository, SessionCartService sessionCartService) {
         this.orderRepository = orderRepository;
+        this.sessionCartService = sessionCartService;
     }
 
-    @Transactional
-    public Order createNewOrder() {
-        Order order = new Order();
-        logger.debug("New Order added: {}", order);
-
-        LocalDateTime orderDateTime = LocalDateTime.now();
-        order.setOrderTime(orderDateTime);
-
-        logger.debug("Order time: {}", orderDateTime);
-        return orderRepository.save(order);
-    }
 
     @Transactional
     public Order createOrder(Order orderRequest) {
 
-        logger.debug("New Order added with id: {}", orderRequest.getId());
+        Cart cart = sessionCartService.getCart();
+
+        for (CartItem cartItem : cart.getCartItems()) {
+            OrderItem orderItem = new OrderItem(
+                    orderRequest,
+                    cartItem.getProduct(),
+                    cartItem.getCounter(),
+                    cartItem.getProduct().getPrice()
+            );
+            orderRequest.addOrderItem(orderItem);
+        }
+
+        BigDecimal totalCostNoShippingIncluded=cart.getSum();
+        BigDecimal totalCostShippingIncluded = cart.getTotalCost();
+
+        orderRequest.setTotalOrderPrice(totalCostShippingIncluded);
+        orderRequest.setShippingCost(cart.getShipping().calculateShippingCost(totalCostNoShippingIncluded));
+
         orderRequest.setPayment(orderRequest.getPayment());
-        logger.debug("Payment set to: {}", orderRequest.getPayment());
+
 
         Customer customer = orderRequest.getCustomer();
         customer.addOrder(orderRequest);
-        logger.debug("Customer to Order added: {}", orderRequest.getCustomer().getId());
+
 
         LocalDateTime orderDateTime = LocalDateTime.now();
-        orderRequest.setOrderTime(orderDateTime);
-        logger.debug("Order time: {}", orderDateTime);
 
-        logger.debug("Zamówienie przed zapisem: {}", orderRequest);
-        logger.debug("Zamówienie przed zapisem, id klienta: {}", orderRequest.getCustomer().getId());
+        orderRequest.setOrderTime(orderDateTime);
+
         return orderRepository.save(orderRequest);
     }
 

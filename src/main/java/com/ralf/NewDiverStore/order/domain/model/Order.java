@@ -8,7 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -32,16 +35,24 @@ public class Order {
 
     private LocalDateTime orderTime;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItems = new HashSet<>();
+
+    private BigDecimal totalOrderPrice;
+    private BigDecimal shippingCost;
+
 
     public Order() {
         this.id = UUID.randomUUID();
         this.orderTime = LocalDateTime.now();
     }
 
-//    public Order(Payment payment) {
-//        this();
-//        this.payment = payment;
-//    }
+    public void addOrderItem(OrderItem orderItem){
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+
 
 
 }

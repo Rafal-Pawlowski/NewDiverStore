@@ -48,6 +48,7 @@ insert into producers(id, name) values
                                     (gen_random_uuid(), 'GRALMARINE'),
                                     (gen_random_uuid(), 'HALCYON'),
                                     (gen_random_uuid(), 'KWARK'),
+                                    (gen_random_uuid(), 'GUI'),
                                     (gen_random_uuid(), 'NO GRAVITY'),
                                     (gen_random_uuid(), 'SANTI');
 
