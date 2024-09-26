@@ -6,6 +6,8 @@ import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
+import com.ralf.NewDiverStore.utilities.BreadcrumbItem;
+import com.ralf.NewDiverStore.utilities.BreadcrumbsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,11 +35,14 @@ public class CategoryViewController {
 
     private final SessionCartService sessionCartService;
 
+    private final BreadcrumbsService breadcrumbsService;
 
-    public CategoryViewController(CategoryService categoryService, ProductService productService, SessionCartService sessionCartService) {
+
+    public CategoryViewController(CategoryService categoryService, ProductService productService, SessionCartService sessionCartService, BreadcrumbsService breadcrumbsService) {
         this.categoryService = categoryService;
         this.productService = productService;
         this.sessionCartService = sessionCartService;
+        this.breadcrumbsService = breadcrumbsService;
     }
 
     @ModelAttribute("sessionCartService")
@@ -47,8 +52,9 @@ public class CategoryViewController {
 
 
     @GetMapping("index")
-    public String indexView() {
+    public String indexView(Model model) {
         sessionCartService().getCart(); // in order to session start
+
         return "category/index";
     }
 
@@ -60,6 +66,9 @@ public class CategoryViewController {
             @RequestParam(name = "size", required = false, defaultValue = "12") int size,
             Model model
     ) {
+        List<BreadcrumbItem> breadcrumbItems = breadcrumbsService.breadcrumbsHomeCategories();
+        model.addAttribute("breadcrumbs", breadcrumbItems);
+
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), field);
 
         String reverseSort = null;
@@ -74,6 +83,7 @@ public class CategoryViewController {
         model.addAttribute("reverseSort", reverseSort);
         model.addAttribute("field", field);
         model.addAttribute("direction", direction);
+
 
 
         paging(model, categoriesPage);
@@ -92,4 +102,7 @@ public class CategoryViewController {
         }
     }
 
-}
+    }
+
+
+

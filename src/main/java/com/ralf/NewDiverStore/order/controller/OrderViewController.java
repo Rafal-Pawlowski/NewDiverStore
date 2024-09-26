@@ -48,6 +48,7 @@ public class OrderViewController {
 
     @GetMapping("/customer-details")
     public String customerDetailsView(Model model) {
+        model.addAttribute("step", "details");
 
 
         Order order = sessionOrderService.initiateOrderSession();
@@ -95,6 +96,7 @@ public class OrderViewController {
     public String addressFormView(
             @ModelAttribute("customer") Customer customer,
             Model model) {
+        model.addAttribute("step", "shipping"); // do dynamicznej wizualizacji postępu zamówienia
         logger.info("wyświetlenie formularza address-form");
         model.addAttribute("addressWrapper", new AddressWrapper());
 
@@ -135,6 +137,8 @@ public class OrderViewController {
     public String paymentView(Model model) {
         Order order = sessionOrderService.getOrder();
         model.addAttribute("order", order);
+        model.addAttribute("step", "payment"); // do dynamicznej wizualizacji postępu zamówienia
+
         return "order/payment";
     }
 
@@ -178,6 +182,8 @@ public class OrderViewController {
 
         model.addAttribute("order", order);
         model.addAttribute("customer", customer);
+        model.addAttribute("step", "summary"); // do dynamicznej wizualizacji postępu zamówienia
+
 
         sessionCartService.clearCart();
         session.removeAttribute("scopedTarget.sessionCartService");

@@ -1,29 +1,67 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
-<head th:replace="~{category/template :: head(title='Customer Details')}"/>
+<head th:replace="~{category/template :: head(title='Shipping Details')}"/>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
 <style>
-    .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        user-select: none;
+    /* Stylizacja breadcrumbs */
+    .breadcrumb {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
     }
 
-    @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-            font-size: 3.5rem;
-        }
+    .breadcrumb li {
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
     }
 
-    .b-example-divider {
-        width: 100%;
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
+    .breadcrumb li + li:before {
+        content: "→";
+        margin: 0 10px;
+        font-size: 1.5rem;
+        color: #999;
+        align-self: center;
+    }
+
+    .breadcrumb li.active span {
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #ffb347; /* Ciemniejszy jasnopomarańczowy */
+        padding: 5px 8px;
+        border-radius: 3px;
+        display: inline-block;
+        background-color: #ffcc80; /* Pastelowy pomarańczowy */
+    }
+
+    .breadcrumb li.active:hover span {
+        background-color: #ff9933; /* Ciemniejszy pomarańczowy na hover */
+    }
+
+    /* Stylizacja formularza */
+    .container {
+        margin-top: 20px;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .needs-validation {
+        margin-top: 20px;
+    }
+
+    .invalid-feedback {
+        font-size: 0.875rem;
+    }
+
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1.2rem;
     }
 </style>
 </head>
@@ -34,25 +72,30 @@
 
 <div class="container">
     <main>
-        <div class="py-5 text-center">
-            <h2>Customer Details</h2>
+        <!-- Breadcrumbs -->
+        <ul class="breadcrumb">
+            <li th:classappend="${step == 'cart'} ? 'active' : ''"><span>Cart</span></li>
+            <li th:classappend="${step == 'details'} ? 'active' : ''"><span>Customer Details</span></li>
+            <li th:classappend="${step == 'shipping'} ? 'active' : ''"><span>Shipping</span></li>
+            <li th:classappend="${step == 'payment'} ? 'active' : ''"><span>Payment</span></li>
+            <li th:classappend="${step == 'summary'} ? 'active' : ''"><span>Summary</span></li>
+        </ul>
+
+        <div class="text-center">
+            <h2>Shipping</h2>
         </div>
 
-        <div class="row g-5">
-            <div class="col-md-7 col-lg-8">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
                 <div th:if="${message != null}" class="alert alert-success" role="alert">
                     <span th:text="${message}"></span>
                 </div>
+
                 <h4 class="mb-3">Enter Information</h4>
-
-                <form method="post"  th:object="${addressWrapper}" class="needs-validation" novalidate>
-
-
+                <form method="post" th:object="${addressWrapper}" class="needs-validation" novalidate>
                     <div class="row g-3">
-
                         <div class="col-12">
                             <label for="shipping-address" class="form-label">Shipping Address</label>
-
                             <input th:field="*{shippingAddress.street}" type="text" class="form-control" id="shipping-address" placeholder="1234 Main St" required>
                             <div class="invalid-feedback">
                                 Please enter your shipping address.
@@ -74,16 +117,14 @@
 
                         <div class="col-md-4">
                             <label for="shipping-city" class="form-label">City</label>
-
                             <input th:field="*{shippingAddress.city}" type="text" class="form-control" id="shipping-city" placeholder="Input City" required>
                             <div class="invalid-feedback">
-                                Please enter your shipping address.
+                                Please enter your shipping city.
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <label for="shipping-zip" class="form-label">Zip</label>
-
                             <input th:field="*{shippingAddress.zip}" type="text" class="form-control" id="shipping-zip" placeholder="XX-XXX" required>
                             <div class="invalid-feedback">
                                 Zip code required.
@@ -93,37 +134,27 @@
 
                     <hr class="my-4">
 
-
-
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input"  id="same-address">
+                        <input type="checkbox" class="form-check-input" id="same-address">
                         <label class="form-check-label" for="same-address">Billing address is the same as my shipping address</label>
                     </div>
 
                     <hr class="my-4">
 
-
-                <h4 class="mb-3">Billing address</h4>
-
-
-                    <h5 class="mb-3">If Billing adress is different please input correct data</h5>
+                    <h4 class="mb-3">Billing address</h4>
+                    <h5 class="mb-3">If Billing address is different please input correct data</h5>
 
                     <div class="row g-3">
-
                         <div class="col-12">
                             <label for="billing-address" class="form-label">Billing Address</label>
-                            <span class="error" th:if="${#fields.hasErrors('billingAddress.street')}" th:errors="*{billingAddress.street}">Billing Street Error</span>
-
                             <input th:field="*{billingAddress.street}" type="text" class="form-control" id="billing-address" placeholder="1234 Main St" required>
                             <div class="invalid-feedback">
-                                Please enter your shipping address.
+                                Please enter your billing address.
                             </div>
                         </div>
 
                         <div class="col-md-5">
                             <label for="billing-country" class="form-label">Country</label>
-                            <span class="error" th:if="${#fields.hasErrors('billingAddress.country')}" th:errors="*{billingAddress.country}">Billing Country Error</span>
-
                             <select th:field="*{billingAddress.country}" class="form-select" id="billing-country" required>
                                 <option value="">Choose...</option>
                                 <option value="USA">United States</option>
@@ -137,29 +168,24 @@
 
                         <div class="col-md-4">
                             <label for="billing-city" class="form-label">City</label>
-                            <span class="error" th:if="${#fields.hasErrors('billingAddress.city')}" th:errors="*{billingAddress.city}">Billing City Error</span>
-
                             <input th:field="*{billingAddress.city}" type="text" class="form-control" id="billing-city" placeholder="Input City" required>
                             <div class="invalid-feedback">
-                                Please enter your shipping address.
+                                Please enter your billing city.
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <label for="billing-zip" class="form-label">Zip</label>
-                            <span class="error" th:if="${#fields.hasErrors('billingAddress.zip')}" th:errors="*{billingAddress.zip}">Shipping ZipCode Error</span>
-
                             <input th:field="*{billingAddress.zip}" type="text" class="form-control" id="billing-zip" placeholder="XX-XXX" required>
                             <div class="invalid-feedback">
                                 Zip code required.
                             </div>
                         </div>
                     </div>
-                    <hr class="my-4">
 
+                    <hr class="my-4">
                     <button class="w-100 btn btn-primary btn-lg" type="submit">Next</button>
                 </form>
-
             </div>
         </div>
     </main>
@@ -185,7 +211,6 @@
             zip: document.getElementById('billing-zip')
         };
 
-        // Funkcja kopiująca dane z shipping do billing
         function copyShippingToBilling() {
             billingAddressFields.street.value = shippingAddressFields.street.value;
             billingAddressFields.country.value = shippingAddressFields.country.value;
@@ -193,23 +218,19 @@
             billingAddressFields.zip.value = shippingAddressFields.zip.value;
         }
 
-        // Obsługa checkboxa dla kopiowania adresu
         sameAddressCheckbox.addEventListener('change', function () {
             if (this.checked) {
                 copyShippingToBilling();
-                // Dezaktywacja pól billing
                 for (let key in billingAddressFields) {
                     billingAddressFields[key].setAttribute('readonly', 'true');
                 }
             } else {
-                // Aktywacja pól billing w przypadku odznaczenia checkboxa
                 for (let key in billingAddressFields) {
                     billingAddressFields[key].removeAttribute('readonly');
                 }
             }
         });
 
-        // Nasłuchiwanie zmian w polach shipping i kopiowanie do billing, jeśli checkbox jest zaznaczony
         Object.values(shippingAddressFields).forEach(field => {
             field.addEventListener('input', function () {
                 if (sameAddressCheckbox.checked) {
@@ -218,22 +239,11 @@
             });
         });
 
-        // Walidacja formularza
         const form = document.querySelector('form.needs-validation');
         form.addEventListener('submit', function (event) {
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
-            } else {
-                // Weryfikacja billingAddress jeśli checkbox jest zaznaczony
-                if (sameAddressCheckbox.checked) {
-                    const billingAddressInvalid = Object.values(billingAddressFields).some(field => !field.value);
-                    if (billingAddressInvalid) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        alert("Billing Address contains empty fields!");
-                    }
-                }
             }
             form.classList.add('was-validated');
         });

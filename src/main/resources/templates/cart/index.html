@@ -2,12 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
 <head th:replace="~{category/template :: head(title='Your Cart')}"/>
 <style>
+    /* Stylizacja koszyka */
     .cart-title {
         font-size: 2.5rem;
         text-align: center;
         margin-top: 20px;
         margin-bottom: 20px;
     }
+
     .cart-item {
         display: flex;
         align-items: center;
@@ -17,27 +19,27 @@
         margin-bottom: 10px;
         border-radius: 5px;
     }
+
     .cart-item img {
         width: 80px;
         height: 80px;
         object-fit: cover;
         border-radius: 5px;
     }
-    .cart-item .quantity-input {
+
+    .quantity-input {
         display: flex;
         align-items: center;
     }
-    .cart-item .quantity-input input {
+
+    .quantity-input input {
         text-align: center;
         width: 40px !important;
         padding: 5px;
         margin: 0 5px;
     }
-    .cart-item .quantity-input button {
-        margin: 0;
-    }
 
-    .cart-item .delete-button {
+    .delete-button {
         margin-left: 15px;
         background-color: #dc3545;
         color: white;
@@ -46,9 +48,6 @@
         border-radius: 5px;
         cursor: pointer;
     }
-    .cart-item .delete-button i {
-        margin-right: 5px;
-    }
 
     .cart-summary {
         background-color: #e9ecef;
@@ -56,43 +55,33 @@
         border-radius: 5px;
         margin-top: 20px;
     }
-    .cart-summary h4 {
-        margin-bottom: 15px;
-    }
+
     .cart-summary .summary-item {
         display: flex;
         justify-content: space-between;
         padding: 5px 0;
     }
-    /* Ukrywanie strzałek dla pól typu number */
-    input[type='number']::-webkit-outer-spin-button,
-    input[type='number']::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input[type='number'] {
-        -moz-appearance: textfield;
-    }
 
     .go-next-container {
-        text-align: center; /* Wyśrodkowanie przycisku */
+        text-align: center;
         margin-top: 20px;
     }
 
     .go-next-button {
-        background-color: #28a745; /* Zielony kolor tła */
+        background-color: #28a745;
         color: white;
         border: none;
         padding: 10px 20px;
         border-radius: 5px;
         font-size: 1.2rem;
         cursor: pointer;
-        width: 200px; /* Umiarkowana szerokość */
+        width: 200px;
     }
 
     .go-next-button:hover {
-        background-color: #218838; /* Ciemniejszy zielony po najechaniu */
+        background-color: #218838;
     }
+
     .empty-cart {
         text-align: center;
         margin-top: 100px;
@@ -100,7 +89,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 50vh; /* Wysokość kontenera, aby elementy były na środku */
+        height: 50vh;
     }
 
     .empty-cart h2 {
@@ -109,7 +98,7 @@
     }
 
     .continue-shopping-button {
-        background-color: #ffc107; /* Żółty kolor */
+        background-color: #ffc107;
         color: black;
         padding: 10px 20px;
         border-radius: 5px;
@@ -120,12 +109,44 @@
     }
 
     .continue-shopping-button:hover {
-        background-color: #e0a800; /* Ciemniejszy żółty po najechaniu */
-        text-decoration: none;
-        color: black;
+        background-color: #e0a800;
     }
 
+    /* Stylizacja breadcrumbs */
+    .breadcrumb {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+    }
 
+    .breadcrumb li {
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+    }
+
+    .breadcrumb li + li:before {
+        content: "→";
+        margin: 0 10px;
+        font-size: 1.5rem;
+        color: #999;
+        align-self: center;
+    }
+
+    .breadcrumb li.active span {
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #ffb347;
+        padding: 5px 8px;
+        border-radius: 3px;
+        display: inline-block;
+        background-color: #ffcc80;
+    }
+
+    .breadcrumb li.active:hover span {
+        background-color: #ff9933;
+    }
 </style>
 </head>
 
@@ -134,10 +155,21 @@
 <th:block th:replace="~{category/template::header}"/>
 
 <main>
+    <hr>
+
+    <!-- Breadcrumbs -->
+    <ul class="breadcrumb">
+        <li th:classappend="${step == 'cart'} ? 'active' : ''"><span>Cart</span></li>
+        <li th:classappend="${step == 'details'} ? 'active' : ''"><span>Customer Details</span></li>
+        <li th:classappend="${step == 'shipping'} ? 'active' : ''"><span>Shipping</span></li>
+        <li th:classappend="${step == 'payment'} ? 'active' : ''"><span>Payment</span></li>
+        <li th:classappend="${step == 'summary'} ? 'active' : ''"><span>Summary</span></li>
+    </ul>
+
     <div class="container">
         <h1 class="cart-title">Your Cart</h1>
 
-
+        <!-- Informacje zwrotne -->
         <div th:if="${message != null}" class="alert alert-success" role="alert">
             <span th:text="${message}"></span>
         </div>
@@ -148,6 +180,7 @@
             <a th:href="@{/categories}" class="continue-shopping-button">Continue shopping</a>
         </div>
 
+        <!-- Zawartość koszyka -->
         <div th:if="${!cart.getCartItems().isEmpty()}">
             <div th:each="cartItem : ${cart.getCartItems()}" class="cart-item">
                 <img th:src="@{'/uploads/' + ${cartItem.product.imagePath}}" alt="Product Image">
@@ -156,16 +189,13 @@
                     <p th:text="'Price: ' + ${cartItem.product.price} + ' zł'">Price: 999 zł</p>
                 </div>
 
-                <!-- Formularz dla zmiany ilości (połączenie przycisków plus i minus w jednym formularzu) -->
                 <form th:action="@{'/cart/update/' + ${cartItem.product.id}}" method="post" class="quantity-input">
                     <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'decrease')">-</button>
                     <input type="number" name="qty" th:value="${cartItem.counter}" class="form-control text-center" min="1">
                     <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'increase')">+</button>
-                    <!-- Ukryte pole, które będzie wskazywać, czy zmniejszamy czy zwiększamy ilość -->
                     <input type="hidden" name="action" value="">
                 </form>
 
-                <!-- Przycisk usuwania produktu -->
                 <form th:action="@{'/cart/delete/' + ${cartItem.product.id}}" method="get">
                     <button class="delete-button" type="submit">
                         <i class="bi bi-trash"></i> Delete
@@ -177,6 +207,7 @@
                 </div>
             </div>
 
+            <!-- Podsumowanie -->
             <div class="cart-summary">
                 <h4>Podsumowanie</h4>
                 <div class="summary-item">
@@ -192,6 +223,7 @@
                     <span th:text="${totalCostShippingIncluded} + ' zł'">1019 zł</span>
                 </div>
             </div>
+
             <div class="go-next-container">
                 <a th:href="@{/order/customer-details}" class="go-next-button">
                     Go to next
@@ -199,28 +231,15 @@
             </div>
         </div>
     </div>
-
 </main>
 
-<th:block th:replace="~{category/template :: footer}" class="text-body-secondary py-5">
-    <div class="container">
-        <p class="float-end mb-1">
-            <a href="#">Back to top</a>
-        </p>
-        <p class="mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-        <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="../getting-started/introduction/">getting started guide</a>.</p>
-    </div>
-</th:block>
+<th:block th:replace="~{category/template :: footer}" class="text-body-secondary py-5"></th:block>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
     function submitForm(button, action) {
-        // Znajdujemy formularz, do którego należy przycisk
         var form = button.closest('form');
-
-        // Ustawiamy wartość ukrytego pola "action" (increase lub decrease)
         form.querySelector('input[name="action"]').value = action;
-
-        // Wysyłamy formularz metodą POST
         form.submit();
     }
 </script>

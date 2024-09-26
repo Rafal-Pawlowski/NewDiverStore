@@ -2,10 +2,13 @@ package com.ralf.NewDiverStore.product.controller;
 
 import com.ralf.NewDiverStore.cart.domain.model.Cart;
 import com.ralf.NewDiverStore.cart.service.SessionCartService;
+import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.service.CategoryService;
 import com.ralf.NewDiverStore.common.dto.Message;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
+import com.ralf.NewDiverStore.utilities.BreadcrumbItem;
+import com.ralf.NewDiverStore.utilities.BreadcrumbsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,12 +36,15 @@ public class ProductViewController {
 
     private final SessionCartService sessionCartService;
 
+    private final BreadcrumbsService breadcrumbsService;
 
 
-    public ProductViewController(ProductService productService, CategoryService categoryService, SessionCartService sessionCartService) {
+
+    public ProductViewController(ProductService productService, CategoryService categoryService, SessionCartService sessionCartService, BreadcrumbsService breadcrumbsService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.sessionCartService = sessionCartService;
+        this.breadcrumbsService = breadcrumbsService;
     }
 
 
@@ -58,12 +65,17 @@ public class ProductViewController {
             reverseSort = "asc";
         }
 
+        Category category = categoryService.getCategory(categoryId);
+        List<BreadcrumbItem> breadcrumbItems = breadcrumbsService.breadcrumbsHomeCategoriesCategoriesName(category.getName(), categoryId);
+        model.addAttribute("breadcrumbs", breadcrumbItems);
+
+
         Page<Product> productsPage = productService.findProductByCategoryId(categoryId, pageable);
         model.addAttribute("productsPage", productsPage);
         model.addAttribute("reverseSort", reverseSort);
         model.addAttribute("field", field);
         model.addAttribute("direction", direction);
-        model.addAttribute("category", categoryService.getCategory(categoryId));
+        model.addAttribute("category", category);
 
         paging(model, productsPage);
         return "product/list";
@@ -131,7 +143,12 @@ public class ProductViewController {
 
     @GetMapping("products/{product-id}")
     public String singleProductView(@PathVariable("product-id") UUID productId, Model model) {
-        model.addAttribute("product", productService.getSingleProduct(productId));
+        Product product = productService.getSingleProduct(productId);
+        model.addAttribute("product", product);
+
+        Category category = product.getCategory();
+        List<BreadcrumbItem> breadcrumbItems = breadcrumbsService.breadcrumbsHomeCategoriesCategoriesName(category.getName(), category.getId());
+        model.addAttribute("breadcrumbs", breadcrumbItems);
 
         return "product/single";
     }
@@ -145,4 +162,5 @@ public class ProductViewController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
     }
+
 }

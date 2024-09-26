@@ -68,13 +68,13 @@
                         <hr>
                         <label>Producer select</label>
                         <select th:field="*{producer}" class="form-control select2" style="width: 100%;">
-                            <option th:selected="${product.getProducer() != null}" value="" th:text="${product.getProducer() != null ? product.getProducer().name : 'Select producer'}"></option>
+                            <option th:selected="${product.producer != null}" value="" th:text="${product.producer != null ? product.producer.name : 'Select producer'}"></option>
                             <option th:each="producer : ${producers}" th:value="${producer.id}" th:text="${producer.name}"></option>
                         </select>
                         <hr>
                         <label>Category select</label>
                         <select th:field="*{category}" class="form-control select2" style="width: 100%;">
-                            <option th:selected="${product.getCategory() != null}" value="" th:text="${product.getCategory() != null ? product.getCategory().name : 'Select category'}"></option>
+                            <option th:selected="${product.category != null}" value="" th:text="${product.category != null ? product.category.name : 'Select category'}"></option>
                             <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
                         </select>
                         <hr>

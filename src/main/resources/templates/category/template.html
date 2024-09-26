@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
 <head th:fragment="head(title)">
-    <script src="/assets/js/color-modes.js"></script>
+<!--    <script src="/assets/js/color-modes.js"></script>-->
     <base href="/category/"/>
 
 
@@ -124,13 +124,17 @@
         .bd-mode-toggle .dropdown-menu .active .bi {
             display: block !important;
         }
+        .breadcrumb {
+            font-size: 1.2rem; /* Zwiększenie czcionki */
+        }
+
 
 
     </style>
 
 
     <!-- Custom styles for this template -->
-    <link href="carousel/carousel.css" rel="stylesheet">
+    <link href="/category/carousel/carousel.css" rel="stylesheet">
 </head>
 <body>
 <svg th:fragment="icons" xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -236,6 +240,18 @@
         </div>
     </nav>
 </header>
+
+<div th:fragment="breadcrumbs" class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li th:each="breadcrumb, stat : ${breadcrumbs}" class="breadcrumb-item">
+                <a th:href="@{${breadcrumb.url}}" th:text="${breadcrumb.name}"></a>
+                <!-- Dodaj strzałkę jeśli nie jesteśmy przy ostatnim elemencie -->
+                <span th:if="${!stat.last}"> -> </span>
+            </li>
+        </ol>
+    </nav>
+</div>
 
 <main>
 
