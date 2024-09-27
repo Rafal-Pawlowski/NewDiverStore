@@ -53,8 +53,16 @@ public class CategoryService {
         } else {
             throw new EntityNotFoundException("Category with id: " + id + " not found");
         }
+    }
 
-
+    @Transactional
+    public Category getCategoryByName(String name){
+        try{
+            Category category = categoryRepository.findByNameContaining(name);
+            return category;
+        } catch (Exception e){
+            throw new EntityNotFoundException("Cannot find category with name: "+ name);
+        }
     }
 
     @Transactional

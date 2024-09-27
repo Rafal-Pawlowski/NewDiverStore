@@ -55,6 +55,10 @@ public class CategoryViewController {
     public String indexView(Model model) {
         sessionCartService().getCart(); // in order to session start
 
+        //articles
+        model.addAttribute("categoryDrySuit", categoryService.getCategoryByName("Dry suits"));
+        model.addAttribute("categoryMasks", categoryService.getCategoryByName("Masks"));
+        model.addAttribute("categoryFins", categoryService.getCategoryByName("Fins"));
         return "category/index";
     }
 
@@ -85,7 +89,6 @@ public class CategoryViewController {
         model.addAttribute("direction", direction);
 
 
-
         paging(model, categoriesPage);
 
         return "category/list";
@@ -102,7 +105,7 @@ public class CategoryViewController {
         }
     }
 
-    }
+}
 
 
 

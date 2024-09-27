@@ -23,9 +23,52 @@
         <th:block th:replace="~{category/template :: sections}"/>
 
         <!-- START THE FEATURETTES -->
+        <!-- START THE FEATURETTES -->
+        <div th:fragment="featurettes">
+            <hr class="featurette-divider">
 
-         <th:block th:replace="~{category/template :: featurettes}"/>
+            <div class="row featurette">
+                <div class="col-md-7">
+                    <h2 class="featurette-heading fw-normal lh-1">Dry Suits: Your Key to Comfort in the Coldest Waters. <span class="text-body-secondary">Unbeatable protection from the cold. Discover our range of dry suits!</span></h2>
+                    <p class="lead">Dive into the unknown while staying thermally comfortable in any conditions. Our dry suits offer excellent thermal insulation, perfect for divers seeking adventure in deep waters. Whether it’s the icy waters of the Arctic or cold lakes, our suits will keep you warm and dry, even in extreme environments.</p>
+                    <a th:href="@{'/categories/' + ${categoryDrySuit.id} + '/products'}" class="btn btn-primary">View Dry Suits</a>
 
+                </div>
+                <div class="col-md-5">
+                    <img src="/img/index_article_drysuit.png" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em"></text></svg>
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette">
+                <div class="col-md-7 order-md-2">
+                    <h2 class="featurette-heading fw-normal lh-1">Fins That Will Take Your Diving to the Next Level.<span class="text-body-secondary">Precision, power, and speed. Feel the difference with our fins!</span></h2>
+                    <p class="lead">Feel like a fish in the water with professional fins that guarantee maximum performance and control. Perfect for long dives and exploration, our fins provide incredible maneuverability underwater. Whether you’re a recreational diver or in professional settings, we have the perfect model for you.</p>
+                    <a th:href="@{'/categories/' + ${categoryFins.id} + '/products'}" class="btn btn-primary">View Fins</a>
+
+                </div>
+                <div class="col-md-5 order-md-1">
+                    <img src="/img/index_article_fins.png" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em"></text></svg>
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette">
+                <div class="col-md-7">
+                    <h2 class="featurette-heading fw-normal lh-1">Diving Masks That Open Up a Whole New Underwater World. <span class="text-body-secondary">Crystal clear view, maximum comfort. Discover our diving masks!</span></h2>
+                    <p class="lead">Nothing ruins underwater adventures like a poorly fitting mask or limited visibility. That’s why we offer masks that ensure perfect vision on every dive. Whether you’re exploring coral reefs or shipwrecks, our masks will make each dive unforgettable.</p>
+                    <a th:href="@{'/categories/' + ${categoryMasks.id} + '/products'}" class="btn btn-primary">View Diving Masks</a>
+                </div>
+                <div class="col-md-5">
+                    <img src="/img/index_article_mask.png" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em"></text></img>
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+        </div>
+        <!-- /END THE FEATURETTES -->
         <!-- /END THE FEATURETTES -->
 
     </div><!-- /.container -->
