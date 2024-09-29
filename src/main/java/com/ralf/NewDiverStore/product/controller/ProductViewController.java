@@ -48,6 +48,12 @@ public class ProductViewController {
     }
 
 
+    @GetMapping("/top")
+    public String topProductsView(Model model){
+        List<Product> topProducts = productService.getTopProducts(10);
+        model.addAttribute("topProducts", topProducts);
+        return "product/top";
+    }
 
     @GetMapping("categories/{category-id}/products")
     public String productsByCategoryView(@PathVariable("category-id") UUID categoryId,

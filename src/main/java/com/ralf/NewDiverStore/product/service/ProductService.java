@@ -5,14 +5,12 @@ import com.ralf.NewDiverStore.product.domain.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProductService {
@@ -20,8 +18,11 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public ProductService(ProductRepository productRepository, RedisTemplate<String, String> redisTemplate) {
         this.productRepository = productRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     @Transactional
@@ -62,6 +63,32 @@ public class ProductService {
             throw new EntityNotFoundException("Product with id: " + id + " not found");
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<Product> getTopProducts(int topN){
+        List<Product> topProducts = new ArrayList<>();
+
+        List<Product> allProducts = productRepository.findAll();
+
+        Map<Product, Long> productOrderCountMap = new HashMap<>();
+        for(Product product:allProducts){
+            String redisKey = "product:order_count:" + product.getId().toString();
+            String orderCount = redisTemplate.opsForValue().get(redisKey);
+
+            if(orderCount !=null){
+                productOrderCountMap.put(product, Long.valueOf(orderCount));
+            }
+        }
+        //sortowanie produktów na podstawie liczby zamówien
+        productOrderCountMap.entrySet().stream()
+                .sorted(Map.Entry.<Product, Long>comparingByValue().reversed())
+                .limit(topN)
+                .forEach(entry->topProducts.add(entry.getKey()));
+
+        return topProducts;
+    }
+
+
 
     @Transactional
     public Product updateProduct(UUID productId, Product productRequest) {

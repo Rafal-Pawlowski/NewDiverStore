@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +27,15 @@ public class OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
 
-    public final SessionCartService sessionCartService;
+    private final SessionCartService sessionCartService;
 
-    public OrderService(OrderRepository orderRepository, SessionCartService sessionCartService) {
+    private final RedisTemplate<String, String> redisTemplate;
+
+
+    public OrderService(OrderRepository orderRepository, SessionCartService sessionCartService, RedisTemplate<String, String> redisTemplate) {
         this.orderRepository = orderRepository;
         this.sessionCartService = sessionCartService;
+        this.redisTemplate = redisTemplate;
     }
 
 
@@ -47,6 +52,9 @@ public class OrderService {
                     cartItem.getProduct().getPrice()
             );
             orderRequest.addOrderItem(orderItem);
+
+            //Redis
+            increaseProductOrderCount(cartItem.getProduct().getId(), cartItem.getCounter());
         }
 
         BigDecimal totalCostNoShippingIncluded=cart.getSum();
@@ -99,4 +107,12 @@ public class OrderService {
     public void deleteOrder(UUID orderId) {
         orderRepository.deleteById(orderId);
     }
+
+    private void increaseProductOrderCount(UUID productId, int count){
+        String redisKey = "product:order_count:"+productId.toString();
+        redisTemplate.opsForValue().increment(redisKey, count);
+    }
+
 }
+
+
