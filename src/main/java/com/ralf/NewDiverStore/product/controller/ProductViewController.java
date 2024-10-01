@@ -9,6 +9,7 @@ import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import com.ralf.NewDiverStore.utilities.BreadcrumbItem;
 import com.ralf.NewDiverStore.utilities.BreadcrumbsService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +40,6 @@ public class ProductViewController {
     private final BreadcrumbsService breadcrumbsService;
 
 
-
     public ProductViewController(ProductService productService, CategoryService categoryService, SessionCartService sessionCartService, BreadcrumbsService breadcrumbsService) {
         this.productService = productService;
         this.categoryService = categoryService;
@@ -49,10 +49,30 @@ public class ProductViewController {
 
 
     @GetMapping("/top")
-    public String topProductsView(Model model){
-        List<Product> topProducts = productService.getTopProducts(10);
+    public String topProductsView(Model model) {
+        int recordLimit = 10;
+
+        List<BreadcrumbItem> breadcrumbItems = breadcrumbsService.breadcrumbsHomeTop();
+        model.addAttribute("breadcrumbs", breadcrumbItems);
+
+        List<Product> topProducts = productService.getTopProducts(recordLimit);
         model.addAttribute("topProducts", topProducts);
         return "product/top";
+    }
+
+    @GetMapping("/newest")
+    public String newestProductsView(Model model, Pageable pageable) {
+        int recordLimit = 30;
+
+        List<BreadcrumbItem> breadcrumbItems = breadcrumbsService.breadcrumbsHomeNewest();
+        model.addAttribute("breadcrumbs", breadcrumbItems);
+
+        Page<Product> newestProductsPage = productService.getNewestProducts(recordLimit, pageable);
+
+        model.addAttribute("newestProductsPage", newestProductsPage);
+        paging(model, newestProductsPage);
+
+        return "product/newest";
     }
 
     @GetMapping("categories/{category-id}/products")
@@ -87,6 +107,32 @@ public class ProductViewController {
         return "product/list";
     }
 
+    @PostMapping("/product/add/{product-id}")
+    public String addNewestProductToCart(
+            @PathVariable("product-id") UUID productId,
+            Model model,
+            RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        Product product = productService.getSingleProduct(productId);
+        sessionCartService.addProductToCart(product);
+
+
+        redirectAttributes.addFlashAttribute("message", "Product has been added to cart!");
+
+        // Pobranie poprzedniego URL za pomocą nagłówka Referer
+        String refererUrl = request.getHeader("Referer");
+
+        // Warunkowe przekierowanie w zależności od poprzedniego URL
+        if (refererUrl != null && refererUrl.contains("/newest")) {
+            return "redirect:/newest";
+        } else if (refererUrl != null && refererUrl.contains("/top")) {
+            return "redirect:/top";
+        }
+
+        // Domyślne przekierowanie, jeśli nie ma dopasowania
+        return "redirect:/";
+    }
+
     @PostMapping("categories/{category-id}/products/add/{product-id}")
     public String addProductToCart(@PathVariable("product-id") UUID productId, @PathVariable("category-id") UUID categoryId,
                                    @RequestParam(name = "field", required = false, defaultValue = "name") String field,
@@ -103,10 +149,8 @@ public class ProductViewController {
             reverseSort = "asc";
         }
 
-
         Product product = productService.getSingleProduct(productId);
         sessionCartService.addProductToCart(product);
-
 
         Page<Product> productsPage = productService.findProductByCategoryId(categoryId, pageable);
 
@@ -118,7 +162,6 @@ public class ProductViewController {
 
         redirectAttributes.addFlashAttribute("message", "Product has been added to cart!");
 
-
         paging(model, productsPage);
         return "redirect:/categories/{category-id}/products";
     }
@@ -126,16 +169,14 @@ public class ProductViewController {
     @PostMapping("add/{product-id}")
     public String addProductToCartInSingleView(
             @PathVariable("product-id") UUID productId,
-            @RequestParam(name = "quantity", required = false, defaultValue = "1")int quantity, RedirectAttributes redirectAttributes,
-            Model model){
-
+            @RequestParam(name = "quantity", required = false, defaultValue = "1") int quantity, RedirectAttributes redirectAttributes,
+            Model model) {
 
 
         Product product = productService.getSingleProduct(productId);
-        for(int i = 0; i < quantity; i++) {
+        for (int i = 0; i < quantity; i++) {
             sessionCartService.addProductToCart(product);
         }
-
 
 
         model.addAttribute("product", productService.getSingleProduct(productId));
@@ -143,8 +184,6 @@ public class ProductViewController {
         redirectAttributes.addFlashAttribute("message", Message.info("Product has been added to cart!"));
         return "redirect:/products/{product-id}";
     }
-
-
 
 
     @GetMapping("products/{product-id}")

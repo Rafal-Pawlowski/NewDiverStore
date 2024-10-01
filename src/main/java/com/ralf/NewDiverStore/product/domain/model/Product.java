@@ -2,17 +2,16 @@ package com.ralf.NewDiverStore.product.domain.model;
 
 import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.producer.domain.model.Producer;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import jdk.jfr.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.format.annotation.NumberFormat;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -44,6 +43,9 @@ public class Product {
     @ManyToOne
     private Producer producer;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
+
     public Product() {
         this.id=UUID.randomUUID();
     }
@@ -52,6 +54,11 @@ public class Product {
         this();
         this.name = name;
         this.price = price;
+    }
+
+    @PrePersist
+    private void onCreate(){
+        this.createdDate= new Date();
     }
 
     @Override

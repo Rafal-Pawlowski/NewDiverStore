@@ -3,14 +3,14 @@ package com.ralf.NewDiverStore.product.service;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.domain.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -44,9 +44,10 @@ public class ProductService {
     public Page<Product> findAllProducts(Pageable pageable) {
         return findAllProducts(null, pageable);
     }
+
     @Transactional(readOnly = true)
     public Page<Product> findAllProducts(String search, Pageable pageable) {
-        if(search==null){
+        if (search == null) {
             return productRepository.findAll(pageable);
         } else {
             return productRepository.findByNameContainingIgnoreCase(search, pageable);
@@ -65,17 +66,17 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> getTopProducts(int topN){
+    public List<Product> getTopProducts(int topN) {
         List<Product> topProducts = new ArrayList<>();
 
         List<Product> allProducts = productRepository.findAll();
 
         Map<Product, Long> productOrderCountMap = new HashMap<>();
-        for(Product product:allProducts){
+        for (Product product : allProducts) {
             String redisKey = "product:order_count:" + product.getId().toString();
             String orderCount = redisTemplate.opsForValue().get(redisKey);
 
-            if(orderCount !=null){
+            if (orderCount != null) {
                 productOrderCountMap.put(product, Long.valueOf(orderCount));
             }
         }
@@ -83,11 +84,10 @@ public class ProductService {
         productOrderCountMap.entrySet().stream()
                 .sorted(Map.Entry.<Product, Long>comparingByValue().reversed())
                 .limit(topN)
-                .forEach(entry->topProducts.add(entry.getKey()));
+                .forEach(entry -> topProducts.add(entry.getKey()));
 
         return topProducts;
     }
-
 
 
     @Transactional
@@ -135,5 +135,19 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<Product> getProductsByProducerId(UUID id) {
         return productRepository.findProductByProducerId(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Product> getNewestProducts(int limit, Pageable pageable) {
+
+        List<Product> allProducts = productRepository.findAll(Sort.by(Sort.Direction.DESC, "createdDate"));
+        List<Product> limitedProducts = allProducts.stream()
+                .limit(limit)
+                .toList();
+
+        int start = Math.min((int) pageable.getOffset(), limitedProducts.size());
+        int end = Math.min((start + pageable.getPageSize()), limitedProducts.size());
+
+        return new PageImpl<>(limitedProducts.subList(start, end), pageable, limitedProducts.size());
     }
 }

@@ -27,6 +27,24 @@ public class BreadcrumbsService {
 
         return breadcrumbItems;
     }
+
+    public List<BreadcrumbItem> breadcrumbsHomeNewest(){
+        List<BreadcrumbItem> breadcrumbItems = new ArrayList<>();
+        breadcrumbItems.add(new BreadcrumbItem("home", "/index"));
+        breadcrumbItems.add(new BreadcrumbItem("newest", "/newest"));
+
+        return breadcrumbItems;
+    }
+
+    public List<BreadcrumbItem> breadcrumbsHomeTop(){
+        List<BreadcrumbItem> breadcrumbItems = new ArrayList<>();
+        breadcrumbItems.add(new BreadcrumbItem("home", "/index"));
+        breadcrumbItems.add(new BreadcrumbItem("top", "/top"));
+
+        return breadcrumbItems;
+    }
+
+
    public List<BreadcrumbItem> breadcrumbsHomeCategoriesCategoriesName(String categoryName, UUID categoryId){
         List<BreadcrumbItem> breadcrumbItems = new ArrayList<>();
         breadcrumbItems.add(new BreadcrumbItem("home", "/index"));

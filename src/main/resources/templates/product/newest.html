@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
-<head th:replace="~{category/template :: head(title='Top Products')}"/>
+<head th:replace="~{category/template :: head(title='Newest Products')}"/>
 <meta name="cartId" content="[[${cartId}]]">
 <body>
 
@@ -13,7 +13,7 @@
                 <span th:text="${message}"></span>
             </div>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <div th:each="product : ${topProducts}" class="col">
+                <div th:each="product : ${newestProductsPage.content}" class="col">
                     <div class="card shadow-sm">
                         <div class="text-center mb-2">
                             <a th:href="@{'/products/' + ${product.id}}">
@@ -45,6 +45,15 @@
                         Back to main
                     </a>
                 </div>
+            </div>
+            <div class="card-footer d-flex justify-content-end">
+                <ul class="pagination pagination-sm m-0 float-right" th:if="${newestProductsPage.totalPages > 0}">
+                    <li th:each="pageNumber : ${pageNumbers}" class="page-item">
+                        <a class="page-link"
+                           th:href="@{'/newest' (size=${newestProductsPage.size}, page=${pageNumber}-1)}"
+                           th:text="${pageNumber}"></a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
