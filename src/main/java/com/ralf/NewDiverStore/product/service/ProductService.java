@@ -103,6 +103,7 @@ public class ProductService {
             product.setCategory(productRequest.getCategory());
             productRequest.getCategory().addProduct(product);
             product.setImagePath(productRequest.getImagePath());
+            product.setDiscountPercentage(productRequest.getDiscountPercentage());
 
             return productRepository.save(product);
         } else {

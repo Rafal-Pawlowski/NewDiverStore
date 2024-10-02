@@ -92,6 +92,7 @@
                                                    th:href="@{'/admin/products'(s=${search}, field='name', direction=${reverseSort})}">Products</a></th>
                                             <th><a th:classappend="${field == 'price' ? 'sort-' + reverseSort : ''}"
                                                    th:href="@{'/admin/products'(s=${search}, field='price', direction=${reverseSort})}">Price</a></th>
+                                            <th>Discount %</th>
                                             <th><a th:classappend="${field == 'category.name' ? 'sort-' + reverseSort : ''}"
                                                    th:href="@{'/admin/products'(s=${search}, field='category.name', direction=${reverseSort})}">Category</a></th>
                                             <th><a th:classappend="${field == 'producer.name' ? 'sort-' + reverseSort : ''}"
@@ -106,6 +107,7 @@
                                             <td th:text="${product.id}"></td>
                                             <td th:text="${product.name}"></td>
                                             <td th:text="${product.price}"></td>
+                                            <td th:text="${product.discountPercentage}"></td>
                                             <td th:text="${product.getCategory().name}"></td>
                                             <td th:text="${product.getProducer().name}"></td>
                                             <td>

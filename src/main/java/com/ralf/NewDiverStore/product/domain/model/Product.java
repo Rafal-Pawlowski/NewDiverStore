@@ -46,6 +46,18 @@ public class Product {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
+    @DecimalMin(value = "0.0", message = "Discount must be a positive value")
+    @DecimalMax(value = "100.0", message = "Discount cannot exceed 100%")
+    private BigDecimal discountPercentage = BigDecimal.ZERO;
+
+    public BigDecimal getDiscountedPrice() {
+        if (discountPercentage != null && discountPercentage.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal discount = price.multiply(discountPercentage).divide(new BigDecimal("100"));
+            return price.subtract(discount);
+        }
+        return price;
+    }
+
     public Product() {
         this.id=UUID.randomUUID();
     }

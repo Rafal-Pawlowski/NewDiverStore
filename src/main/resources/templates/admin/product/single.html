@@ -84,12 +84,31 @@
                                             Xtra-Large
                                         </label>
                                     </div>
-
+                                    <!--wyświetlanie ceny po zniżce-->
                                     <div class="bg-gray py-2 px-3 mt-4">
-                                        <h2 class="mb-0" th:text="${product.price} + ' zł'">
-                                            99999 zł
-                                        </h2>
+                                        <!-- Jeśli produkt ma rabat -->
+                                        <div th:if="${product.discountPercentage > 0}">
+                                            <!-- Przekreślona oryginalna cena -->
+                                            <h2 class="mb-0" style="text-decoration: line-through;"
+                                                th:text="${product.price}">
+                                                99999 zł
+                                            </h2>
+                                            <!-- Cena po zniżce -->
+                                            <h2 class="mb-0" style="color: red;"
+                                                th:text="${product.getDiscountedPrice()}">
+                                                1890,00 zł
+                                            </h2>
+                                        </div>
+
+                                        <!-- Jeśli produkt nie ma rabatu -->
+                                        <div th:if="${product.discountPercentage == 0}">
+                                            <h2 class="mb-0" th:text="${product.price}">
+                                                99999 zł
+                                            </h2>
+                                        </div>
                                     </div>
+
+
 
                                     <div class="mt-4">
                                         <a th:href="@{'/admin/products/' + ${product.id}+ '/edit'}" class="btn btn-primary btn-lg btn-flat">
