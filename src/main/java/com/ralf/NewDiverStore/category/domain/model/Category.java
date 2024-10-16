@@ -20,6 +20,7 @@ import java.util.UUID;
 @Table(name = "categories")
 @Getter
 @Setter
+@ToString
 public class Category {
 
     @Id
@@ -68,16 +69,5 @@ public class Category {
         return Collections.unmodifiableSet(products);
     }
 
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", imagePath='" + imagePath + '\'' +
-                ", productsCount=" + (products != null ? products.size() : 0) +
-                '}';
-    }
 
 }
