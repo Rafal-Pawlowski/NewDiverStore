@@ -55,30 +55,27 @@ public class CategoryService {
 
     @Transactional
     public Category getCategoryByName(String name){
-        try{
-            Category category = categoryRepository.findByNameContaining(name);
-            return category;
-        } catch (Exception e){
-            throw new EntityNotFoundException("Cannot find category with name: "+ name);
-        }
+        return categoryRepository.findByNameContaining(name)
+                .orElseThrow(() -> new EntityNotFoundException("Cannot find category with name: " + name));
     }
 
     @Transactional
     public Category updateCategory(UUID id, Category categoryRequest) {
-        Optional<Category> optionalCategory = categoryRepository.findById(id);
-        if (optionalCategory.isPresent()) {
-            Category category = optionalCategory.get();
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category with id: " + id + " not found"));
+
             category.setName(categoryRequest.getName());
             category.setDescription(categoryRequest.getDescription());
             category.setImagePath(categoryRequest.getImagePath());
             return categoryRepository.save(category);
-        } else {
-            throw new EntityNotFoundException("Category with id: " + id + " not found");
-        }
+
     }
 
     @Transactional
     public void deleteCategory(UUID id) {
+        if(!categoryRepository.existsById(id)){
+            throw new EntityNotFoundException("Category with id: " + id + " not exist");
+        }
         categoryRepository.deleteById(id);
     }
 }
