@@ -54,10 +54,10 @@ class CategoryServiceTest {
         Category result = categoryService.createCategory(category);
 
         //then
-    assertThat(result)
-            .isNotNull()
-            .extracting(Category::getName, Category::getDescription)
-            .containsExactlyInAnyOrder(category.getName(), category.getDescription());
+        assertThat(result)
+                .isNotNull()
+                .extracting(Category::getName, Category::getDescription)
+                .containsExactlyInAnyOrder(category.getName(), category.getDescription());
 
         Optional<Category> optionalCategory = categoryRepository.findById(result.getId());
         assertThat(optionalCategory)
@@ -99,7 +99,7 @@ class CategoryServiceTest {
         categoryRepository.saveAll(List.of(category1, category2, category3));
 
         //when
-        Page<Category>result = categoryService.getCategories(query, Pageable.unpaged());
+        Page<Category> result = categoryService.getCategories(query, Pageable.unpaged());
 
         //then
         assertThat(result)
@@ -127,15 +127,15 @@ class CategoryServiceTest {
     }
 
     @Test
-    void shouldThrowEntityNotFoundExceptionWhenGettingCategory(){
+    void shouldThrowEntityNotFoundExceptionWhenGettingCategory() {
         //given
         UUID id = UUID.randomUUID();
 
         //when & then
-      EntityNotFoundException exception =  assertThrows(EntityNotFoundException.class, () -> {
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             categoryService.getCategory(id);
         });
-      assertThat(exception.getMessage()).isEqualTo("Category with id: " + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo("Category with id: " + id + " not found");
 
     }
 
@@ -158,7 +158,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void shouldThrowEntityNotFoundExceptionWhenGettingCategoryByName(){
+    void shouldThrowEntityNotFoundExceptionWhenGettingCategoryByName() {
         //given
         String nameQuery = "One";
 
@@ -166,7 +166,7 @@ class CategoryServiceTest {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             categoryService.getCategoryByName(nameQuery);
         });
-        assertThat(exception.getMessage()).isEqualTo("Cannot find category with name: "+ nameQuery);
+        assertThat(exception.getMessage()).isEqualTo("Cannot find category with name: " + nameQuery);
 
     }
 
@@ -190,7 +190,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void shouldThrowEntityNotFoundExceptionWhenUpdatingCategory(){
+    void shouldThrowEntityNotFoundExceptionWhenUpdatingCategory() {
         //given
         UUID id = UUID.randomUUID();
         Category categoryRequest = new Category("Category Test", "New Description");
@@ -208,7 +208,7 @@ class CategoryServiceTest {
         Category category = categoryService.createCategory(new Category("Category to delete"));
         UUID id = category.getId();
         //when
-        Throwable throwable = catchThrowable(()-> categoryService.deleteCategory(id));
+        Throwable throwable = catchThrowable(() -> categoryService.deleteCategory(id));
 
         //then
         assertThat(throwable).isNull();
@@ -216,7 +216,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void shouldThrowEntityNotFoundExceptionWhenRemovingCategory(){
+    void shouldThrowEntityNotFoundExceptionWhenRemovingCategory() {
         //given
         UUID id = UUID.randomUUID();
 
