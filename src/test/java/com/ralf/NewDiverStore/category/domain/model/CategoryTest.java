@@ -75,6 +75,7 @@ class CategoryTest {
         // then
         assertThat(category.getProducts().size()).isEqualTo(1);
         assertThat(product.getCategory()).isEqualTo(category);
+
     }
 
 }
