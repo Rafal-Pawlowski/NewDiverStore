@@ -1,9 +1,7 @@
 package com.ralf.NewDiverStore.customer.service;
 
-import com.ralf.NewDiverStore.customer.domain.model.BillingAddress;
 import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import com.ralf.NewDiverStore.customer.domain.model.CustomerBuilder;
-import com.ralf.NewDiverStore.customer.domain.model.ShippingAddress;
 import com.ralf.NewDiverStore.customer.domain.repository.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -26,24 +24,22 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    //TODO zmiana metody na prostrzą, ponieważ w pierwszym kroku nie jest ustawiany żaden adres
+
     @Transactional
     public Customer createCustomer(Customer customerRequest) {
         Customer customer = new CustomerBuilder()
                 .withFirstName(customerRequest.getFirstName())
                 .withLastName(customerRequest.getLastName())
                 .withEmail(customerRequest.getEmail())
-//                .withShippingAddress(customerRequest.getShippingAddress())
-//                .withBillingAddress(customerRequest.getBillingAddress())
                 .build();
 
-    return customerRepository.save(customer);
+        return customerRepository.save(customer);
     }
 
     @Transactional
-    public Customer createOrUpdateCustomerWithNamesAndEmail(Customer customerRequest){
+    public Customer createOrUpdateCustomerWithNamesAndEmail(Customer customerRequest) {
         logger.debug("CreateOrUpdateCustomer method");
-        if(customerRequest.getId()!=null) {
+        if (customerRequest.getId() != null) {
             Optional<Customer> existingCustomer = customerRepository.findById(customerRequest.getId());
             if (existingCustomer.isPresent()) {
                 Customer customer = existingCustomer.get();
@@ -59,23 +55,23 @@ public class CustomerService {
     }
 
 
-
     @Transactional(readOnly = true)
     public Page<Customer> getCustomers(Pageable pageable) {
-    return customerRepository.findAll(pageable);
+        return customerRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
     public Customer getCustomer(UUID customerId) {
         Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
-        if(optionalCustomer.isPresent()){
+        if (optionalCustomer.isPresent()) {
             Customer customer = optionalCustomer.get();
             return customer;
 
-        } else{
-            throw  new EntityNotFoundException("Customer with id: " + customerId + " not found");
+        } else {
+            throw new EntityNotFoundException("Customer with id: " + customerId + " not found");
         }
     }
+
     @Transactional
     public Customer updateCustomer(UUID customerId, Customer customerRequest) {
         Customer customer = getCustomer(customerId);
@@ -85,7 +81,7 @@ public class CustomerService {
         customer.setShippingAddress(customerRequest.getShippingAddress());
         customer.setBillingAddress(customerRequest.getBillingAddress());
 
-    return customerRepository.save(customer);
+        return customerRepository.save(customer);
     }
 
     @Transactional
