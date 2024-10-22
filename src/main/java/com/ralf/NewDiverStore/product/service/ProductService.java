@@ -56,13 +56,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Product getSingleProduct(UUID id) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            return product;
-        } else {
-            throw new EntityNotFoundException("Product with id: " + id + " not found");
-        }
+        return productRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Product with id: " + id + " not found"));
+
     }
 
     @Transactional(readOnly = true)
@@ -92,23 +88,20 @@ public class ProductService {
 
     @Transactional
     public Product updateProduct(UUID productId, Product productRequest) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            product.setName(productRequest.getName());
-            product.setPrice(productRequest.getPrice());
-            product.setDescription(productRequest.getDescription());
-            product.setProducer(productRequest.getProducer());
-            productRequest.getProducer().addProduct(product);
-            product.setCategory(productRequest.getCategory());
-            productRequest.getCategory().addProduct(product);
-            product.setImagePath(productRequest.getImagePath());
-            product.setDiscountPercentage(productRequest.getDiscountPercentage());
+        Product product = productRepository.findById(productId).orElseThrow(() ->
+                new EntityNotFoundException("Product with id: " + productId + " not found"));
 
-            return productRepository.save(product);
-        } else {
-            throw new EntityNotFoundException("Product with id: " + productId + " not found");
-        }
+        product.setName(productRequest.getName());
+        product.setPrice(productRequest.getPrice());
+        product.setDescription(productRequest.getDescription());
+        product.setProducer(productRequest.getProducer());
+        productRequest.getProducer().addProduct(product);
+        product.setCategory(productRequest.getCategory());
+        productRequest.getCategory().addProduct(product);
+        product.setImagePath(productRequest.getImagePath());
+        product.setDiscountPercentage(productRequest.getDiscountPercentage());
+
+        return productRepository.save(product);
     }
 
     @Transactional
