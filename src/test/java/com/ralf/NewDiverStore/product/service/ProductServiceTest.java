@@ -20,6 +20,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,6 +47,9 @@ class ProductServiceTest {
     private ProducerRepository producerRepository;
 
     @Autowired
+    private RedisProductService redisProductService;
+
+    @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     @BeforeEach
@@ -59,11 +64,27 @@ class ProductServiceTest {
         redisTemplate.getConnectionFactory().getConnection().flushAll();
     }
 
+    private Product createProduct(String name, BigDecimal price, Category category, Producer producer) {
+        Product product = new Product(name, price);
+        product.setCategory(category);
+        product.setProducer(producer);
+        return productRepository.save(product);
+    }
+
+    private Category createCategory(String name) {
+        return categoryRepository.save(new Category(name));
+    }
+
+    private Producer createProducer(String name) {
+        return producerRepository.save(new Producer(name));
+    }
+
+
     @Test
     void shouldCreateProduct() {
         //given
-        Category category = categoryRepository.save(new Category("Category"));
-        Producer producer = producerRepository.save(new Producer("Producer"));
+        Category category = createCategory("Category");
+        Producer producer = createProducer("Producer");
 
         Product productRequest = new Product("productRequest", new BigDecimal("150.00"));
         productRequest.setDescription("productRequest description text");
@@ -187,15 +208,16 @@ class ProductServiceTest {
 
     @Test
     void shouldGetTopProducts() {
+
         // given
         Product product1 = productRepository.save(new Product("Product 1", new BigDecimal("100.00")));
         Product product2 = productRepository.save(new Product("Product 2", new BigDecimal("150.00")));
         Product product3 = productRepository.save(new Product("Product 3", new BigDecimal("200.00")));
 
-        //orderCountToRedis
-        redisTemplate.opsForValue().set("product:order_count:" + product1.getId(), "10");
-        redisTemplate.opsForValue().set("product:order_count:" + product2.getId(), "5");
-        redisTemplate.opsForValue().set("product:order_count:" + product3.getId(), "15");
+        // Ustawienie liczby zamówień za pomocą RedisProductService
+        redisProductService.setOrderCount(product1.getId(), 10L);
+        redisProductService.setOrderCount(product2.getId(), 5L);
+        redisProductService.setOrderCount(product3.getId(), 15L);
 
         // when
         List<Product> topProducts = productService.getTopProducts(2);
@@ -214,9 +236,9 @@ class ProductServiceTest {
 
         Product productRequest = new Product("UpdatedProduct", new BigDecimal("50"));
         productRequest.setDescription("shortDescriptionToUpdate");
-        Producer producer = producerRepository.save(new Producer("Producer"));
+        Producer producer = createProducer("Producer");
         productRequest.setProducer(producer);
-        Category category = categoryRepository.save(new Category("Category"));
+        Category category = createCategory("Category");
         productRequest.setCategory(category);
         productRequest.setImagePath("image/path");
         productRequest.setDiscountPercentage(new BigDecimal("5"));
@@ -273,24 +295,14 @@ class ProductServiceTest {
     @Test
     void findProductByCategoryId() {
         //given
-        Category category1 = categoryRepository.save(new Category("Category1"));
-        Category category2 = categoryRepository.save(new Category("Category2"));
-        Producer producer = producerRepository.save(new Producer("Producer"));
+        Category category1 = createCategory("Category1");
+        Category category2 = createCategory("Category2");
+        Producer producer = createProducer("Producer");
 
-        Product product1 = new Product("Product1", new BigDecimal("99"));
-        product1.setCategory(category1);
-        product1.setProducer(producer);
-        Product savedProduct1 = productRepository.save(product1);
+        Product product1 = createProduct("Product1", new BigDecimal("99"), category1, producer);
+        Product product2 = createProduct("Product2", new BigDecimal("123"), category2, producer);
+        Product product3 = createProduct("Product3", new BigDecimal("400"), category2, producer);
 
-        Product product2 = new Product("Product2", new BigDecimal("123"));
-        product2.setCategory(category2);
-        product2.setProducer(producer);
-        Product savedProduct2 = productRepository.save(product2);
-
-        Product product3 = new Product("Product3", new BigDecimal("400"));
-        product3.setCategory(category2);
-        product3.setProducer(producer);
-        Product savedProduct3 = productRepository.save(product3);
 
         //when
         Page<Product> result = productService.findProductByCategoryId(category2.getId(), Pageable.unpaged());
@@ -299,31 +311,20 @@ class ProductServiceTest {
         assertThat(result)
                 .hasSize(2)
                 .extracting(Product::getName)
-                .containsExactly(savedProduct2.getName(), savedProduct3.getName());
+                .containsExactly(product2.getName(), product3.getName());
 
     }
 
     @Test
     void countProducersByCategoryId() {
         //given
-        Category category1 = categoryRepository.save(new Category("Category1"));
-        Category category2 = categoryRepository.save(new Category("Category2"));
-        Producer producer1 = producerRepository.save(new Producer("Producer"));
-        Producer producer2 = producerRepository.save(new Producer("Producer2"));
-        Product product1 = new Product("Product1", new BigDecimal("99"));
-        product1.setCategory(category1);
-        product1.setProducer(producer1);
-        Product savedProduct1 = productRepository.save(product1);
-
-        Product product2 = new Product("Product2", new BigDecimal("123"));
-        product2.setCategory(category2);
-        product2.setProducer(producer2);
-        Product savedProduct2 = productRepository.save(product2);
-
-        Product product3 = new Product("Product3", new BigDecimal("400"));
-        product3.setCategory(category2);
-        product3.setProducer(producer1);
-        Product savedProduct3 = productRepository.save(product3);
+        Category category1 = createCategory("Category1");
+        Category category2 = createCategory("Category2");
+        Producer producer1 = createProducer("Producer1");
+        Producer producer2 = createProducer("Producer2");
+        Product product1 = createProduct("Product1", new BigDecimal("99"), category1, producer1);
+        Product product2 =createProduct("Product2", new BigDecimal("123"), category2, producer2);
+        Product product3 = createProduct("Product3", new BigDecimal("400"), category2, producer1);
 
         //when
         long result1 = productService.countProducersByCategoryId(category2.getId(), Pageable.unpaged());
@@ -337,9 +338,43 @@ class ProductServiceTest {
 
     @Test
     void getProductsByProducerId() {
+        //given
+        Category category = createCategory("Category");
+        Producer producer1 = createProducer("Producer");
+        Producer producer2 = createProducer("Producer2");
+        Product product1 = createProduct("Product1", new BigDecimal("99"), category, producer1);
+        Product product2 = createProduct("Product2", new BigDecimal("123"), category, producer2);
+        Product product3 = createProduct("Product3", new BigDecimal("400"), category, producer1);
+
+        //when
+        List<Product> result = productService.getProductsByProducerId(producer1.getId());
+
+        //then
+        assertThat(result).hasSize(2)
+                .extracting(Product::getId)
+                .containsExactly(product1.getId(), product3.getId());
+
     }
 
     @Test
     void getNewestProducts() {
+        //given
+        Category category = createCategory("Category");
+        Producer producer = createProducer("Producer");
+
+        Product product1 = createProduct("Product1", new BigDecimal("99"), category, producer);
+        Product product2 = createProduct("Product2", new BigDecimal("400"), category, producer);
+        Product product3 = createProduct("Product3", new BigDecimal("500"), category, producer);
+        Product product4 = createProduct("Product4", new BigDecimal("600"), category, producer);
+
+
+        //when
+        Page<Product> result = productService.getNewestProducts(3, Pageable.unpaged());
+
+        //then
+        assertThat(result).hasSize(3)
+                .extracting(Product::getId)
+                .containsExactly(product4.getId(), product3.getId(), product2.getId());
+
     }
 }

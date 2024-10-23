@@ -18,11 +18,11 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisProductService redisProductService;
 
-    public ProductService(ProductRepository productRepository, RedisTemplate<String, String> redisTemplate) {
+    public ProductService(ProductRepository productRepository, RedisTemplate<String, String> redisTemplate, RedisProductService redisProductService) {
         this.productRepository = productRepository;
-        this.redisTemplate = redisTemplate;
+        this.redisProductService = redisProductService;
     }
 
     @Transactional
@@ -64,19 +64,14 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<Product> getTopProducts(int topN) {
         List<Product> topProducts = new ArrayList<>();
-
         List<Product> allProducts = productRepository.findAll();
 
         Map<Product, Long> productOrderCountMap = new HashMap<>();
         for (Product product : allProducts) {
-            String redisKey = "product:order_count:" + product.getId().toString();
-            String orderCount = redisTemplate.opsForValue().get(redisKey);
-
-            if (orderCount != null) {
-                productOrderCountMap.put(product, Long.valueOf(orderCount));
-            }
+            Long orderCount = redisProductService.getOrderCount(product.getId());
+            productOrderCountMap.put(product, orderCount);
         }
-        //sortowanie produktów na podstawie liczby zamówien
+
         productOrderCountMap.entrySet().stream()
                 .sorted(Map.Entry.<Product, Long>comparingByValue().reversed())
                 .limit(topN)
@@ -138,6 +133,10 @@ public class ProductService {
         List<Product> limitedProducts = allProducts.stream()
                 .limit(limit)
                 .toList();
+
+        if (pageable.isUnpaged()) {
+            return new PageImpl<>(limitedProducts);
+        }
 
         int start = Math.min((int) pageable.getOffset(), limitedProducts.size());
         int end = Math.min((start + pageable.getPageSize()), limitedProducts.size());
