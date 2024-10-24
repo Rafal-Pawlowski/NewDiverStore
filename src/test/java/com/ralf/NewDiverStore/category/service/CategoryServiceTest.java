@@ -171,7 +171,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void shouldUpdateCategory() {
+    void shouldUpdateExistingCategory() {
         //given
         Category category = categoryService.createCategory(new Category("Category 1", "Test Category Description"));
 
@@ -190,7 +190,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void shouldThrowEntityNotFoundExceptionWhenUpdatingCategory() {
+    void shouldThrowEntityNotFoundExceptionWhenUpdatingNotExistingCategory() {
         //given
         UUID id = UUID.randomUUID();
         Category categoryRequest = new Category("Category Test", "New Description");

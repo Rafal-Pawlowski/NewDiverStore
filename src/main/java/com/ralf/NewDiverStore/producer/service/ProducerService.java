@@ -8,9 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,9 +30,10 @@ public class ProducerService {
     public Page<Producer> getProducers(Pageable pageable) {
         return getProducers(null, pageable);
     }
+
     @Transactional(readOnly = true)
     public Page<Producer> getProducers(String search, Pageable pageable) {
-        if(search==null){
+        if (search == null) {
             return producerRepository.findAll(pageable);
         } else {
             return producerRepository.findByNameContainingIgnoreCase(search, pageable);
@@ -44,30 +42,27 @@ public class ProducerService {
 
     @Transactional(readOnly = true)
     public Producer getSingleProducer(UUID id) {
-        Optional<Producer> optionalProducer = producerRepository.findById(id);
-        if(optionalProducer.isPresent()){
-            Producer producer = optionalProducer.get();
-            return producer;
-        } else {
-            throw new EntityNotFoundException("Producer with id: " + id + " not found");
-        }
+        return producerRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Producer with id: " + id + " not found"));
     }
 
     @Transactional
     public Producer updateProducer(UUID id, Producer producerRequest) {
-        Optional<Producer> optionalProducer = producerRepository.findById(id);
-        if(optionalProducer.isPresent()){
-            Producer producer =  optionalProducer.get();
-            producer.setName(producerRequest.getName());
-            producer.setDescription(producerRequest.getDescription());
-           return producerRepository.save(producer);
-        } else {
-            throw new EntityNotFoundException("Producer with id: " + id + " not found");
-        }
+        Producer producer = producerRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Producer with id: " + id + " not found"));
+
+        producer.setName(producerRequest.getName());
+        producer.setDescription(producerRequest.getDescription());
+        return producerRepository.save(producer);
     }
+
 
     @Transactional
     public void deleteProducer(UUID id) {
+        producerRepository.findById(id).orElseThrow(()->
+            new EntityNotFoundException("Entity with id: "+ id + " do not exist")
+        );
+
         producerRepository.deleteById(id);
     }
 }

@@ -214,7 +214,6 @@ class ProductServiceTest {
         Product product2 = productRepository.save(new Product("Product 2", new BigDecimal("150.00")));
         Product product3 = productRepository.save(new Product("Product 3", new BigDecimal("200.00")));
 
-        // Ustawienie liczby zamówień za pomocą RedisProductService
         redisProductService.setOrderCount(product1.getId(), 10L);
         redisProductService.setOrderCount(product2.getId(), 5L);
         redisProductService.setOrderCount(product3.getId(), 15L);
