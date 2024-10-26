@@ -7,6 +7,7 @@ import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import com.ralf.NewDiverStore.order.domain.model.Order;
 import com.ralf.NewDiverStore.order.domain.model.OrderItem;
 import com.ralf.NewDiverStore.order.domain.repository.OrderRepository;
+import com.ralf.NewDiverStore.product.service.RedisProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +30,13 @@ public class OrderService {
 
     private final SessionCartService sessionCartService;
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisProductService redisProductService;
 
 
-    public OrderService(OrderRepository orderRepository, SessionCartService sessionCartService, RedisTemplate<String, String> redisTemplate) {
+    public OrderService(OrderRepository orderRepository, SessionCartService sessionCartService, RedisTemplate<String, String> redisTemplate, RedisProductService redisProductService) {
         this.orderRepository = orderRepository;
         this.sessionCartService = sessionCartService;
-        this.redisTemplate = redisTemplate;
+        this.redisProductService = redisProductService;
     }
 
 
@@ -63,7 +64,7 @@ public class OrderService {
         orderRequest.setTotalOrderPrice(totalCostShippingIncluded);
         orderRequest.setShippingCost(cart.getShipping().calculateShippingCost(totalCostNoShippingIncluded));
 
-        orderRequest.setPayment(orderRequest.getPayment());
+//        orderRequest.setPayment(orderRequest.getPayment()); // ???WTF
 
 
         Customer customer = orderRequest.getCustomer();
@@ -108,11 +109,11 @@ public class OrderService {
         orderRepository.deleteById(orderId);
     }
 
-    private void increaseProductOrderCount(UUID productId, int count){
-        String redisKey = "product:order_count:"+productId.toString();
-        redisTemplate.opsForValue().increment(redisKey, count);
+    private void increaseProductOrderCount(UUID productId, int count) {
+        redisProductService.setOrderCount(
+                productId,
+                redisProductService.getOrderCount(productId) + count);
     }
-
 }
 
 
