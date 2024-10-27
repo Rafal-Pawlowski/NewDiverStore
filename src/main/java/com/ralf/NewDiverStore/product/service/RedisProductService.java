@@ -24,4 +24,9 @@ public class RedisProductService {
         String redisKey = "product:order_count:" + productId.toString();
         redisTemplate.opsForValue().set(redisKey, count.toString());
     }
+
+    public void incrementOrderCount(UUID productId, long count) {
+        Long currentCount = getOrderCount(productId);
+        setOrderCount(productId, currentCount + count);
+    }
 }

@@ -55,7 +55,7 @@ public class OrderService {
             orderRequest.addOrderItem(orderItem);
 
             //Redis
-            increaseProductOrderCount(cartItem.getProduct().getId(), cartItem.getCounter());
+            redisProductService.incrementOrderCount(cartItem.getProduct().getId(), cartItem.getCounter());
         }
 
         BigDecimal totalCostNoShippingIncluded=cart.getSum();
@@ -64,7 +64,7 @@ public class OrderService {
         orderRequest.setTotalOrderPrice(totalCostShippingIncluded);
         orderRequest.setShippingCost(cart.getShipping().calculateShippingCost(totalCostNoShippingIncluded));
 
-//        orderRequest.setPayment(orderRequest.getPayment()); // ???WTF
+//        orderRequest.setPayment(orderRequest.getPayment()); // ???WT
 
 
         Customer customer = orderRequest.getCustomer();
@@ -80,19 +80,14 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Page<Order> findOrders(Pageable pageable) {
-
         return orderRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
     public Order findOrder(UUID orderId) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderId);
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-            return order;
-        } else {
-            throw new EntityNotFoundException("Order with id: " + orderId + " not found");
-        }
+        return orderRepository.findById(orderId).orElseThrow(()->
+                new EntityNotFoundException("Order with id: " + orderId + " not found"));
+
     }
 
     @Transactional
@@ -106,14 +101,13 @@ public class OrderService {
 
     @Transactional
     public void deleteOrder(UUID orderId) {
+        if(!orderRepository.existsById(orderId)){
+            throw new EntityNotFoundException("Order with id: " + orderId + " not exist");
+        }
         orderRepository.deleteById(orderId);
     }
 
-    private void increaseProductOrderCount(UUID productId, int count) {
-        redisProductService.setOrderCount(
-                productId,
-                redisProductService.getOrderCount(productId) + count);
-    }
+
 }
 
 
