@@ -38,7 +38,6 @@ public class CustomerService {
 
     @Transactional
     public Customer createOrUpdateCustomerWithNamesAndEmail(Customer customerRequest) {
-        logger.debug("CreateOrUpdateCustomer method");
         if (customerRequest.getId() != null) {
             Optional<Customer> existingCustomer = customerRepository.findById(customerRequest.getId());
             if (existingCustomer.isPresent()) {
@@ -46,11 +45,10 @@ public class CustomerService {
                 customer.setFirstName(customerRequest.getFirstName());
                 customer.setLastName(customerRequest.getLastName());
                 customer.setEmail(customerRequest.getEmail());
-                logger.debug("Before Saving customer in createOrUpdateCustomer method: {}", customer);
+
                 return customerRepository.save(customer);
             }
         }
-        logger.debug("Before Saving customerRequest in createOrUpdateCustomer method: {}", customerRequest);
         return createCustomer(customerRequest);
     }
 
@@ -62,15 +60,10 @@ public class CustomerService {
 
     @Transactional(readOnly = true)
     public Customer getCustomer(UUID customerId) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
-            return customer;
-
-        } else {
-            throw new EntityNotFoundException("Customer with id: " + customerId + " not found");
-        }
+        return customerRepository.findById(customerId).orElseThrow(() ->
+                new EntityNotFoundException("Customer with id: " + customerId + " not found"));
     }
+
 
     @Transactional
     public Customer updateCustomer(UUID customerId, Customer customerRequest) {
@@ -86,6 +79,9 @@ public class CustomerService {
 
     @Transactional
     public void deleteCustomer(UUID customerId) {
+        if(!customerRepository.existsById(customerId)){
+            throw new EntityNotFoundException("Customer with id: " + customerId + " not exist");
+        }
         customerRepository.deleteById(customerId);
     }
 }

@@ -11,7 +11,6 @@ import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.domain.repository.ProductRepository;
 import com.ralf.NewDiverStore.product.service.RedisProductService;
 import jakarta.persistence.EntityNotFoundException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,8 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -161,7 +161,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void shouldThrowEntityNotFoundExceptionWhileRemovingNonExistingOrder(){
+    void shouldThrowEntityNotFoundExceptionWhileRemovingNonExistingOrder() {
         //given
         UUID id = UUID.randomUUID();
 
