@@ -35,7 +35,7 @@ public class CustomerApiController {
 
     @GetMapping("{customer-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Customer getCustomer(@PathVariable("{customer-id}")UUID customerId){
+    public Customer getCustomer(@PathVariable("customer-id")UUID customerId){
         return customerService.getCustomer(customerId);
     }
 
