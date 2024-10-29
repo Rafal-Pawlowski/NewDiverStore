@@ -35,20 +35,20 @@ public class CategoryApiController {
 
     @GetMapping("{category-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Category getCategory(@PathVariable("{category-id}") UUID categoryId){
+    public Category getCategory(@PathVariable("category-id") UUID categoryId){
         return categoryService.getCategory(categoryId);
     }
 
 
     @PutMapping("{category-id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category updateCategory(@PathVariable("{category-id}") UUID categoryId,@RequestBody Category categoryRequest){
+    public Category updateCategory(@PathVariable("category-id") UUID categoryId,@RequestBody Category categoryRequest){
         return categoryService.updateCategory(categoryId, categoryRequest);
     }
 
     @DeleteMapping("{category-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable("{category-id}") UUID categoryId){
+    public void deleteCategory(@PathVariable("category-id") UUID categoryId){
         categoryService.deleteCategory(categoryId);
     }
 
