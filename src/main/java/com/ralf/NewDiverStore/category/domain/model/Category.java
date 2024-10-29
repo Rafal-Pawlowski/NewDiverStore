@@ -34,7 +34,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category")
-    private Set<Product> products;
+    private Set<Product> products = new LinkedHashSet<>();
 
     private String imagePath;
 
@@ -56,9 +56,6 @@ public class Category {
 
 
     public Category addProduct(Product product) {
-        if (products == null) {
-            products = new LinkedHashSet<>();
-        }
         product.setCategory(this);
         products.add(product);
 
