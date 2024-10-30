@@ -5,6 +5,8 @@ import com.ralf.NewDiverStore.product.domain.model.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 
 import java.util.Collections;
@@ -14,6 +16,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "producers")
+@Setter
+@Getter
 public class Producer {
 
     @Id
@@ -30,7 +34,7 @@ public class Producer {
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "producer")
-    private Set<Product> products;
+    private Set<Product> products = new LinkedHashSet<>();
 
 
     public Producer() {
@@ -42,10 +46,8 @@ public class Producer {
         this.name = name;
     }
 
-    public Producer addProduct(Product product){
-        if (products == null){
-            products = new LinkedHashSet<>();
-        }
+    public Producer addProduct(Product product){     //is already used in another class!
+
         product.setProducer(this);
         products.add(product);
 
@@ -56,29 +58,6 @@ public class Producer {
         return Collections.unmodifiableSet(products);
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     @Override
     public String toString() {
