@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/producers/{producer-id}/products")
+@RequestMapping("api/v1/products")
 public class ProductApiController {
 
 
@@ -24,8 +24,7 @@ public class ProductApiController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product addProduct(@PathVariable("producer-id") UUID id,
-                              @RequestBody Product product) {
+    public Product addProduct(@RequestBody Product product) {
         return productService.createProduct(product);
     }
 
@@ -37,23 +36,20 @@ public class ProductApiController {
 
     @GetMapping("{product-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Product getProduct(@PathVariable("producer-id") UUID producerId,
-                              @PathVariable("product-id") UUID productId) {
+    public Product getProduct(@PathVariable("product-id") UUID productId) {
         return productService.getSingleProduct(productId);
     }
 
     @PatchMapping("{product-id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Product updateProduct(@PathVariable("producer-id") UUID producerId,
-                                 @PathVariable("product-id") UUID productId,
+    public Product updateProduct(@PathVariable("product-id") UUID productId,
                                  @RequestBody Product product) {
         return productService.updateProduct(productId, product);
     }
 
     @DeleteMapping("{product-id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(@PathVariable("producer-id") UUID producerId,
-                              @PathVariable("product-id") UUID productId) {
+    public void deleteProduct(@PathVariable("product-id") UUID productId) {
         productService.deleteProduct(productId);
     }
 
