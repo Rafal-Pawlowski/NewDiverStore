@@ -6,6 +6,7 @@ import com.ralf.NewDiverStore.common.dto.Message;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import com.ralf.NewDiverStore.utilities.ImageHandler;
+import com.ralf.NewDiverStore.utilities.Pagination;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.ralf.NewDiverStore.utilities.Pagination.*;
+
 @Controller
 @RequestMapping("admin/categories")
 public class CategoryAdminViewController {
@@ -38,7 +41,7 @@ public class CategoryAdminViewController {
 
     @GetMapping
     public String indexView(
-            @RequestParam(name = "s", required = false) String search,
+            @RequestParam(name = "s", required = false, defaultValue = "") String search,
             @RequestParam(name = "field", required = false, defaultValue = "id") String field,
             @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction,
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
@@ -175,14 +178,6 @@ public class CategoryAdminViewController {
     }
 
 
-    private void paging(Model model, Page page) {
-        int totalPages = page.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-    }
+
 
 }
