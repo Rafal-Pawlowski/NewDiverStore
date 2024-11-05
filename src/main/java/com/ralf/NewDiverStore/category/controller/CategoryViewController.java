@@ -1,15 +1,10 @@
 package com.ralf.NewDiverStore.category.controller;
 
-import com.ralf.NewDiverStore.cart.domain.model.Cart;
 import com.ralf.NewDiverStore.cart.service.SessionCartService;
 import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.service.CategoryService;
-import com.ralf.NewDiverStore.product.domain.model.Product;
-import com.ralf.NewDiverStore.product.service.ProductService;
 import com.ralf.NewDiverStore.utilities.BreadcrumbItem;
 import com.ralf.NewDiverStore.utilities.BreadcrumbsService;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,29 +13,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
+import static com.ralf.NewDiverStore.utilities.Pagination.paging;
 
 @Controller
 public class CategoryViewController {
 
     private final CategoryService categoryService;
-    private final ProductService productService;
 
     private final SessionCartService sessionCartService;
 
     private final BreadcrumbsService breadcrumbsService;
 
 
-    public CategoryViewController(CategoryService categoryService, ProductService productService, SessionCartService sessionCartService, BreadcrumbsService breadcrumbsService) {
+    public CategoryViewController(CategoryService categoryService, SessionCartService sessionCartService, BreadcrumbsService breadcrumbsService) {
         this.categoryService = categoryService;
-        this.productService = productService;
         this.sessionCartService = sessionCartService;
         this.breadcrumbsService = breadcrumbsService;
     }
@@ -94,16 +84,6 @@ public class CategoryViewController {
         return "category/list";
     }
 
-
-    private void paging(Model model, Page page) {
-        int totalPages = page.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-    }
 
 }
 
