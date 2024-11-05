@@ -29,11 +29,9 @@ public class CartViewController {
     public String index(Model model) {
 
         model.addAttribute("step", "cart"); // do dynamicznej wizualizacji postępu zamówienia
-
         model.addAttribute("cart", sessionCartService.getCart());
         model.addAttribute("totalCostShippingIncluded", sessionCartService.getTotalCostShippingIncluded());
         model.addAttribute("shipping", sessionCartService.getShippingCost());
-
 
         return "cart/index";
     }
@@ -50,7 +48,7 @@ public class CartViewController {
             sessionCartService.itemOperation(productId, ItemOperation.DECREASE);
         }
 
-//        model.addAttribute("cart", sessionCartService.getCart());
+
         return "redirect:/cart";
     }
 
