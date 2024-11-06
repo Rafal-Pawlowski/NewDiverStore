@@ -1,7 +1,6 @@
 package com.ralf.NewDiverStore.order.controller;
 
 import com.ralf.NewDiverStore.cart.service.SessionCartService;
-import com.ralf.NewDiverStore.wrapper.AddressWrapper;
 import com.ralf.NewDiverStore.common.dto.Message;
 import com.ralf.NewDiverStore.customer.domain.model.Customer;
 import com.ralf.NewDiverStore.customer.domain.repository.CustomerRepository;
@@ -9,6 +8,7 @@ import com.ralf.NewDiverStore.customer.service.CustomerService;
 import com.ralf.NewDiverStore.order.domain.model.Order;
 import com.ralf.NewDiverStore.order.service.OrderService;
 import com.ralf.NewDiverStore.order.service.SessionOrderService;
+import com.ralf.NewDiverStore.wrapper.AddressWrapper;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -26,12 +26,9 @@ import java.util.UUID;
 @SessionAttributes({"customer", "addressWrapper"})
 public class OrderViewController {
 
-
     private static final Logger logger = LoggerFactory.getLogger(OrderViewController.class);
     private final SessionOrderService sessionOrderService;
-
     private final OrderService orderService;
-
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
     private final SessionCartService sessionCartService;
@@ -39,7 +36,6 @@ public class OrderViewController {
 
     public OrderViewController(SessionOrderService sessionOrderService, OrderService orderService, CustomerService customerService, CustomerRepository customerRepository, SessionCartService sessionCartService) {
         this.sessionOrderService = sessionOrderService;
-
         this.orderService = orderService;
         this.customerService = customerService;
         this.customerRepository = customerRepository;
@@ -49,7 +45,6 @@ public class OrderViewController {
     @GetMapping("/customer-details")
     public String customerDetailsView(Model model) {
         model.addAttribute("step", "details");
-
 
         Order order = sessionOrderService.initiateOrderSession();
         logger.debug("Session order initiated");
@@ -66,8 +61,6 @@ public class OrderViewController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
-        logger.debug("PostMapping : /customer-details");
-
         if (bindingResult.hasErrors()) {
             logger.error("Error while completing form");
             model.addAttribute("message", Message.error("Data writing error"));
@@ -76,10 +69,7 @@ public class OrderViewController {
 
         try {
             Order order = sessionOrderService.getOrder();
-
             Customer savedCustomer = customerService.createOrUpdateCustomerWithNamesAndEmail(customerForm);
-            logger.info("Created or updated customer to DB: {}", savedCustomer);
-
             redirectAttributes.addFlashAttribute("message", Message.info("New Order added"));
 
             return "redirect:/order/address-form";
@@ -96,8 +86,7 @@ public class OrderViewController {
     public String addressFormView(
             @ModelAttribute("customer") Customer customer,
             Model model) {
-        model.addAttribute("step", "shipping"); // do dynamicznej wizualizacji postępu zamówienia
-        logger.info("wyświetlenie formularza address-form");
+        model.addAttribute("step", "shipping");
         model.addAttribute("addressWrapper", new AddressWrapper());
 
         return "order/address";
@@ -110,7 +99,6 @@ public class OrderViewController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
-        logger.debug("PostMapping : /address");
 
         if (bindingResult.hasErrors()) {
             logger.error("Validation errors detected: {}", bindingResult.getAllErrors());
@@ -121,7 +109,6 @@ public class OrderViewController {
         try {
             customer.setShippingAddress(addressWrapper.getShippingAddress());
             customer.setBillingAddress(addressWrapper.getBillingAddress());
-            logger.debug("Customer After setting billingAddress: {}", customer.getBillingAddress());
 
             return "redirect:/order/payment";
 
@@ -159,9 +146,7 @@ public class OrderViewController {
             customer.addOrder(order);
             customerRepository.save(customer);
 
-            logger.debug("Order before persisting entity: {}", order);
             orderService.createOrder(order);
-            logger.debug("Order After persisting entity: {}", order);
 
             return "redirect:/order/greetings/" + order.getId();
 
@@ -177,13 +162,11 @@ public class OrderViewController {
     @GetMapping("/greetings/{order-id}")
     public String greetingsView(@PathVariable("order-id") UUID orderId, @ModelAttribute("customer") Customer customer, Model model, HttpSession session) {
 
-
         Order order = orderService.findOrder(orderId);
 
         model.addAttribute("order", order);
         model.addAttribute("customer", customer);
         model.addAttribute("step", "summary"); // do dynamicznej wizualizacji postępu zamówienia
-
 
         sessionCartService.clearCart();
         session.removeAttribute("scopedTarget.sessionCartService");

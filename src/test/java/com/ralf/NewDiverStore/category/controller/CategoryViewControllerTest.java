@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -99,4 +98,4 @@ class CategoryViewControllerTest {
                 .andExpect(model().attribute("breadcrumbs", breadcrumbItems))
                 .andExpect(model().attributeExists("reverseSort", "field", "direction", "categoriesPage"));
     }
-    }
+}
