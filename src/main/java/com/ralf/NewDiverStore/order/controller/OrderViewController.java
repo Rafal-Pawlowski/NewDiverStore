@@ -160,13 +160,15 @@ public class OrderViewController {
 
 
     @GetMapping("/greetings/{order-id}")
-    public String greetingsView(@PathVariable("order-id") UUID orderId, @ModelAttribute("customer") Customer customer, Model model, HttpSession session) {
+    public String greetingsView(@PathVariable("order-id") UUID orderId,
+                                @ModelAttribute("customer") Customer customer,
+                                Model model, HttpSession session) {
 
         Order order = orderService.findOrder(orderId);
 
         model.addAttribute("order", order);
         model.addAttribute("customer", customer);
-        model.addAttribute("step", "summary"); // do dynamicznej wizualizacji postępu zamówienia
+        model.addAttribute("step", "summary");
 
         sessionCartService.clearCart();
         session.removeAttribute("scopedTarget.sessionCartService");

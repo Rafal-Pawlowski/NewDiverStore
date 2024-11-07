@@ -2,7 +2,9 @@ package com.ralf.NewDiverStore.order.controller;
 
 import com.ralf.NewDiverStore.cart.domain.model.Cart;
 import com.ralf.NewDiverStore.cart.service.SessionCartService;
+import com.ralf.NewDiverStore.customer.domain.model.BillingAddress;
 import com.ralf.NewDiverStore.customer.domain.model.Customer;
+import com.ralf.NewDiverStore.customer.domain.model.ShippingAddress;
 import com.ralf.NewDiverStore.customer.domain.repository.CustomerRepository;
 import com.ralf.NewDiverStore.customer.service.CustomerService;
 import com.ralf.NewDiverStore.order.domain.model.Order;
@@ -10,6 +12,7 @@ import com.ralf.NewDiverStore.order.service.OrderService;
 import com.ralf.NewDiverStore.order.service.SessionOrderService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.wrapper.AddressWrapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -138,18 +142,65 @@ class OrderViewControllerTest {
 
 
     @Test
-    void addressFormEditView() {
+    void shouldProcessAddressformAndRedirectToPayment() throws Exception {
+
+        AddressWrapper addressWrapper = new AddressWrapper();
+        ShippingAddress shippingAddress = new ShippingAddress("ShippingStreet", "ShippingCountry", "ShippingCity", "00-001");
+        BillingAddress billingAddress = new BillingAddress("BillingStreet", "BillingCountry", "BillingCity", "00-002");
+        addressWrapper.setShippingAddress(shippingAddress);
+        addressWrapper.setBillingAddress(billingAddress);
+
+
+        mockMvc.perform(post("/order/address-form")
+                        .flashAttr("addressWrapper", addressWrapper)
+                        .flashAttr("customer", mockCustomer))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/order/payment"));
+
+        assertThat(mockCustomer.getShippingAddress()).isEqualTo(shippingAddress);
+        assertThat(mockCustomer.getBillingAddress()).isEqualTo(billingAddress);
+
+    }
+
+
+    @Test
+    void shouldDisplayPaymentView() throws Exception {
+
+        mockMvc.perform(get("/order/payment"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("order/payment"))
+                .andExpect(model().attribute("step", "payment"))
+                .andExpect(model().attribute("order", mockOrder));
     }
 
     @Test
-    void paymentView() {
+    void shouldProcessPaymentAndRedirectToGreetings() throws Exception {
+
+        when(customerRepository.save(any(Customer.class))).thenReturn(mockCustomer);
+        when(orderService.createOrder(any(Order.class))).thenReturn(mockOrder);
+
+        mockMvc.perform(post("/order/payment")
+                        .flashAttr("order", mockOrder)
+                        .flashAttr("customer", mockCustomer))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/order/greetings/" + mockOrder.getId()));
     }
 
     @Test
-    void paymentEditAndFinalOrderOperations() {
-    }
+    void shouldDisplayGreetingsView() throws Exception {
+        ShippingAddress shippingAddress = new ShippingAddress("ShippingStreet", "ShippingCountry", "ShippingCity", "00-001");
+        BillingAddress billingAddress = new BillingAddress("BillingStreet", "BillingCountry", "BillingCity", "00-002");
+        mockCustomer.setShippingAddress(shippingAddress);
+        mockCustomer.setBillingAddress(billingAddress);
 
-    @Test
-    void greetingsView() {
+        mockMvc.perform(get("/order/greetings/{order-id}", mockOrder.getId())
+                        .flashAttr("customer", mockCustomer))
+                .andExpect(status().isOk())
+                .andExpect(view().name("order/greetings"))
+                .andExpect(model().attribute("order", mockOrder))
+                .andExpect(model().attribute("customer", mockCustomer))
+                .andExpect(model().attribute("step", "summary"));
+
+        verify(sessionCartService, times(1)).clearCart();
     }
 }
