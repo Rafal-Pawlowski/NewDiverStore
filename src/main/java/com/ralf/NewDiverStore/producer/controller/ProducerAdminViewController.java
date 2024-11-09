@@ -5,6 +5,7 @@ import com.ralf.NewDiverStore.producer.domain.model.Producer;
 import com.ralf.NewDiverStore.producer.service.ProducerService;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
+import com.ralf.NewDiverStore.utilities.Pagination;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static com.ralf.NewDiverStore.utilities.Pagination.*;
 
 
 @Controller
@@ -145,15 +148,6 @@ public class ProducerAdminViewController {
     }
 
 
-    private void paging(Model model, Page page) {
-        int totalPages = page.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-    }
 
 }
 
