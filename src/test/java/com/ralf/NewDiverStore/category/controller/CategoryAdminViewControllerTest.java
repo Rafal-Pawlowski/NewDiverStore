@@ -109,11 +109,11 @@ class CategoryAdminViewControllerTest {
         UUID categoryId = UUID.randomUUID();
         Category category = new Category("Category");
         when(categoryService.getCategory(categoryId)).thenReturn(category);
-        when(categoryService.updateCategory(any(), any())).thenAnswer((InvocationOnMock invocationOnMock)-> invocationOnMock.getArguments()[1]);
+        when(categoryService.updateCategory(any(), any())).thenAnswer((InvocationOnMock invocationOnMock) -> invocationOnMock.getArguments()[1]);
 
-        mockMvc.perform(multipart("/admin/categories/"+categoryId + "/edit")
-                .file("file", new byte[0])
-                .flashAttr("category", category))
+        mockMvc.perform(multipart("/admin/categories/" + categoryId + "/edit")
+                        .file("file", new byte[0])
+                        .flashAttr("category", category))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(redirectedUrl("/admin/categories"));
@@ -125,7 +125,7 @@ class CategoryAdminViewControllerTest {
         Page<Product> emptyProductsPage = new PageImpl<>(Collections.emptyList());
         when(productService.findProductByCategoryId(categoryId, Pageable.unpaged())).thenReturn(emptyProductsPage);
 
-        mockMvc.perform(get("/admin/categories/"+categoryId+"/delete"))
+        mockMvc.perform(get("/admin/categories/" + categoryId + "/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(redirectedUrl("/admin/categories"));
@@ -140,6 +140,7 @@ class CategoryAdminViewControllerTest {
                 .andExpect(model().attributeExists("category"));
 
     }
+
     @Test
     void shouldAddCategoryAndRedirect() throws Exception {
         // Given
