@@ -4,6 +4,8 @@ import com.ralf.NewDiverStore.cart.domain.model.Cart;
 import com.ralf.NewDiverStore.cart.service.SessionCartService;
 import com.ralf.NewDiverStore.category.domain.model.Category;
 import com.ralf.NewDiverStore.category.service.CategoryService;
+import com.ralf.NewDiverStore.common.dto.Message;
+import com.ralf.NewDiverStore.producer.domain.model.Producer;
 import com.ralf.NewDiverStore.product.domain.model.Product;
 import com.ralf.NewDiverStore.product.service.ProductService;
 import com.ralf.NewDiverStore.utilities.BreadcrumbItem;
@@ -56,12 +58,15 @@ class ProductViewControllerTest {
     private Product product;
 
     private Category category;
+    private Producer producer;
 
     @BeforeEach
     void setUp() {
         product = new Product("Product", new BigDecimal("345.00"));
         category = new Category("Category");
-
+        producer = new Producer("Producer");
+        product.setCategory(category);
+        product.setProducer(producer);
         breadcrumbItems = new ArrayList<>();
         productsList = new ArrayList<>(List.of(product));
         productsPage = new PageImpl<>(List.of(product));
@@ -69,7 +74,9 @@ class ProductViewControllerTest {
         Cart mockCart = new Cart();
         mockCart.addItem(product);
         when(sessionCartService.getCart()).thenReturn(mockCart);
-
+        when(categoryService.getCategory(any(UUID.class))).thenReturn(category);
+        when(productService.getSingleProduct(any())).thenReturn(product);
+        when(breadcrumbsService.breadcrumbsHomeCategoriesCategoriesName(any(), any())).thenReturn(breadcrumbItems);
     }
 
 
@@ -102,9 +109,9 @@ class ProductViewControllerTest {
     @Test
     void shouldDisplayProductsByCategoryView() throws Exception {
 
-        when(breadcrumbsService.breadcrumbsHomeCategoriesCategoriesName(any(), any())).thenReturn(breadcrumbItems);
+
         when(productService.findProductByCategoryId(any(), any())).thenReturn(productsPage);
-        when(categoryService.getCategory(any())).thenReturn(category);
+
 
         mockMvc.perform(get("/categories/{category-id}/products", category.getId())
                         .param("field", "name")
@@ -189,18 +196,56 @@ class ProductViewControllerTest {
 
 
     @Test
-    void addNewestProductToCart() {
+    void shouldAddProductToCart() throws Exception {
+        // Given
+        UUID categoryId = category.getId();
+        UUID productId = product.getId();
+
+        when(productService.findProductByCategoryId(any(), any(Pageable.class))).thenReturn(productsPage);
+
+
+        // When & Then
+        mockMvc.perform(post("/categories/{category-id}/products/add/{product-id}", categoryId, productId)
+                        .param("field", "name")
+                        .param("direction", "asc")
+                        .param("page", "0")
+                        .param("size", "12"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/categories/" + categoryId + "/products"))
+                .andExpect(flash().attribute("message", "Product has been added to cart!"));
+
+        // Verify interactions
+        verify(sessionCartService, times(1)).addProductToCart(product);
+        verify(productService, times(1)).findProductByCategoryId(any(UUID.class), any(Pageable.class));
+        verify(categoryService, times(1)).getCategory(categoryId);
+
     }
 
     @Test
-    void addProductToCart() {
+    void shouldAddThreeProductsToCartInSingleView() throws Exception {
+
+        mockMvc.perform(post("/add/{product-id}", product.getId())
+                        .param("quantity", "3"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/products/" + product.getId()))
+                .andExpect(flash().attribute("message", Message.info("Product has been added to cart!")));
+
+        verify(sessionCartService, times(3)).addProductToCart(product);
+        verify(productService, times(1)).getSingleProduct(product.getId());
     }
 
     @Test
-    void addProductToCartInSingleView() {
-    }
+    void shouldDisplaySingleProduct() throws Exception {
 
-    @Test
-    void singleProductView() {
+        mockMvc.perform(get("/products/{product-id}", product.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("product/single"))
+                .andExpect(model().attribute("product", product))
+                .andExpect(model().attribute("breadcrumbs", breadcrumbItems));
+
+        verify(productService).getSingleProduct(product.getId());
+        verify(breadcrumbsService).breadcrumbsHomeCategoriesCategoriesName(any(),any());
+
+
     }
 }

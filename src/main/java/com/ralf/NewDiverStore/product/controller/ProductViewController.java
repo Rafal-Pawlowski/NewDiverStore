@@ -168,7 +168,8 @@ public class ProductViewController {
     @PostMapping("add/{product-id}")
     public String addProductToCartInSingleView(
             @PathVariable("product-id") UUID productId,
-            @RequestParam(name = "quantity", required = false, defaultValue = "1") int quantity, RedirectAttributes redirectAttributes,
+            @RequestParam(name = "quantity", required = false, defaultValue = "1") int quantity,
+            RedirectAttributes redirectAttributes,
             Model model) {
 
 
@@ -178,7 +179,7 @@ public class ProductViewController {
         }
 
 
-        model.addAttribute("product", productService.getSingleProduct(productId));
+        model.addAttribute("product", product);
 
         redirectAttributes.addFlashAttribute("message", Message.info("Product has been added to cart!"));
         return "redirect:/products/{product-id}";
