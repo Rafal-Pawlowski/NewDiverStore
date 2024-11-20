@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -142,5 +142,10 @@ public class ProductService {
         int end = Math.min((start + pageable.getPageSize()), limitedProducts.size());
 
         return new PageImpl<>(limitedProducts.subList(start, end), pageable, limitedProducts.size());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Product> getDealsProducts(BigDecimal discountPercentage, Pageable pageable) {
+        return productRepository.findByDiscountPercentageGreaterThan(discountPercentage, pageable);
     }
 }

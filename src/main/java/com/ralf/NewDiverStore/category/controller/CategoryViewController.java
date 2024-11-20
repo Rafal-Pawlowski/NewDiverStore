@@ -84,6 +84,11 @@ public class CategoryViewController {
         return "category/list";
     }
 
+    @GetMapping("/article")
+    public String articleView(){
+        return "article/article";
+    }
+
 
 }
 

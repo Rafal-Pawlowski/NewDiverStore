@@ -1,6 +1,7 @@
 package com.ralf.NewDiverStore.product.domain.model;
 
 import com.ralf.NewDiverStore.category.domain.model.Category;
+//import com.ralf.NewDiverStore.currency.domain.Currency;
 import com.ralf.NewDiverStore.producer.domain.model.Producer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -11,6 +12,7 @@ import lombok.ToString;
 import org.springframework.format.annotation.NumberFormat;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.UUID;
 
@@ -36,6 +38,9 @@ public class Product {
     private String description;
 
     private String imagePath;
+//
+//    @Enumerated(EnumType.STRING)
+//    private Currency currency;
 
     @ManyToOne
     private Category category;
@@ -48,18 +53,23 @@ public class Product {
 
     @DecimalMin(value = "0.0", message = "Discount must be a positive value")
     @DecimalMax(value = "100.0", message = "Discount cannot exceed 100%")
+    @Column(precision = 10, scale = 2)
     private BigDecimal discountPercentage = BigDecimal.ZERO;
 
     public BigDecimal getDiscountedPrice() {
         if (discountPercentage != null && discountPercentage.compareTo(BigDecimal.ZERO) > 0) {
             BigDecimal discount = price.multiply(discountPercentage).divide(new BigDecimal("100"));
-            return price.subtract(discount);
+            BigDecimal discountedPrice = price.subtract(discount);
+            return discountedPrice.setScale(2, RoundingMode.HALF_UP);
         }
         return price;
     }
 
+
     public Product() {
         this.id=UUID.randomUUID();
+        this.discountPercentage = BigDecimal.ZERO;
+//        this.currency = Currency.EUR;
     }
 
     public Product(String name, BigDecimal price) {

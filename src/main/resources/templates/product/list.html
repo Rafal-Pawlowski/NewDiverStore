@@ -25,8 +25,29 @@
                                 <a th:href="@{'/products/' + ${product.id}}" class="card-link category-name" th:text="${product.name}">Product name</a>
                             </h2>
                             <div>
-                                <p class="product-price" th:text="'$' + ${product.price}"></p>
-                            </div>
+                                <!--wyświetlanie ceny po zniżce-->
+                                <div class="bg-gray py-2 px-3 mt-4">
+                                    <!-- Jeśli produkt ma rabat -->
+                                    <div th:if="${product.discountPercentage > 0}">
+                                        <!-- Przekreślona oryginalna cena -->
+                                        <h2 class="mb-0" style="text-decoration: line-through;"
+                                            th:text="${product.price}+ ' zł'">
+                                            99999 zł
+                                        </h2>
+                                        <!-- Cena po zniżce -->
+                                        <h2 class="mb-0" style="color: red;"
+                                            th:text="${product.getDiscountedPrice()}+ ' zł'">
+                                            1890,00 zł
+                                        </h2>
+                                    </div>
+
+                                    <!-- Jeśli produkt nie ma rabatu -->
+                                    <div th:if="${product.discountPercentage == 0} ">
+                                        <h2 class="mb-0" th:text="${product.price} + ' zł'">
+                                            99999 zł
+                                        </h2>
+                                    </div>
+                                </div>                            </div>
                             <div>
                                 <!-- Formularz do dodawania produktu do koszyka metodą POST -->
                                 <form th:action="@{'/categories/' + ${category.id} + '/products/add/' + ${product.id}}" method="post">

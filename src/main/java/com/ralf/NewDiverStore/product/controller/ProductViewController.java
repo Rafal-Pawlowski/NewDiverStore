@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,6 +73,21 @@ public class ProductViewController {
         paging(model, newestProductsPage);
 
         return "product/newest";
+    }
+
+    @GetMapping("/deals")
+    public String dealsProductsView(Model model, Pageable pageable) {
+        BigDecimal discountPercentage = BigDecimal.ZERO;
+
+        List<BreadcrumbItem> breadcrumbItems = breadcrumbsService.breadcrumbsHomeDeals();
+        model.addAttribute("breadcrumbs", breadcrumbItems);
+
+        Page<Product> dealsProductsPage = productService.getDealsProducts(discountPercentage, pageable);
+
+        model.addAttribute("dealsProductsPage", dealsProductsPage);
+        paging(model, dealsProductsPage);
+
+        return "product/deals";
     }
 
     @GetMapping("categories/{category-id}/products")
@@ -126,6 +142,8 @@ public class ProductViewController {
             return "redirect:/newest";
         } else if (refererUrl != null && refererUrl.contains("/top")) {
             return "redirect:/top";
+        } else if (refererUrl != null && refererUrl.contains("/deals")) {
+            return "redirect:/deals";
         }
 
         // Domyślne przekierowanie, jeśli nie ma dopasowania

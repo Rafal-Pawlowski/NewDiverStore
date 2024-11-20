@@ -1,0 +1,65 @@
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
+<head th:replace="~{category/template :: head(~{title ='Dive Store'})}"></head>
+<body>
+
+
+
+    <th:block th:replace="~{category/template::header}"/>
+    <main style="font-family: 'Arial', sans-serif; line-height: 1.8; margin: 0 auto; max-width: 1400px; padding: 20px; background-color: #f9f9f9; color: #333;">
+        <h1 style="text-align: center; margin-bottom: 50px; font-size: 48px; color: #003366; letter-spacing: 1px;">The Best Diving Spots in the Universe</h1>
+
+        <!-- Section 1 -->
+        <section style="display: flex; align-items: center; margin-bottom: 60px; gap: 40px; padding: 20px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+            <div style="flex: 1; text-align: center;">
+                <img src="/img/article_planet1.png" alt="Diving in Aqualiris on Enceladus" style="width: 100%; max-width: 500px; border-radius: 12px; object-fit: cover;">
+            </div>
+            <div style="flex: 2; padding: 0 20px;">
+                <h2 style="font-size: 36px; color: #004080; margin-bottom: 20px;">1. The Depths of Aqualiris – The Icy Planet Enceladus</h2>
+                <p style="font-size: 18px;">
+                    Imagine diving in crystal-clear waters hidden beneath an icy crust. The Depths of Aqualiris are a subterranean ocean where fluorescent marine creatures light the way, and underwater
+                    geysers shoot streams of water and ice in a spectacular natural display. Divers, equipped with thermal suits, explore unique rock formations resembling coral, glowing with a soft blue light.
+                    This location is a paradise for explorers dreaming of touching the unknown.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section style="display: flex; align-items: center; margin-bottom: 60px; gap: 40px; padding: 20px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); flex-direction: row-reverse;">
+            <div style="flex: 1; text-align: center;">
+                <img src="/img/article_planet2.png" alt="Diving in Hydrocarbon Lagoon on Titan" style="width: 100%; max-width: 500px; border-radius: 12px; object-fit: cover;">
+            </div>
+            <div style="flex: 2; padding: 0 20px;">
+                <h2 style="font-size: 36px; color: #004080; margin-bottom: 20px;">2. Hydrocarbon Lagoon – Titan, Moon of Saturn</h2>
+                <p style="font-size: 18px;">
+                    Titan offers diving in lakes of liquid methane and ethane, where the traditional concept of water ceases to exist. The Hydrocarbon Lagoon is a place where the surface of the lake reflects
+                    the warm orange glow of the sky, and beneath the surface lie floating organic crystals and unusual life forms adapted to extreme conditions. Special suits protect divers from the toxic
+                    environment, and the view of Titanian mountains in the background makes every second here breathtaking.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section style="display: flex; align-items: center; margin-bottom: 60px; gap: 40px; padding: 20px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+            <div style="flex: 1; text-align: center;">
+                <img src="/img/article_planet3.png" alt="Diving in Chromaflux Ocean on Gliese 581d" style="width: 100%; max-width: 500px; border-radius: 12px; object-fit: cover;">
+            </div>
+            <div style="flex: 2; padding: 0 20px;">
+                <h2 style="font-size: 36px; color: #004080; margin-bottom: 20px;">3. Chromaflux Ocean – Gliese 581d</h2>
+                <p style="font-size: 18px;">
+                    Chromaflux Ocean is a place where water has a rainbow-like structure, shifting colors based on depth and angle of light. Underwater cities built by intelligent life forms attract divers
+                    eager to see alien technology up close. Submerged waterfalls and moving reefs add excitement, while wandering jellyfish the size of spaceships leave trails of luminous streaks. This
+                    destination offers a truly surreal and otherworldly experience.
+                </p>
+            </div>
+        </section>
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+<footer style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; font-size: 14px; color: #666;">
+    <p>Written by <strong>Rafal Pawlowski</strong> | Published on <em>November 19, 2024</em></p>
+</footer>
+</html>

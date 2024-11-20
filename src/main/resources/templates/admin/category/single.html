@@ -43,7 +43,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body text-center">
-                                <img th:src="@{'/uploads/' + ${category.imagePath}}" src="/uploads/sample.jpg" class="img-fluid" alt="Category Image" style="max-width: 100%; height: auto;">
+                                <img th:src="@{'/uploads/' + ${category.imagePath}}" src="/uploads/sample.jpg" class="img-fluid" alt="Category Image" style="max-width: 500px; max-height: 500px; height: auto; width: auto;">
                             </div>
                         </div>
                     </div>
@@ -65,11 +65,9 @@
                                         <b>Number of producers</b> <a class="float-right" th:text="${producerCounter}">wyświetlić liczbę producerów</a>
                                     </li>
                                     <li class="list-group-item">
-                                        <b>Number of products</b> <a class="float-right" th:text="${#lists.size(products)}">wyswietlic liczbę produktów w kategorii</a>
+                                        <b>Number of products</b> <a class="float-right" th:text="${products.content.size()}">wyswietlic liczbę produktów w kategorii</a>
                                     </li>
                                 </ul>
-
-                                <a href="#" class="btn btn-primary btn-block"><b>Button may be usable</b></a>
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -108,17 +106,17 @@
                         <div class="card-header">
                             <h3 class="card-title" th:text="'Products in category: ' + ${category.name}"></h3>
 
-                            <div class="card-tools">
-                                <div class="input-group input-group-sm" style="width: 150px;">
-                                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+<!--                            <div class="card-tools">-->
+<!--                                <div class="input-group input-group-sm" style="width: 150px;">-->
+<!--                                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">-->
 
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-default">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+<!--                                    <div class="input-group-append">-->
+<!--                                        <button type="submit" class="btn btn-default">-->
+<!--                                            <i class="fas fa-search"></i>-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0" style="height: 300px;">

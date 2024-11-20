@@ -224,8 +224,8 @@
                 <div class="container">
                     <div class="carousel-caption text-end">
                         <h1>The best diving destinations</h1>
-                        <p>Check out our recommendations of the best diving spots</p>
-                        <p><a class="btn btn-lg btn-primary" href="#">Read an article</a></p>
+                        <p>Check out our recommendations of the best diving spots in Universe</p>
+                        <p><a class="btn btn-lg btn-primary" href="/article">Read an article</a></p>
                     </div>
                 </div>
             </div>
@@ -250,40 +250,40 @@
         <!-- Four columns of text below the carousel -->
         <div th:fragment="sections" class="row">
             <div class="col-lg-3 col-sm d-flex flex-column justify-content-center align-items-center">
-                <svg class="bd-placeholder-img rounded-circle mb-3" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="var(--bs-secondary-color)"/>
-                </svg>
+                <img class="bd-placeholder-img rounded-circle mb-3"
+                     src="/img/index_categories_icon.png"
+                     alt="Category Icon"
+                     width="140"
+                     height="140" />
                 <h2 class="fw-normal">Categories</h2>
-                <p>Some representative placeholder content for the four columns of text below the carousel. This is the first column.</p>
                 <p><a class="btn btn-secondary" href="/categories">View details &raquo;</a></p>
             </div><!-- /.col-lg-3 -->
             <div class="col-lg-3 col-sm d-flex flex-column justify-content-center align-items-center">
-                <svg class="bd-placeholder-img rounded-circle mb-3" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="var(--bs-secondary-color)"/>
-                </svg>
+                <img class="bd-placeholder-img rounded-circle mb-3"
+                     src="/img/index_top_products_icon.png"
+                     alt="Category Icon"
+                     width="140"
+                     height="140" />
                 <h2 class="fw-normal">Top Products</h2>
-                <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second column.</p>
                 <p><a class="btn btn-secondary" href="/top">View details &raquo;</a></p>
             </div><!-- /.col-lg-3 -->
             <div class="col-lg-3 col-sm d-flex flex-column justify-content-center align-items-center">
-                <svg class="bd-placeholder-img rounded-circle mb-3" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="var(--bs-secondary-color)"/>
-                </svg>
+                <img class="bd-placeholder-img rounded-circle mb-3"
+                     src="/img/index_new_products_icon.png"
+                     alt="Category Icon"
+                     width="140"
+                     height="140" />
                 <h2 class="fw-normal">Newest</h2>
-                <p>And lastly this, the third column of representative placeholder content.</p>
                 <p><a class="btn btn-secondary" href="/newest">View details &raquo;</a></p>
             </div><!-- /.col-lg-3 -->
             <div class="col-lg-3 col-sm d-flex flex-column justify-content-center align-items-center">
-                <svg class="bd-placeholder-img rounded-circle mb-3" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="var(--bs-secondary-color)"/>
-                </svg>
+                <img class="bd-placeholder-img rounded-circle mb-3"
+                     src="/img/index_deals_icon.png"
+                     alt="Category Icon"
+                     width="140"
+                     height="140" />
                 <h2 class="fw-normal">Deals</h2>
-                <p>And lastly this, the fourth column of representative placeholder content.</p>
-                <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+                <p><a class="btn btn-secondary" href="/deals">View details &raquo;</a></p>
             </div><!-- /.col-lg-3 -->
         </div><!-- /.row -->
 
@@ -298,8 +298,8 @@
 
     <!-- FOOTER -->
     <footer th:fragment="footer" class="container">
-        <p class="float-end"><a href="#">Back to top</a></p>
-        <p>&copy; 2017–2024 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        <p>2024 Rafal Pawlowski </p>
+        <p>No commercial purpose</p>
 
         <th:block th:if="${message != null}">
             <script>

@@ -36,6 +36,14 @@ public class BreadcrumbsService {
         return breadcrumbItems;
     }
 
+    public List<BreadcrumbItem> breadcrumbsHomeDeals(){
+        List<BreadcrumbItem> breadcrumbItems = new ArrayList<>();
+        breadcrumbItems.add(new BreadcrumbItem("home", "/index"));
+        breadcrumbItems.add(new BreadcrumbItem("deals", "/deals"));
+
+        return breadcrumbItems;
+    }
+
     public List<BreadcrumbItem> breadcrumbsHomeTop(){
         List<BreadcrumbItem> breadcrumbItems = new ArrayList<>();
         breadcrumbItems.add(new BreadcrumbItem("home", "/index"));
