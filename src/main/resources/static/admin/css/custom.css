@@ -23,3 +23,20 @@
     content: " ↓";
     color: #2fc4ff;
 }
+
+.custom-button {
+    background-color: #ffc107; /* Żółte tło */
+    color: #000; /* Czarny tekst */
+    border: 2px solid #ffa000; /* Obramowanie w ciemniejszym odcieniu żółtego */
+    border-radius: 8px; /* Zaokrąglone rogi */
+    padding: 8px 16px; /* Wewnętrzny odstęp */
+    text-decoration: none; /* Usuń podkreślenie */
+    font-weight: bold; /* Pogrubiona czcionka */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Płynne efekty */
+}
+
+.custom-button:hover {
+    background-color: #ffcc33; /* Jaśniejszy żółty przy najechaniu */
+    transform: scale(1.05); /* Lekkie powiększenie przy najechaniu */
+    color: #000; /* Zachowanie koloru tekstu */
+}
