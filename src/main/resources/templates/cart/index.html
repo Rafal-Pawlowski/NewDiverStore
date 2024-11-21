@@ -147,6 +147,12 @@
     .breadcrumb li.active:hover span {
         background-color: #ff9933;
     }
+    .quantity-input input[type="number"]::-webkit-inner-spin-button,
+    .quantity-input input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
 </style>
 </head>
 
@@ -186,12 +192,12 @@
                 <img th:src="@{'/uploads/' + ${cartItem.product.imagePath}}" alt="Product Image">
                 <div>
                     <h5 th:text="${cartItem.product.name}">Product Name</h5>
-                    <p th:text="'Price: ' + ${cartItem.product.price} + ' zł'">Price: 999 zł</p>
+                    <p th:text="'Price: ' + ${cartItem.product.getDiscountedPrice()} + ' zł'">Price: 999 zł</p>
                 </div>
 
                 <form th:action="@{'/cart/update/' + ${cartItem.product.id}}" method="post" class="quantity-input">
                     <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'decrease')">-</button>
-                    <input type="number" name="qty" th:value="${cartItem.counter}" class="form-control text-center" min="1">
+                    <input type="number" name="qty" th:value="${cartItem.counter}" class="form-control text-center" min="1" readonly>
                     <button class="btn btn-outline-secondary" type="button" onclick="submitForm(this, 'increase')">+</button>
                     <input type="hidden" name="action" value="">
                 </form>
